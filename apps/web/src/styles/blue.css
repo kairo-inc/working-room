@@ -1,0 +1,207 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@source "../pages";
+@source "../components";
+
+:root {
+  --font-size: 16px;
+
+  /* Base */
+  --background: #f4f8fd; /* Very pale ice blue tint */
+  --foreground: #152c5b; /* Dark Navy */
+
+  /* Primary */
+  --primary: #245595; /* Royal Blue */
+  --primary-hover: #152c5b; /* Dark Navy */
+  --primary-foreground: #ffffff;
+
+  /* Secondary */
+  --secondary: #518dcd; /* Sky Blue */
+  --secondary-hover: #245595; /* Royal Blue */
+  --secondary-foreground: #ffffff;
+
+  /* 
+    Semantic State Colors — Cool-toned to harmonize with Ocean Blue
+    ----------------------------------------------------------------
+    Destructive : Cool Crimson   (blue-red direction, not warm orange-red)
+    Warning     : Golden Ochre   (dark amber/gold, not warm orange)
+    Success     : Teal Green     (blue-green / sea green)
+    Info        : Sky Blue       (Color 3 — matches brand directly)
+  */
+
+  /* Destructive — Cool Crimson */
+  --destructive: #b8294a;
+  --destructive-hover: #921f3a;
+  --destructive-foreground: #ffffff;
+
+  /* Warning — Golden Ochre */
+  --warning: #c87010;
+  --warning-hover: #a45808;
+  --warning-foreground: #ffffff;
+
+  /* Success — Teal Green */
+  --success: #0a7a5c;
+  --success-hover: #085e47;
+  --success-foreground: #ffffff;
+
+  /* Info — Sky Blue (brand color) */
+  --info: #518dcd;
+  --info-hover: #245595;
+  --info-foreground: #ffffff;
+
+  /* UI Elements */
+  --border: #b0d4ee;
+  --input: #a8cceb;
+  --input-background: #ffffff;
+  --ring: #518dcd;
+
+  /* Disabled — Blue-tinted neutral */
+  --disabled: #d8e8f4;
+  --disabled-foreground: #8aafc8;
+  --disabled-border: #c4d9ec;
+
+  /* Muted & Accent */
+  --muted: #e8f3fb;
+  --muted-foreground: #6b8eae; /* Desaturated blue-gray */
+  --accent: #bee1f9;
+  --accent-foreground: #152c5b;
+
+  /* Components */
+  --card: #ffffff;
+  --card-foreground: #152c5b;
+
+  --popover: #0f2248;
+  --popover-foreground: #ffffff;
+
+  /* Utilities */
+  --radius: 0.5rem;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+}
+
+.dark {
+  /* Base */
+  --background: #0c1b38; /* Deeper than Dark Navy */
+  --foreground: #e8f3fb; /* Pale blue-white */
+
+  /* Primary */
+  --primary: #518dcd; /* Sky Blue */
+  --primary-hover: #7aabdf; /* Slightly lighter */
+  --primary-foreground: #ffffff;
+
+  /* Secondary */
+  --secondary: #1a3460; /* Slightly lighter than Dark Navy */
+  --secondary-hover: #245595;
+  --secondary-foreground: #e8f3fb;
+
+  /* 
+    Dark Mode Semantic Colors — Lightened for readability on dark bg
+    ----------------------------------------------------------------
+    Destructive : Lighter Cool Crimson
+    Warning     : Lighter Golden Amber
+    Success     : Lighter Teal Green
+    Info        : Sky Blue (same brand color)
+  */
+
+  /* Destructive — Lighter Cool Crimson */
+  --destructive: #e0506e;
+  --destructive-hover: #f07088;
+  --destructive-foreground: #ffffff;
+
+  /* Warning — Lighter Golden Amber */
+  --warning: #e09820;
+  --warning-hover: #f0b040;
+  --warning-foreground: #0c1b38;
+
+  /* Success — Lighter Teal Green */
+  --success: #12b88a;
+  --success-hover: #38ceaa;
+  --success-foreground: #0c1b38;
+
+  /* Info — Sky Blue */
+  --info: #518dcd;
+  --info-hover: #7aabdf;
+  --info-foreground: #0c1b38;
+
+  /* UI Elements */
+  --border: #1f4070;
+  --input: #224580;
+  --input-background: #0f2248;
+  --ring: #518dcd;
+
+  /* Disabled */
+  --disabled: #172e55;
+  --disabled-foreground: #456a90;
+  --disabled-border: #1f3d6a;
+
+  /* Muted & Accent */
+  --muted: #152c5b;
+  --muted-foreground: #7aabdf; /* Lighter sky blue for readability */
+  --accent: #1f4070;
+  --accent-foreground: #e8f3fb;
+
+  /* Components */
+  --card: #0f2248; /* Slightly lighter than background */
+  --card-foreground: #e8f3fb;
+
+  --popover: #e8f3fb;
+  --popover-foreground: #152c5b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-hover: var(--warning-hover);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-success: var(--success);
+  --color-success-hover: var(--success-hover);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-info: var(--info);
+  --color-info-hover: var(--info-hover);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-ring: var(--ring);
+
+  --color-disabled: var(--disabled);
+  --color-disabled-foreground: var(--disabled-foreground);
+  --color-disabled-border: var(--disabled-border);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+}

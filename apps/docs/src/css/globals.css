@@ -1,0 +1,274 @@
+/**
+ * This file is same as the one in apps/web/src/styles/globals.css to share the same design tokens and global styles between web and doc.
+ * Some variables are overridden to fit the doc's design, but the majority of the styles are shared.
+ * If you want to change the design of the doc, please edit this file instead of creating a new one.
+ */
+
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css";
+@import "tw-animate-css";
+
+@source "../pages";
+@source "../components";
+@source "../theme";
+
+:root {
+  --font-size: 16px;
+
+  /* Base */
+  --background: #f7f7f7;
+  --foreground: #111111;
+
+  /* Primary */
+  --primary: #111111;
+  --primary-hover: #000000;
+  --primary-foreground: #ffffff;
+
+  /* Secondary */
+  --secondary: #2a2a2a;
+  --secondary-hover: #111111;
+  --secondary-foreground: #ffffff;
+
+  /* Semantic Colors */
+  --destructive: #b42318;
+  --destructive-hover: #912018;
+  --destructive-foreground: #ffffff;
+
+  --warning: #b7791f;
+  --warning-hover: #975a16;
+  --warning-foreground: #ffffff;
+
+  --success: #166534;
+  --success-hover: #14532d;
+  --success-foreground: #ffffff;
+
+  --info: #374151;
+  --info-hover: #1f2937;
+  --info-foreground: #ffffff;
+
+  /* UI Elements */
+  --border: #e4e4e7;
+  --input: #d4d4d8;
+  --input-background: #ffffff;
+  --ring: #525252;
+
+  /* Disabled */
+  --disabled: #f1f1f1;
+  --disabled-foreground: #9a9a9a;
+  --disabled-border: #e5e5e5;
+
+  /* Muted & Accent */
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+
+  --accent: #ebebeb;
+  --accent-foreground: #111111;
+
+  /* Components */
+  --card: #ffffff;
+  --card-foreground: #111111;
+
+  --link: #1d4ed8;
+  --link-hover: #1e40af;
+
+  --popover: #111111;
+  --popover-foreground: #ffffff;
+
+  /* Utilities */
+  --radius: 0.5rem;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+
+  /* docusaurus override */
+  --ifm-background-color: var(--background);
+  --ifm-font-color-base: var(--foreground);
+  --ifm-color-primary: var(--primary);
+
+  /* navbar */
+  --ifm-navbar-link-color: var(--foreground);
+  --ifm-navbar-link-hover-color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  --ifm-navbar-link-color-active: var(--foreground);
+
+  /* menu */
+  /* --ifm-menu-background-color: var(--card); */
+  --ifm-menu-color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  --ifm-menu-color-active: var(--foreground);
+
+  /* link */
+  --ifm-link-decoration: none;
+  --ifm-link-hover-decoration: none;
+}
+
+html[data-theme="dark"] {
+  /* Base */
+  --background: #050505;
+  --foreground: #fafafa;
+
+  /* Primary */
+  --primary: #ffffff;
+  --primary-hover: #e5e5e5;
+  --primary-foreground: #050505;
+
+  /* Secondary */
+  --secondary: #181818;
+  --secondary-hover: #242424;
+  --secondary-foreground: #fafafa;
+
+  /* Semantic Colors */
+  --destructive: #ff5a5f;
+  --destructive-hover: #ff7b80;
+  --destructive-foreground: #ffffff;
+
+  --warning: #ffb020;
+  --warning-hover: #ffc95a;
+  --warning-foreground: #111111;
+
+  --success: #32d583;
+  --success-hover: #5ce0a1;
+  --success-foreground: #111111;
+
+  --info: #d4d4d8;
+  --info-hover: #ffffff;
+  --info-foreground: #111111;
+
+  /* UI Elements */
+  --border: #494949;
+  --input: #3a3a3a;
+  --input-background: #0f0f0f;
+  --ring: #d4d4d8;
+
+  /* Disabled */
+  --disabled: #121212;
+  --disabled-foreground: #6b7280;
+  --disabled-border: #232323;
+
+  /* Muted & Accent */
+  --muted: #242424;
+  --muted-foreground: #9ca3af;
+
+  --accent: #1f1f1f;
+  --accent-foreground: #ffffff;
+
+  /* Components */
+  --card: #161616;
+  --card-foreground: #fafafa;
+
+  --link: #4087f8;
+  --link-hover: #2563eb;
+
+  --popover: #fafafa;
+  --popover-foreground: #121212;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-hover: var(--warning-hover);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-success: var(--success);
+  --color-success-hover: var(--success-hover);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-info: var(--info);
+  --color-info-hover: var(--info-hover);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-ring: var(--ring);
+
+  --color-disabled: var(--disabled);
+  --color-disabled-foreground: var(--disabled-foreground);
+  --color-disabled-border: var(--disabled-border);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* 12.5px */
+  --text-xs: 0.78125rem;
+  /* 15.5px */
+  --text-sm: 0.96875rem;
+  /* 16.5px */
+  --text-base: 1.03125rem;
+  /* 18px */
+  --text-lg: 1.125rem;
+  /* 20px */
+  --text-xl: 1.25rem;
+}
+
+.body {
+  @apply bg-background text-foreground;
+}
+
+.navbar {
+  @apply border-border bg-card border-b shadow-none;
+}
+
+.pagination-nav__link {
+  @apply bg-card;
+}
+
+.theme-doc-sidebar-container {
+  @apply bg-card;
+}
+
+.menu {
+  padding: 0.5rem !important;
+}
+
+.language-bash .token.comment,
+.language-sh .token.comment {
+  color: #737373;
+  font-style: italic;
+}
+
+.language-bash .token.function,
+.language-sh .token.function {
+  color: #111111;
+  font-weight: 700;
+}
+
+.language-bash .token.builtin,
+.language-sh .token.builtin {
+  color: #2563eb;
+}
+
+.language-bash .token.string,
+.language-sh .token.string {
+  color: #166534;
+}
+
+.language-bash .token.variable,
+.language-sh .token.variable {
+  color: #b45309;
+}

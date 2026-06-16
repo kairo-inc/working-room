@@ -1,0 +1,57 @@
+---
+title: Installation
+sidebar_position: 1
+custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/getting-started/index.mdx"
+---
+
+# Installation
+
+## Requirements
+
+Before running WorkingRoom, prepare the following requirements for your setup:
+
+- For all setups: at least one AI provider API key
+  - `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY`
+  - At least one of these keys is required to run the application.
+- For local development:
+  - Node.js 18-22
+  - Yarn 4 or later (`packageManager: yarn@4.5.3`, `engines.yarn: >=4.0.0`)
+  - `corepack enable` to use the repository-managed Yarn version
+
+Local development uses the repository's committed `.env.local` defaults together with your shell environment variables for AI provider keys.
+
+## Using docker compose (Easiest way)
+
+```bash
+git clone https://github.com/kairo-inc/workingroom.git
+cd workingroom
+
+# Set up OPENAI_API_KEY or ANTHROPIC_API_KEY in your shell environment variables.
+# Then, run the following command to start the application using docker compose:
+docker compose up
+```
+
+Then access `http://localhost:3000` in your browser to see the application.
+
+## Local development
+
+```bash
+git clone https://github.com/kairo-inc/workingroom.git
+cd workingroom
+
+# 1. Install dependencies
+corepack enable
+yarn install
+
+# 2. Configure environment
+# .env.local is committed with local development defaults
+# Set ANTHROPIC_API_KEY and/or OPENAI_API_KEY in your shell environment
+
+# 3. Initialize database
+yarn prisma:dev
+
+# 4. Start web app
+yarn dev:web
+```
+
+Then access `http://localhost:3000` in your browser to see the application.

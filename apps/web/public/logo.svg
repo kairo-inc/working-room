@@ -1,0 +1,14 @@
+<svg width="286" height="286" viewBox="0 0 286 286" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .stroke { stroke: #000; }
+    .fill { stroke: #000; }
+
+    @media (prefers-color-scheme: dark) {
+      .stroke { stroke: #fff; }
+      .fill { fill: #fff; }
+    }
+  </style>
+<path class="stroke" d="M260.842 74.9639V211.035L143 279.071L25.1582 211.035V74.9639L143 6.92773L260.842 74.9639Z" stroke-width="12" stroke-linejoin="round"/>
+<line class="stroke" x1="143.25" y1="9" x2="143.25" y2="177" stroke-width="12"/>
+<path class="fill" d="M143 143L265 213L143 283L21 213L143 143Z"/>
+</svg>

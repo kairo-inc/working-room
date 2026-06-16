@@ -1,0 +1,48 @@
+{
+  "name": "working-room",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "author": "Yusuke Suwa",
+  "homepage": "https://workingroom.io",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "dotenv -e .env.local -- yarn workspace @wr/web dev",
+    "dev:docs": "dotenv -e .env.local -- yarn workspace @wr/docs start",
+    "build:web": "dotenv -e .env.local -- yarn workspace @wr/web build",
+    "build:docs": "dotenv -e .env.local -- yarn workspace @wr/docs build",
+    "start:web": "dotenv -e .env.local -- yarn workspace @wr/web start",
+    "start:web:docs": "dotenv -e .env.docs -- yarn workspace @wr/web start",
+    "prisma:dev": "dotenv -e .env.local -- yarn workspace @wr/db migrate:dev",
+    "prisma:reset": "dotenv -e .env.local -- yarn workspace @wr/db migrate:reset",
+    "prisma:generate": "dotenv -e .env.local -- yarn workspace @wr/db generate",
+    "prisma:deploy": "dotenv -e .env.local -- yarn workspace @wr/db migrate:deploy",
+    "test": "dotenv -e .env.test -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.test -- vitest run",
+    "test:watch": "dotenv -e .env.test -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.test -- vitest",
+    "coverage": "dotenv -e .env.test -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.test -- vitest run --coverage",
+    "lint": "prettier --check '**/*.{tsx,ts}'",
+    "lint-fix": "prettier --write '**/*.{tsx,ts}'",
+    "seed:docs": "dotenv -e .env.docs -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.docs -- yarn workspace @wr/db seed:docs"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.1",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@vitest/coverage-v8": "^4.1.9",
+    "dotenv-cli": "^11.0.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.9",
+    "memfs": "^4.57.7",
+    "prettier": "^3.8.4",
+    "prettier-plugin-tailwindcss": "0.8.0",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
+  },
+  "packageManager": "yarn@4.5.3",
+  "engines": {
+    "node": ">=20 <=22.x.x",
+    "yarn": ">=4.0.0"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@wr/testing",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.3",
+    "jwks-rsa": "^4.0.1"
+  },
+  "peerDependencies": {
+    "@wr/db": "workspace:*",
+    "@wr/shared": "workspace:*",
+    "cuid": "^3.0.0",
+    "pino": "^10.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3"
+  }
+}

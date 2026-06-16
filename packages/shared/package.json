@@ -1,0 +1,17 @@
+{
+  "name": "@wr/shared",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "@ai-sdk/anthropic": "^3.0.0",
+    "@ai-sdk/openai": "^3.0.0",
+    "ai": "^6.0.177",
+    "mime": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3"
+  }
+}

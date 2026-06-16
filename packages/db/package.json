@@ -1,0 +1,32 @@
+{
+  "name": "@wr/db",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "sideEffects": true,
+  "scripts": {
+    "generate": "prisma generate --schema ./prisma/schema.prisma",
+    "migrate:dev": "prisma migrate dev --schema ./prisma/schema.prisma",
+    "migrate:reset": "prisma migrate reset --schema ./prisma/schema.prisma",
+    "migrate:deploy": "prisma migrate deploy --schema ./prisma/schema.prisma",
+    "seed:docs": "tsx src/seed/forDocs.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3"
+  },
+  "peerDependencies": {
+    "@wr/shared": "workspace:*",
+    "@wr/shared-node": "workspace:*",
+    "@wr/testing": "workspace:*",
+    "reflect-metadata": "0.2.2",
+    "tsyringe": "^4.10.0"
+  },
+  "devDependencies": {
+    "bcryptjs": "^3.0.3",
+    "prisma": "^6.19.3",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}

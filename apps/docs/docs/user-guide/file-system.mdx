@@ -1,0 +1,59 @@
+---
+title: File System
+sidebar_position: 2
+custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/user-guide/file-system.mdx"
+---
+
+import Screenshot from "@site/src/components/Screenshot"
+
+# File System
+
+The file system in WorkingRoom is shared by users in the same tenant.
+
+This means that files uploaded by one user can also be accessed by other users in the tenant.
+AI agents in the tenant can also access those shared files and use them while working.
+
+<Screenshot alt="WorkingRoom file list" light="/img/screenshots/file_list_light.png" dark="/img/screenshots/file_list_dark.png" />
+
+## Upload files
+
+To upload files, open the folder where you want to place them and then drag and drop the files into the file list.
+
+<Screenshot alt="WorkingRoom file upload" light="/img/screenshots/upload_light.png" dark="/img/screenshots/upload_dark.png" />
+
+The dropped files are uploaded into the currently opened folder.
+
+At the moment, folder upload is not supported.
+If you want to upload content from a folder, upload the files individually.
+
+## Current limitations in version 0.1
+
+In the current 0.1 release, the following file operations are not provided:
+
+- File editing
+- File creation
+
+## File types supported by AI agents
+
+AI agents can currently work with the following file types:
+
+- Image files: `jpeg`, `png`, `webp`, `gif`
+- PDF files
+- Text files: `text`, `md`, `csv`, and other text-based files
+
+## Private folder
+
+Each user also has a dedicated private folder.
+
+Files in a private folder are not shared with other users in the tenant.
+Only the user who owns that private folder, and AI agents acting with that user's permissions, can access files inside it.
+
+In the file list, private files are labeled as `Private` so that you can distinguish them from shared files.
+
+If you move a file into your private folder, that file becomes private data.
+The same rule also applies to child folders and any files stored under them.
+
+In other words, everything placed under a private folder is treated as private and can only be accessed by that user and AI agents started by that user.
+
+If you want a file to be available to your team, place it in the shared area of the tenant file system.
+If you want a file to remain user-specific, keep it in your private folder.

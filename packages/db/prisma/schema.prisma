@@ -1,0 +1,305 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl-arm64-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  // Feel free to change this to your database of choice.
+  // For multitenancy, we recommend RLS capable databases like PostgreSQL.
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  // Only one user can be the owner of a tenant, and they have full control over the tenant and its users.
+  owner
+  // Admins can manage users and settings, but they cannot delete the tenant or transfer ownership.
+  admin
+  // Members can access the tenant's resources but cannot manage users or settings.
+  member
+  // Guests have limited access to the tenant's resources.
+  // Currently not used, but can be used in the future for external collaborators or temporary access.
+  guest
+}
+
+enum MessageRole {
+  system
+  user
+  assistant
+  tool
+}
+
+enum FileStatus {
+  exist
+  missing
+  deleted
+}
+
+enum FileOperation {
+  create
+  edit
+  delete
+  rename
+  move
+}
+
+model Tenant {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  // Null means the tenant is active, while a non-null value indicates when the tenant was soft-deleted.
+  deletedAt DateTime?
+
+  // Name of the tenant.
+  name String
+
+  // Relations
+  users           User[]
+  accessGroups    AccessGroup[]
+  fileDescriptors FileDescriptor[]
+}
+
+model AccessGroup {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  name        String
+  description String?
+
+  // Personal access groups are automatically created for each user and can only be accessed by that user.
+  // They are used to manage the user's private files and resources.
+  isPersonal Boolean @default(false)
+
+  resources FileDescriptor[]
+  read      Boolean          @default(false)
+  write     Boolean          @default(false)
+
+  users User[]
+
+  // The tenant that the policy belongs to.
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  name String
+  role UserRole
+
+  // Email of the user.
+  // If you want to use same mail-box for multiple tenants, you can use email alias or plus addressing to make them unique.
+  email String @unique
+
+  // AaaS(Authentication as a Service) providers usually require a unique identifier for the user.
+  sub String @unique
+
+  // This will either be used from local authentication or from an AaaS provider.
+  refreshToken String?
+
+  // Private directory for the user. This is a special directory that is created for each user and can be used to store the user's private files.
+  // It is not shared with other users and is automatically deleted when the user is deleted.
+  privateDirId String         @unique
+  privateDir   FileDescriptor @relation("privateDir", fields: [privateDirId], references: [id], onDelete: Cascade)
+
+  // The tenant that the user belongs to.
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Local sessions for the user. This is only used if you choose to implement a local authentication system without using an AaaS provider.
+  localSession    LocalSession?
+  // If you don't want to use an AaaS provider, you can use the localSecretHash field to store a hashed password or other authentication secret.
+  localSecretHash String?
+
+  chats           Chat[]
+  accessGroups    AccessGroup[]
+  fileHistories   FileHistory[]
+  fileDescriptors FileDescriptor[] @relation("owner")
+}
+
+// This table will only be used if you choose to implement a local authentication system without using an AaaS provider.
+// It will store the sessions for each user.
+model LocalSession {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // For authentication, check this field against the JWT provided by the client.
+  // We do not check its signature, but we confirm that it exists in the database and the expiresAt field has not passed.
+  // It is convenient for environment preparation and testing, and not recommended for production use.
+  jwt String @unique
+
+  // For the first sign-in, we want to check if the user needs to initialize their password.
+  // This is because we want to allow users to sign up with an AaaS provider and
+  // then set a password for local authentication later if they want to.
+  needsPasswordInitialization Boolean @default(false)
+  // This field will store the code for password initialization.
+  sessionCode                 String?
+
+  // The user that the session belongs to.
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // The expiration time of the session.
+  expiresAt DateTime
+}
+
+//// LLM related models
+model Chat {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // The user that initiated the chat.
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // The messages in the chat.
+  messages        Message[]
+  requireApproval Boolean   @default(false)
+
+  // Other status.
+  resources       FileDescriptor[]
+  pendingApproval String? // Json.
+  interactions    String? // Json.
+  consumedTokens  ConsumedToken[]
+}
+
+model Message {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  isUserFacing Boolean   @default(false)
+  sequence     Int // The order of the message in the chat.
+
+  // The chat that the message belongs to.
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  // The content of the message.
+  role    MessageRole
+  content String // Json. This can be string or json.
+}
+
+model FileDescriptor {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  status    FileStatus @default(exist)
+  // {dev}-{ino} for local files.
+  // This can be different for other file systems.
+  birthtime DateTime
+  mtime     DateTime
+
+  // This field indicates whether the file is currently being modified.
+  // This can be useful for handling concurrent modifications and ensuring data integrity.
+  isModifying Boolean @default(false)
+
+  // The name of the file.
+  size          Int
+  mimeType      String
+  isDirectory   Boolean @default(false)
+  // There is only one root directory in a tenant.
+  // It has only 2 types of children:
+  // 1. Shared root directory that are shared among multiple users.
+  // 2. Private root directories that are created for each user and can be used to store the user's private files.
+  //   - Private root folder must have a user relation.
+  isRoot        Boolean @default(false)
+  // There is only one shared root directory in a tenant.
+  isSharedRoot  Boolean @default(false)
+  // User relation. The root Private directory must have this relation.
+  privateRootOf User?   @relation("privateDir")
+
+  // This flag indicates chat uploaded file will be stored in this directory.
+  isChatDir Boolean          @default(false)
+  // /etc/workspace/dir1/dir2/file.txt
+  name      String // file.txt
+  // /id1/id2/id3. This is used for efficient querying of files in the same directory and subdirectories.
+  // This does not include itself's id.
+  pathIds   String
+  // Relations
+  parentId  String? // Null if the file is in the root directory.
+  blobHash  String
+  parent    FileDescriptor?  @relation("FileDescriptorToFileDescriptor", fields: [parentId], references: [id], onDelete: Cascade)
+  children  FileDescriptor[] @relation("FileDescriptorToFileDescriptor")
+
+  // Who made the file or directory. This is used for access control and auditing.
+  ownerId String?
+  owner   User?   @relation("owner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  chats        Chat[]
+  histories    FileHistory[]
+  accessGroups AccessGroup[]
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+  tenantId String
+}
+
+model FileHistory {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  fileDescriptorId String
+  fileDescriptor   FileDescriptor @relation(fields: [fileDescriptorId], references: [id], onDelete: Cascade)
+  // blobhash of the file content after the operation. This can be used to retrieve the file content from a blob storage if needed.
+  blobHash         String?
+
+  // The content of the file at the time of the change.
+  operation FileOperation
+  preview   String?
+
+  // Who made the change.
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ConsumedToken {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  provider String
+  model    String
+
+  toolName           String?
+  agentName          String?
+  inputTokens        Int
+  outputTokens       Int
+  noCacheInputTokens Int
+  cachedInputTokens  Int
+
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chatId String
+}
+
+view TokenUsageOnUser {
+  createdAt          DateTime
+  userId             String
+  provider           String
+  model              String
+  inputTokens        Int
+  outputTokens       Int
+  noCacheInputTokens Int
+  cachedInputTokens  Int
+}
+
+view TokenUsageOnTenant {
+  createdAt          DateTime
+  tenantId           String
+  provider           String
+  model              String
+  inputTokens        Int
+  outputTokens       Int
+  noCacheInputTokens Int
+  cachedInputTokens  Int
+}

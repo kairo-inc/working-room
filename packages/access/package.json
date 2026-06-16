@@ -1,0 +1,28 @@
+{
+  "name": "@wr/access",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "@ai-sdk/anthropic": "^3.0.0",
+    "@ai-sdk/openai": "^3.0.0",
+    "@aws-sdk/client-s3": "^3.1068.0",
+    "@vscode/ripgrep": "^1.18.0",
+    "@vscode/ripgrep-linux-x64": "^1.18.0",
+    "@wr/core": "workspace:*",
+    "@wr/db": "workspace:*",
+    "@wr/shared": "workspace:*",
+    "@wr/shared-node": "workspace:*",
+    "ai": "^6.0.0",
+    "chardet": "^2.1.1",
+    "cuid": "^3.0.0",
+    "diff": "^9.0.0",
+    "mime": "^4.1.0",
+    "tsyringe": "^4.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3"
+  }
+}
