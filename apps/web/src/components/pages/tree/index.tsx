@@ -38,8 +38,8 @@ export const PageTree = ({ parent, ancestors, fileList }: PageTreeProps) => {
 
       notify.info(L.tree.uploadTitle, L.tree.uploadSuccess)
       router.replace(router.asPath)
-    } catch (_) {
-      notify.error(L.tree.uploadTitle, L.tree.uploadFailed)
+    } catch (e) {
+      notify.error(L.tree.uploadTitle, e.message)
     }
   }
 

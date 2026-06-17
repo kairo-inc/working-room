@@ -14,6 +14,10 @@ import {
   BadRequestError,
   DomainFileDescriptor,
   ImplementationError,
+  InvalidChatDirAccessError,
+  InvalidPrivateDirAccessError,
+  InvalidRootDirAccessError,
+  InvalidSharedDirAccessError,
   MimeType,
   PageResult,
   PermissionDeniedError,
@@ -316,11 +320,13 @@ export class FileAccessServiceImpl extends FileAccessService {
       })
       if (desc.isDirectory) {
         if (desc.isRoot) {
-          throw new BadRequestError(`Cannot delete root directory.`)
+          throw new InvalidRootDirAccessError(`Cannot delete root directory.`)
         } else if (isUserPrivateDir) {
-          throw new BadRequestError(`Cannot delete user private directory.`)
+          throw new InvalidPrivateDirAccessError(`Cannot delete user private directory.`)
         } else if (desc.isChatDir) {
-          throw new BadRequestError(`Cannot delete chat directory.`)
+          throw new InvalidChatDirAccessError(`Cannot delete chat directory.`)
+        } else if (desc.isSharedRoot) {
+          throw new InvalidSharedDirAccessError(`Cannot delete shared root directory.`)
         }
         await this.fileDescriptorSource.delete({ where: { id: descId } })
         await this.fileDescriptorSource.deleteMany({ where: { pathIds: { contains: descId } } })
@@ -804,7 +810,7 @@ export class FileAccessServiceImpl extends FileAccessService {
     } else if (!targetParentDesc.isDirectory) {
       throw new BadRequestError(`Cannot move a file/directory into a file.`)
     } else if (targetDesc.isChatDir) {
-      throw new BadRequestError(`Cannot move a chat directory.`)
+      throw new InvalidChatDirAccessError(`Cannot move a chat directory.`)
     }
 
     await this.move({ descId, targetDirId: parentDescId, newName })
