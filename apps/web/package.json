@@ -27,7 +27,7 @@
     "@wr/db": "workspace:*",
     "@wr/shared": "workspace:*",
     "@wr/shared-node": "workspace:*",
-    "ai": "^6.0.205",
+    "ai": "^6.0.207",
     "bcryptjs": "^3.0.3",
     "chardet": "^2.1.1",
     "class-variance-authority": "0.7.1",
