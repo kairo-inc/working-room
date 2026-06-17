@@ -1,6 +1,15 @@
 import { FileHistorySortBy } from "@wr/db"
-import { BadRequestError, SortDirection } from "@wr/shared"
+import {
+  BadRequestError,
+  InvalidChatDirAccessError,
+  InvalidPrivateDirAccessError,
+  InvalidRootDirAccessError,
+  InvalidSharedDirAccessError,
+  PermissionDeniedError,
+  SortDirection,
+} from "@wr/shared"
 
+import { L } from "../../localization"
 import { handleError } from "../../middleware/trpc"
 import { trpc } from "../../utils/trpc"
 
@@ -12,7 +21,16 @@ export const useFileUploadFiles = () => {
       try {
         return await mutateAsync(formData)
       } catch (e) {
-        return handleError(e, [], "Failed to upload file.")
+        return handleError(
+          e,
+          [
+            {
+              error: PermissionDeniedError,
+              message: L.file.errors.uploadPermissionDenied,
+            },
+          ],
+          L.file.errors.uploadFailed
+        )
       }
     },
   }
@@ -26,7 +44,7 @@ export const useFileUploadFileToChat = () => {
       try {
         return await mutateAsync(formData)
       } catch (e) {
-        return handleError(e, [], "Failed to upload file to chat.")
+        return handleError(e, [], L.file.errors.uploadToChatFailed)
       }
     },
   }
@@ -72,7 +90,16 @@ export const useFileDeleteMany = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [], "Failed to delete file.")
+        return handleError(
+          e,
+          [
+            { error: InvalidRootDirAccessError, message: L.file.errors.cannotDeleteRoot },
+            { error: InvalidPrivateDirAccessError, message: L.file.errors.cannotDeletePrivate },
+            { error: InvalidChatDirAccessError, message: L.file.errors.cannotDeleteChat },
+            { error: InvalidSharedDirAccessError, message: L.file.errors.cannotDeleteShared },
+          ],
+          L.file.errors.deleteFailed
+        )
       }
     },
   }
@@ -86,7 +113,16 @@ export const useFileCreateDirectory = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [], "Failed to create directory.")
+        return handleError(
+          e,
+          [
+            {
+              error: PermissionDeniedError,
+              message: L.file.errors.createDirectoryPermissionDenied,
+            },
+          ],
+          L.file.errors.createDirectoryFailed
+        )
       }
     },
   }
@@ -100,7 +136,16 @@ export const useFileRename = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [], "Failed to rename file.")
+        return handleError(
+          e,
+          [
+            {
+              error: PermissionDeniedError,
+              message: L.file.errors.renamePermissionDenied,
+            },
+          ],
+          L.file.errors.renameFailed
+        )
       }
     },
   }
@@ -119,10 +164,10 @@ export const useFileCopy = () => {
           [
             {
               error: BadRequestError,
-              message: "You cannot copy a directory.",
+              message: L.file.errors.cannotCopyDirectory,
             },
           ],
-          "Failed to copy file."
+          L.file.errors.copyFailed
         )
       }
     },
@@ -137,7 +182,17 @@ export const useFileMove = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [], "Failed to move file.")
+        return handleError(
+          e,
+          [
+            {
+              error: PermissionDeniedError,
+              message: L.file.errors.movePermissionDenied,
+            },
+            { error: InvalidChatDirAccessError, message: L.file.errors.cannotMoveChat },
+          ],
+          L.file.errors.moveFailed
+        )
       }
     },
   }
@@ -171,7 +226,16 @@ export const useFileRestoreHistory = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [], "Failed to restore file history.")
+        return handleError(
+          e,
+          [
+            {
+              error: PermissionDeniedError,
+              message: L.file.errors.restoreHistoryPermissionDenied,
+            },
+          ],
+          L.file.errors.restoreHistoryFailed
+        )
       }
     },
   }

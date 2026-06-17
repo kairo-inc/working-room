@@ -8,6 +8,15 @@ import { runWithPrivateContext, runWithPublicContext } from "@wr/shared-node"
 
 import { nextAuthOptions } from "../server/auth"
 
+const isBaseErrorLike = (obj: unknown): obj is { errorCode: string; statusCode: number } => {
+  return (
+    obj != null &&
+    typeof obj === "object" &&
+    typeof (obj as { errorCode?: unknown }).errorCode === "string" &&
+    typeof (obj as { statusCode?: unknown }).statusCode === "number"
+  )
+}
+
 // Server side File polyfill to support file upload in tRPC procedures using undici's File implementation.
 if (typeof window === "undefined") {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -32,7 +41,7 @@ export type Context = Awaited<typeof createContext>
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ error, shape }) {
-    if (error.cause instanceof BaseError) {
+    if (error.cause instanceof BaseError || isBaseErrorLike(error.cause)) {
       const { name, errorCode, statusCode, message } = error.cause
       console.error(`Caught an error: [${name}](${errorCode}) - ${message}`)
       return {
