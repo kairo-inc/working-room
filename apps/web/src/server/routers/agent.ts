@@ -21,3 +21,20 @@ export const agentCreate = privateProcedure
     const service = getWebAppDiContainer().resolve<AgentService>("AgentService")
     return await service.create(input)
   })
+
+export const agentEdit = privateProcedure
+  .input(
+    z.object({
+      id: z.string(),
+      name: z.string().optional(),
+      description: z.string().optional().nullable(),
+      descriptionForAgent: z.string().optional(),
+      tier: z.enum(AiModelTierList).optional(),
+      prompt: z.string().optional(),
+      workingFolderId: z.string().optional(),
+    })
+  )
+  .mutation(async ({ input }) => {
+    const service = getWebAppDiContainer().resolve<AgentService>("AgentService")
+    await service.edit(input)
+  })

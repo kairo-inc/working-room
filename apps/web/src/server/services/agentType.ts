@@ -12,9 +12,26 @@ export type AgentServiceCreateArgs = {
   workingFolderId?: string
 }
 
+export type AgentServiceEditArgs = {
+  id: string
+  name?: string
+  description?: string | null
+  descriptionForAgent?: string
+  tier?: AiModelTier
+  prompt?: string
+  workingFolderId?: string
+}
+
+export type AgentServiceGetArgs = {
+  id: string
+}
+
 export type AgentServiceGetListArgs = PageArg<AgentSortBy>
 
 export abstract class AgentService {
   abstract create(args: AgentServiceCreateArgs): Promise<AppAgent>
+  abstract edit(args: AgentServiceEditArgs): Promise<void>
+
+  abstract get(args: AgentServiceGetArgs): Promise<AppAgent>
   abstract getList(args: AgentServiceGetListArgs): Promise<PageResult<AppAgent>>
 }

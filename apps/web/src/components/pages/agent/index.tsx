@@ -7,28 +7,26 @@ import { RectangleButton } from "../../../components/buttons/rectangleButton"
 import { BodyLayout } from "../../../components/layout/body"
 import { PageLayout } from "../../../components/layout/page"
 import { useNotification } from "../../../contexts/notification"
-import { L } from "../../../localization"
+import { Route } from "../../../route"
 import { AppAgent } from "../../../types/agent"
-import { useAgentCreateModal } from "../../modals/agentCreate"
 import { Table } from "../../table"
 
-export interface PageAgentProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface PageAgentListProps extends React.HTMLAttributes<HTMLDivElement> {
   data: PageResult<AppAgent>
 }
 
-export const PageAgent = ({ data }: PageAgentProps) => {
+export const PageAgentList = ({ data }: PageAgentListProps) => {
   const router = useRouter()
   const notify = useNotification()
-  const { show: showAgentCreateModal, modal: AgentCreateModal } = useAgentCreateModal()
 
   return (
     <PageLayout>
       <BodyLayout
         title={"Agent list"}
-        description={L.account.description}
+        description={"List of agents you have created"}
         containerClassName="gap-10"
         tail={
-          <RectangleButton icon={<Plus />} onClick={() => showAgentCreateModal({})}>
+          <RectangleButton icon={<Plus />} onClick={() => router.push(Route.agentCreation())}>
             Create
           </RectangleButton>
         }
@@ -36,11 +34,11 @@ export const PageAgent = ({ data }: PageAgentProps) => {
         <Table
           headers={["Name", "Tier", "Description"]}
           rows={data.data.map((item) => ({
+            onClick: () => router.push(Route.agent(item.id)),
             items: [item.name, item.tier, item.description ?? "-"],
           }))}
         />
       </BodyLayout>
-      {AgentCreateModal}
     </PageLayout>
   )
 }
