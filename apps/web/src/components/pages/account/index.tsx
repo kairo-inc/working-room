@@ -37,6 +37,7 @@ export const PageAccount = ({ data }: PageAccountProps) => {
             <div>{data.role}</div>
           </div>
         </Section>
+
         <Section title={L.account.signout.title}>
           <div className="grid grid-cols-[auto_1fr] gap-2 gap-x-4 text-base">
             <RectangleButton

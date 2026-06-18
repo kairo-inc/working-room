@@ -58,6 +58,7 @@ model Tenant {
   users           User[]
   accessGroups    AccessGroup[]
   fileDescriptors FileDescriptor[]
+  agents          Agent[]
 }
 
 model AccessGroup {
@@ -121,6 +122,33 @@ model User {
   accessGroups    AccessGroup[]
   fileHistories   FileHistory[]
   fileDescriptors FileDescriptor[] @relation("owner")
+  agents          Agent[]
+}
+
+model Agent {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // Agent props.
+  name                String
+  // Description to User.
+  description         String?
+  // For user-facing agent, when to choose this agent.
+  descriptionForAgent String
+  tier                String // "heavy", "medium" or "light".
+  prompt              String
+  workingFolderId     String?
+  workingFolder       FileDescriptor? @relation(fields: [workingFolderId], references: [id], onDelete: Cascade)
+
+  // The user that the agent belongs to.
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // The tenant that the agent belongs to.
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
 
 // This table will only be used if you choose to implement a local authentication system without using an AaaS provider.
@@ -241,6 +269,7 @@ model FileDescriptor {
   chats        Chat[]
   histories    FileHistory[]
   accessGroups AccessGroup[]
+  agents       Agent[]
 
   tenant   Tenant @relation(fields: [tenantId], references: [id])
   tenantId String

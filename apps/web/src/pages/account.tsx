@@ -14,8 +14,8 @@ export default function Account({ ...props }: PageAccountProps) {
 
 export const getServerSideProps = handleSsr<PageAccountProps>({
   fn: async () => {
-    const service = getWebAppDiContainer().resolve<UserService>("UserService")
-    const data = await service.getMySetting()
+    const userService = getWebAppDiContainer().resolve<UserService>("UserService")
+    const data = await userService.getMySetting()
     return { props: { data } }
   },
 })
