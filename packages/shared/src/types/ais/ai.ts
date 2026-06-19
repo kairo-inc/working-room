@@ -3,7 +3,8 @@ import { OpenAIChatModelId } from "@ai-sdk/openai/internal"
 
 import { MimeType } from "../common"
 
-export type AiModelTier = "light" | "medium" | "heavy"
+export const AiModelTierList = ["light", "medium", "heavy"] as const
+export type AiModelTier = (typeof AiModelTierList)[number]
 
 // Ref: https://developers.openai.com/api/docs/pricing
 export type AiModelOpenAI = Extract<

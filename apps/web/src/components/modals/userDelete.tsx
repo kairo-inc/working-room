@@ -8,10 +8,6 @@ import { AppUser } from "../../types/user"
 import { RectangleButton } from "../buttons/rectangleButton"
 import { Modal, ModalBaseArgs, ModalProps, useModal } from "./modal"
 
-type FormType = {
-  name: string
-}
-
 type Args = ModalBaseArgs & {
   data: Pick<AppUser, "id" | "name" | "email">
 }

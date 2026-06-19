@@ -1,4 +1,5 @@
 export * from "./accessGroup"
+export * from "./agent"
 export * from "./chat"
 export * from "./consumedToken"
 export * from "./fileDescriptor"

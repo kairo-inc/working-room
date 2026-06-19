@@ -106,7 +106,7 @@ export class TenantServiceImpl extends TenantService {
               isPersonal: true,
               tenant: { connect: { id: tenantId } },
               resources: {
-                connect: [{ id: sharedDir.id }, { id: newUserPrivateDir.id }],
+                connect: [{ id: newUserPrivateDir.id }],
               },
             },
           },

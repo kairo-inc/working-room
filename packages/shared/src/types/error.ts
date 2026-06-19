@@ -46,6 +46,11 @@ export class BadRequestError extends BaseError {
   public errorCode = "BAD_REQUEST"
 }
 
+export class InvalidRootDirAccessError extends BaseError {
+  public statusCode = 400
+  public errorCode = "INVALID_ROOT_DIR_ACCESS"
+}
+
 export class InvalidChatDirAccessError extends BaseError {
   public statusCode = 400
   public errorCode = "INVALID_CHAT_DIR_ACCESS"

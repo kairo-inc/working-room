@@ -37,7 +37,7 @@ export const SelectForm = forwardRef<HTMLSelectElement, SelectFormProps>(
     }
 
     return (
-      <div className="inline-flex flex-col gap-1">
+      <div className="inline-flex w-full flex-col gap-1">
         <label htmlFor={formName} className="text-sm">
           {label}
         </label>

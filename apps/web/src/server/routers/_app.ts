@@ -1,5 +1,6 @@
 import { router } from "../trpc"
 import * as accessGroup from "./accessGroup"
+import * as agent from "./agent"
 import * as auth from "./auth"
 import * as chat from "./chat"
 import * as file from "./file"
@@ -12,6 +13,7 @@ export const appRouter = router({
   ...user,
   ...tenant,
   ...file,
+  ...agent,
   ...accessGroup,
 })
 

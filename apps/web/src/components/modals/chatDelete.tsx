@@ -1,15 +1,14 @@
 import { useRouter } from "next/router"
 
-import { EntityFileDescriptor } from "@wr/db"
-
 import { useNotification } from "../../contexts/notification"
 import { useChatDelete } from "../../hooks/trpc/chat"
 import { L } from "../../localization"
+import { AppFileDescriptor } from "../../types/file"
 import { RectangleButton } from "../buttons/rectangleButton"
 import { Modal, ModalBaseArgs, ModalProps, useModal } from "./modal"
 
 type Args = ModalBaseArgs & {
-  data: Pick<EntityFileDescriptor, "id">
+  data: Pick<AppFileDescriptor, "id">
 }
 
 type ChatDeleteModalProps = ModalProps & Args

@@ -441,4 +441,23 @@ describe("[Failure] FileAccessService", () => {
       await expect(listResult).rejects.toThrow(PermissionDeniedError)
     })
   })
+
+  it("Can not access other user's private directory even if user has access policy to ancestor folder", async () => {
+    await runWithDiContainer(testContainer, async () => {
+      const fileAccessService = testContainer.resolve<FileAccessService>("FileAccessService")
+      const dirList = await runWithPrivateContext({ idToken: testIdToken }, async () => {
+        return await fileAccessService.list({ descId: testRootDirId })
+      })
+
+      // Check directory list does not contain other user's private directory.
+      const ownPrivateDir = dirList.data.find((desc) => desc.id === testPrivateUserRootDirId)
+      expect(ownPrivateDir).toBeDefined()
+
+      const sharedDir = dirList.data.find((desc) => desc.id === testSharedRootDirId)
+      expect(sharedDir).toBeDefined()
+
+      const otherUserPrivateDir = dirList.data.find((desc) => desc.id === testPrivateOtherUserRootDirId)
+      expect(otherUserPrivateDir).toBeUndefined()
+    })
+  })
 })

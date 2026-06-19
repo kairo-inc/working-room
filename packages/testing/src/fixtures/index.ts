@@ -146,27 +146,39 @@ export const createTestPrismaClient = async (options?: { withoutFixtures?: boole
     data: {
       id: testUserId,
       email: testUserEmail,
-      role: "admin",
+      role: "owner",
       sub: testUserSub,
       name: "Test User",
       tenant: { connect: { id: tenant.id } },
       accessGroups: {
-        create: {
-          name: `${testUserEmail.split("@")[0]}'s personal access group`,
-          read: true,
-          write: true,
-          isPersonal: true,
-          tenant: { connect: { id: tenant.id } },
-          resources: {
-            connect: [{ id: sharedRootDir.id }, { id: privateUserRootDir.id }],
+        create: [
+          {
+            name: `${testUserEmail.split("@")[0]}'s personal access group`,
+            read: true,
+            write: true,
+            isPersonal: true,
+            tenant: { connect: { id: tenant.id } },
+            resources: {
+              connect: { id: privateUserRootDir.id },
+            },
           },
-        },
+          {
+            name: `Owner access group`,
+            read: true,
+            write: true,
+            isPersonal: false,
+            tenant: { connect: { id: tenant.id } },
+            resources: {
+              connect: { id: rootDir.id },
+            },
+          },
+        ],
       },
       privateDir: {
         connect: { id: testPrivateUserRootDirId },
       },
       fileDescriptors: {
-        connect: [{ id: testPrivateUserRootDirId }],
+        connect: { id: testPrivateUserRootDirId },
       },
     },
   })
@@ -184,7 +196,7 @@ export const createTestPrismaClient = async (options?: { withoutFixtures?: boole
         connect: { id: testPrivateOtherUserRootDirId },
       },
       fileDescriptors: {
-        connect: [{ id: testPrivateOtherUserRootDirId }],
+        connect: { id: testPrivateOtherUserRootDirId },
       },
       accessGroups: {
         create: {
@@ -194,7 +206,7 @@ export const createTestPrismaClient = async (options?: { withoutFixtures?: boole
           isPersonal: true,
           tenant: { connect: { id: tenant.id } },
           resources: {
-            connect: [{ id: sharedRootDir.id }, { id: privateOtherUserRootDir.id }],
+            connect: { id: privateOtherUserRootDir.id },
           },
         },
       },

@@ -35,7 +35,7 @@ export const TextForm = forwardRef<HTMLInputElement, TextFormProps>(
       variant = "disabled"
     }
     return (
-      <div className="inline-flex flex-col gap-1">
+      <div className="inline-flex w-full flex-col gap-1">
         <label htmlFor={formName} className="text-sm">
           {label}
         </label>

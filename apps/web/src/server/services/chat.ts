@@ -10,6 +10,7 @@ import {
   buildChatStateToDomain,
 } from "@wr/core"
 import {
+  AgentSource,
   ChatSource,
   ConsumedTokenSource,
   EntityFileDescriptor,
@@ -22,6 +23,7 @@ import {
   mapMessageEntityToDomain,
 } from "@wr/db"
 import {
+  AiModelTier,
   AiWorkingFolder,
   BadRequestError,
   BaseError,
@@ -50,19 +52,6 @@ import {
   ChatServiceRunSingleLoopArg,
 } from "./chatType"
 
-// NOTE: Additional agents can be registered by providing them in the AdditionalAgents injection token.
-// This allows for dynamic extension of the agent catalog without modifying the core codebase.
-const exampleAdditionalAgent: AgentProps = {
-  name: "company-rule-agent",
-  defaultTier: "medium",
-  description:
-    "An agent that provides information about company rules and policies. It takes user questions about company rules and provides answers based on the company's policy documents. It can call tools to retrieve specific policy documents if needed, but its main focus is to provide accurate and helpful information about company rules.",
-  prompt: `You are a company rule agent. Your task is to provide information about company rules and policies based on user questions.
-You can call tools to retrieve specific policy documents if needed, but your main focus is to provide accurate and helpful information about company rules.
-Always try to understand the user's question clearly and provide relevant information that helps them understand the company's policies.
-`,
-}
-
 @injectable()
 export class ChatServiceImpl extends ChatService {
   constructor(
@@ -70,7 +59,8 @@ export class ChatServiceImpl extends ChatService {
     @inject("FileDescriptorSource") private fileDescriptorSource: FileDescriptorSource,
     @inject("MessageSource") private messageSource: MessageSource,
     @inject("ConsumedTokenSource") private consumedTokenSource: ConsumedTokenSource,
-    @inject("ChatSource") private chatSource: ChatSource
+    @inject("ChatSource") private chatSource: ChatSource,
+    @inject("AgentSource") private agentSource: AgentSource
   ) {
     super()
   }
@@ -174,6 +164,25 @@ export class ChatServiceImpl extends ChatService {
     return domainMessages
   }
 
+  private async buildAgentProps(): Promise<AgentProps[]> {
+    const { userId } = getPrivateContext()
+    const agents = await this.agentSource.findAll("EntityAgent", { where: { userId } })
+    const agentProps: AgentProps[] = await Promise.all(
+      agents.map(
+        async (agent) =>
+          ({
+            name: agent.name,
+            defaultTier: agent.tier as AiModelTier,
+            description: agent.descriptionForAgent,
+            prompt: agent.prompt,
+            isUserFacing: false,
+            workingFolder: agent.workingFolder ? await this.buildWorkingFolder({ folderId: agent.workingFolder.id }) : undefined,
+          }) satisfies AgentProps
+      )
+    )
+    return agentProps
+  }
+
   async runSingleLoop(args: ChatServiceRunSingleLoopArg): Promise<AsyncGenerator<AppStreamEvent>> {
     const { id, message, approvals, resources } = args
     const { userId } = getPrivateContext()
@@ -262,11 +271,10 @@ export class ChatServiceImpl extends ChatService {
     }
     eventBus.register(onEvent)
 
+    const userAgents = await this.buildAgentProps()
     const engine = await this.resolver.resolveEngine({
       eventBus,
-      agents: [
-        // exampleAdditionalAgent,
-      ],
+      agents: [...userAgents],
       tierOverrides: {
         // NOTE: The tier overrides are just an example of how to provide custom configuration for the chat engine.
         // You can adjust or remove it as needed based on your specific requirements.
