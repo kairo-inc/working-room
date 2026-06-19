@@ -2,10 +2,103 @@
 title: AI Agent
 sidebar_position: 5
 custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/user-guide/ai-agent.mdx"
-draft: true
 ---
 
 # AI Agent
 
-WorkingRoom provides a file system abstraction that allows you to manage files and directories in a way that is independent of the underlying storage mechanism.
-This means you can use the same API to interact with files whether they are stored locally, in the cloud, or in any other storage system.
+An Agent is a reusable, pre-configured AI assistant that you define once and use repeatedly across Chats.
+Unlike a plain Chat — where you configure each conversation from scratch — an Agent carries a persistent system prompt and a fixed model tier, so every Chat started with that Agent inherits the same behavior.
+
+Use Agents when you want a consistent AI persona for a specific task: a code reviewer, a document summarizer, a customer-support helper, and so on.
+
+## Concepts
+
+### Model Tier
+
+Each Agent is assigned a **Model Tier** that determines which underlying AI model handles requests.
+
+| Tier     | Characteristics                                              |
+| -------- | ------------------------------------------------------------ |
+| `light`  | Fastest and most cost-efficient. Suited for simple tasks.   |
+| `medium` | Balanced speed and capability. A good default for most use cases. |
+| `heavy`  | Most capable model. Best for complex reasoning tasks.        |
+
+The exact model mapped to each tier depends on the AI provider configured by your administrator.
+
+### Working Folder
+
+A Working Folder is an optional directory in the WorkingRoom file system that you associate with an Agent.
+When a Chat uses an Agent with a Working Folder, the Agent automatically has visibility into the files stored under that directory, without requiring the user to attach them manually each time.
+
+See [File System](./file-system) and [File Access Control](./access-control) for details on how file access is governed.
+
+### Description for Agent
+
+**Description for Agent** is an internal field that is passed directly to the AI model as context about the Agent itself.
+Think of it as the Agent's self-description: write it in the form of instructions the model should understand, not a human-readable summary.
+
+This is separate from **Description**, which is a human-readable note shown in the Agent list for your own reference.
+
+### System Prompt
+
+The **System Prompt** defines the Agent's behavior, persona, and constraints.
+It is injected at the start of every Chat that uses this Agent, before any user message.
+
+Example:
+
+```
+You are a senior software engineer specializing in TypeScript and React.
+Review code changes and provide concise, actionable feedback.
+Focus on correctness, readability, and maintainability.
+Avoid suggesting style changes unless they affect readability significantly.
+```
+
+## Viewing the Agent list
+
+Click **Agents** in the sidebar to open the Agent list.
+The list shows the name, model tier, and description of each Agent you have created.
+
+## Creating an Agent
+
+1. Open the Agent list and click **Create**.
+2. Fill in the Agent Descriptions section:
+
+   | Field             | Required | Description                                                    |
+   | ----------------- | :------: | -------------------------------------------------------------- |
+   | **Name**          | ✅       | Display name shown in the Agent list. Maximum 50 characters.   |
+   | **Model Tier**    | ✅       | The AI model tier to use (`light`, `medium`, or `heavy`).      |
+   | **Working Folder**| —        | An optional directory the Agent reads from by default.         |
+   | **Description**   | —        | A human-readable note for your own reference. Maximum 200 characters. |
+
+3. Fill in the Prompt section:
+
+   | Field                      | Required | Description                                                     |
+   | -------------------------- | :------: | --------------------------------------------------------------- |
+   | **Description for Agent**  | ✅       | Context passed to the AI model about this Agent's identity.     |
+   | **System Prompt**          | ✅       | Instructions that define the Agent's behavior in every Chat.    |
+
+4. Click **Create Agent**.
+
+After creation, you are redirected to the Agent list.
+
+## Viewing Agent details
+
+Click any row in the Agent list to open the Agent detail page.
+The detail page shows all fields including the full Description for Agent and System Prompt.
+
+## Editing an Agent
+
+Open the Agent detail page and click **Edit**.
+All fields can be updated, including the Working Folder assignment.
+To remove a Working Folder, clear the field and save.
+
+## Deleting an Agent
+
+Right-click an Agent row in the Agent list to open the context menu, then select **Delete**.
+Deleted Agents cannot be recovered.
+
+:::note
+
+Deleting an Agent does not delete any files in the Working Folder or any Chats that were previously started with that Agent.
+
+:::
