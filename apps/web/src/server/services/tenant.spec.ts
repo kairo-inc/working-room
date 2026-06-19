@@ -8,7 +8,6 @@ import {
   createTestConfigWithTmpFolder,
   createTestPrismaClient,
   testNotExistUserEmail,
-  testSharedRootDirId,
   testUserEmail,
   testUserIdTokenAdmin,
 } from "@wr/testing"
@@ -49,7 +48,7 @@ describe("[Success] TenantService", async () => {
       const file = await prismaClient.fileDescriptor.findFirst({ where: { ownerId: user!.id } })
       expect(file).not.toBeNull()
 
-      // Role has property to access the created file and shared root directory.
+      // Role has property to access the created file directory.
       const accessGroup = await prismaClient.accessGroup.findFirst({
         where: { users: { some: { id: user!.id } } },
         include: { resources: true },
@@ -57,7 +56,6 @@ describe("[Success] TenantService", async () => {
       expect(accessGroup).not.toBeNull()
       expect(accessGroup?.isPersonal).toBe(true)
       expect(accessGroup?.resources.find((r) => r.id === file!.id)).not.toBeUndefined()
-      expect(accessGroup?.resources.find((r) => r.id === testSharedRootDirId)).not.toBeUndefined()
     })
   })
 })

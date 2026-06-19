@@ -78,12 +78,14 @@ export class FileAccessServiceImpl extends FileAccessService {
   ): Promise<{
     isAncestorOfAllowedFolder: boolean
     hasAllowedPolicy: boolean
+    isUnderOtherUserPrivate: boolean
   }> {
     // Access rules.
     // 1. If a user has a read or write access policy to the folder A, it means the user can read all the ancestors of the folder A and all the files and folders under the folder A.
     // 2. If a user has a write access policy to the folder A, it means the user can read all the ancestors of the folder A and can write all the files and folders under the folder A.
     // 3. If a user has a write access policy to the folder A, user can write the folder A like renaming, moving, deleting, and creating new file/folder under the folder A.
     // 4. If a user has a read or write access policy to the folder A, user can not read folders that are not ancestors of the folder A and files/folders that are not under the folder A.
+    // 5. User can not access other user's private directory in any case, even if the user has access policy to the folder A which is ancestor of other user's private directory.
 
     const { userId } = this.fileAccessContext
     const desc = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
@@ -96,6 +98,13 @@ export class FileAccessServiceImpl extends FileAccessService {
         users: { some: { id: userId } },
         resources: { some: { id: { in: pathIdList } } },
         ...(requiredPermission === "write" ? { write: true } : { OR: [{ read: true }, { write: true }] }),
+      },
+    })
+
+    const isUnderOtherUserPrivate = await this.fileDescriptorSource.exists({
+      where: {
+        id: { in: pathIdList },
+        OR: [{ privateRootOf: { id: { not: userId } } }],
       },
     })
 
@@ -112,16 +121,21 @@ export class FileAccessServiceImpl extends FileAccessService {
         },
       },
     })
-    return { isAncestorOfAllowedFolder, hasAllowedPolicy: policies }
+    return { isAncestorOfAllowedFolder, hasAllowedPolicy: policies, isUnderOtherUserPrivate }
   }
 
   // White list based access restriction. If the user doesn't have access to the file, throw an error.
   async checkAccessPolicyAndThrow(descId: string, requiredPermission: "read" | "write"): Promise<void> {
-    const { isAncestorOfAllowedFolder, hasAllowedPolicy } = await this.checkAccessPolicy(descId, requiredPermission)
+    const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(
+      descId,
+      requiredPermission
+    )
 
     // Check descId is ancestor of any policies.
     // Only allowd to read folders that are ancestors of the folder that user has access to.
     if (!(isAncestorOfAllowedFolder && requiredPermission === "read") && !hasAllowedPolicy) {
+      throw new PermissionDeniedError("You don't have access to this file")
+    } else if (isUnderOtherUserPrivate) {
       throw new PermissionDeniedError("You don't have access to this file")
     }
   }
@@ -604,14 +618,14 @@ export class FileAccessServiceImpl extends FileAccessService {
 
   async list(arg: FileAccessServiceListArg): Promise<PageResult<DomainFileDescriptor>> {
     const { descId, maxDepth = 0, maxItems = 100, sortBy, sortDirection } = arg
-    const { isAncestorOfAllowedFolder, hasAllowedPolicy } = await this.checkAccessPolicy(descId, "read")
+    const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
 
     const dir = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
     if (!dir.isDirectory) {
       throw new BadRequestError(`Not a directory: ${descId}`)
-    }
-
-    if (!hasAllowedPolicy && !isAncestorOfAllowedFolder) {
+    } else if (!hasAllowedPolicy && !isAncestorOfAllowedFolder) {
+      throw new PermissionDeniedError("You don't have access to this folder")
+    } else if (isUnderOtherUserPrivate) {
       throw new PermissionDeniedError("You don't have access to this folder")
     }
 
@@ -632,14 +646,26 @@ export class FileAccessServiceImpl extends FileAccessService {
     if (collected.length >= maxItems) return
 
     const { userId } = this.fileAccessContext
-    const { isAncestorOfAllowedFolder, hasAllowedPolicy } = await this.checkAccessPolicy(descId, "read")
+    const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
     const remaining = maxItems - collected.length
 
     let children: DomainFileDescriptor[]
+    const otherUserPrivateDirIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
+      where: {
+        privateRootOf: { id: { not: userId } },
+      },
+    })
 
     if (hasAllowedPolicy) {
       const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
-        where: { parentId: descId },
+        where: {
+          parentId: descId,
+          // Filter out files that are under other user's private directories
+          AND:
+            otherUserPrivateDirIds.length > 0
+              ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
+              : undefined,
+        },
         take: remaining,
         ...sort,
       })
@@ -656,12 +682,24 @@ export class FileAccessServiceImpl extends FileAccessService {
         },
       })
       const visibleFolderIds = visiblePolicies.flatMap((policy) => policy.resources.map((res) => res.id))
+
       const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
-        where: { parentId: descId, id: { in: visibleFolderIds } },
+        where: {
+          parentId: descId,
+          id: { in: visibleFolderIds },
+          // Filter out files that are under other user's private directories
+          AND:
+            otherUserPrivateDirIds.length > 0
+              ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
+              : undefined,
+        },
         take: remaining,
         ...sort,
       })
       children = data.map(mapFileDescriptorEntityToDomain)
+    } else if (isUnderOtherUserPrivate) {
+      // Nothing to show.
+      return
     } else {
       return
     }
@@ -851,11 +889,18 @@ export class FileAccessServiceImpl extends FileAccessService {
     const { blobDir } = this.coreConfig
     const blobHashList = await this.blobStore.findByText(text, blobDir, { maxResults })
 
+    // Get accessible folders for the user
     const policies = await this.accessGroupSource.findAll("EntityAccessGroup", {
       where: {
         users: {
           some: { id: userId },
         },
+      },
+    })
+
+    const otherUserPrivateDirIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
+      where: {
+        privateRootOf: { id: { not: userId } },
       },
     })
 
@@ -866,6 +911,9 @@ export class FileAccessServiceImpl extends FileAccessService {
       where: {
         OR: uniquePathIdList.map((pathId) => ({ pathIds: { contains: pathId } })),
         blobHash: { in: blobHashList },
+        // Filter out files that are under other user's private directories
+        AND:
+          otherUserPrivateDirIds.length > 0 ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } })) : undefined,
       },
       take: maxResults,
     })

@@ -67,12 +67,12 @@ export class AuthServiceImpl extends AuthService {
 
       // Execute folder creation as a temporary user.
       const tmpJwt = encodeJwt({ email, userId, tenantId, role: "owner" }, randomId())
-      const [sharedDir, privateDir] = await runWithPrivateContext({ idToken: tmpJwt }, async () => {
+      const [rootDir, _, privateDir] = await runWithPrivateContext({ idToken: tmpJwt }, async () => {
         const fileService = await this.resolver.resolveFileService()
-        await fileService.ensureRootDir()
+        const rootDir = await fileService.ensureRootDir()
         const shared = await fileService.ensureSharedRootDir()
         const privateDir = await fileService.ensurePrivateDir()
-        return [shared, privateDir]
+        return [rootDir, shared, privateDir]
       })
 
       await this.userSource.create({
@@ -86,17 +86,30 @@ export class AuthServiceImpl extends AuthService {
           // Other members in the same tenant will be invited by the owner after the signup.
           role: "owner",
           accessGroups: {
-            create: {
-              name: `${name}'s personal access group`,
-              description: `Personal access group for user ${name}`,
-              read: true,
-              write: true,
-              isPersonal: true,
-              tenant: { connect: { id: tenantId } },
-              resources: {
-                connect: [{ id: sharedDir.id }, { id: privateDir.id }],
+            create: [
+              {
+                name: `Owner access group`,
+                description: `Access group for tenant owners`,
+                read: true,
+                write: true,
+                isPersonal: false,
+                tenant: { connect: { id: tenantId } },
+                resources: {
+                  connect: { id: rootDir.id },
+                },
               },
-            },
+              {
+                name: `${name}'s personal access group`,
+                description: `Personal access group for user ${name}`,
+                read: true,
+                write: true,
+                isPersonal: true,
+                tenant: { connect: { id: tenantId } },
+                resources: {
+                  connect: { id: privateDir.id },
+                },
+              },
+            ],
           },
           privateDir: { connect: { id: privateDir.id } },
           // Connect to the owner column.
