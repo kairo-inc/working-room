@@ -42,4 +42,5 @@ export class EntityFileDescriptor implements _EntityFileDescriptor {
   } as const satisfies Prisma.FileDescriptorSelect
 }
 
-export type FileDescriptorSortBy = "id" | "name" | "birthtime" | "mtime" | "size" | "createdAt" | "updatedAt"
+export const FileDescriptorSortByList = ["id", "name", "birthtime", "mtime", "size", "createdAt", "updatedAt"] as const
+export type FileDescriptorSortBy = (typeof FileDescriptorSortByList)[number]

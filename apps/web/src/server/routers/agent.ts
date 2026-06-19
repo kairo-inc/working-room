@@ -31,10 +31,15 @@ export const agentEdit = privateProcedure
       descriptionForAgent: z.string().optional(),
       tier: z.enum(AiModelTierList).optional(),
       prompt: z.string().optional(),
-      workingFolderId: z.string().optional(),
+      workingFolderId: z.string().optional().nullish(),
     })
   )
   .mutation(async ({ input }) => {
     const service = getWebAppDiContainer().resolve<AgentService>("AgentService")
     await service.edit(input)
   })
+
+export const agentDelete = privateProcedure.input(z.object({ id: z.string() })).mutation(async ({ input }) => {
+  const service = getWebAppDiContainer().resolve<AgentService>("AgentService")
+  await service.delete({ id: input.id })
+})

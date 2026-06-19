@@ -1,7 +1,7 @@
 import { Agent, Prisma } from "@prisma/client"
 
 // EntityAgent.
-export class EntityAgent implements Omit<Agent, "deletedAt" | "tenantId" | "userId"> {
+export class EntityAgent implements Omit<Agent, "deletedAt" | "tenantId" | "userId" | "workingFolderId"> {
   id: string
   createdAt: Date
   updatedAt: Date
@@ -10,7 +10,12 @@ export class EntityAgent implements Omit<Agent, "deletedAt" | "tenantId" | "user
   descriptionForAgent: string
   tier: string
   prompt: string
-  workingFolderId: string | null
+  workingFolder: {
+    id: string
+    name: string
+    mimeType: string
+    parentId?: string | null
+  } | null
 
   static select = {
     id: true,
@@ -21,7 +26,14 @@ export class EntityAgent implements Omit<Agent, "deletedAt" | "tenantId" | "user
     descriptionForAgent: true,
     tier: true,
     prompt: true,
-    workingFolderId: true,
+    workingFolder: {
+      select: {
+        id: true,
+        name: true,
+        mimeType: true,
+        parentId: true,
+      },
+    },
   } as const satisfies Prisma.AgentSelect
 }
 

@@ -1,4 +1,4 @@
-import { AiModelTier } from "@wr/shared"
+import { AiModelTier, MimeType } from "@wr/shared"
 
 export type AppAgent = {
   id: string
@@ -7,5 +7,10 @@ export type AppAgent = {
   descriptionForAgent: string
   tier: AiModelTier
   prompt: string
-  workingFolderId?: string
+  workingFolder?: {
+    id: string
+    name: string
+    mimeType: MimeType
+    parentId?: string
+  }
 }

@@ -1,27 +1,32 @@
+import { Blend } from "lucide-react"
 import { useRouter } from "next/router"
 
 import { useNotification } from "../../contexts/notification"
-import { useChatDelete } from "../../hooks/trpc/chat"
+import { useAgentDelete } from "../../hooks/trpc/agent"
 import { L } from "../../localization"
-import { AppFileDescriptor } from "../../types/file"
+import { AppAgent } from "../../types/agent"
 import { RectangleButton } from "../buttons/rectangleButton"
 import { Modal, ModalBaseArgs, ModalProps, useModal } from "./modal"
 
 type Args = ModalBaseArgs & {
-  data: Pick<AppFileDescriptor, "id">
+  data: Pick<AppAgent, "id" | "name">
 }
 
-type ChatDeleteModalProps = ModalProps & Args
+type AgentDeleteModalProps = ModalProps & Args
 
-export const ChatDeleteModal = ({ show, onClose, data, onReject, onResolve }: ChatDeleteModalProps) => {
+export const AgentDeleteModal = ({ show, onClose, data, onReject, onResolve }: AgentDeleteModalProps) => {
   const router = useRouter()
   const notify = useNotification()
-  const { mutateAsync: deleteChat, isPending } = useChatDelete()
+  const { mutateAsync: deleteAgent, isPending } = useAgentDelete()
+
   return (
-    <Modal show={show} onClose={onClose} title={L.modal.chatDelete.title}>
+    <Modal show={show} onClose={onClose} title={L.modal.agentDelete.title}>
       <div className="mt-4 text-sm">
-        {L.modal.chatDelete.confirm}
-        <br />
+        {L.modal.agentDelete.confirm.replace("{0}", data.name)}
+        <div className="bg-muted my-2 flex items-center gap-2 truncate rounded-md px-3 py-2">
+          <Blend />
+          {data.name}
+        </div>
         {L.common.cannotBeUndone}
         <div className="mt-6 flex justify-end gap-4">
           <RectangleButton
@@ -29,12 +34,12 @@ export const ChatDeleteModal = ({ show, onClose, data, onReject, onResolve }: Ch
             variant="destructive"
             onClick={async () => {
               try {
-                await deleteChat({ id: data.id })
+                await deleteAgent({ id: data.id })
                 onClose?.()
                 router.replace(router.asPath)
                 onResolve?.()
-              } catch (e) {
-                notify.error(L.modal.chatDelete.error, e.message)
+              } catch (error) {
+                notify.error(L.modal.agentDelete.failed, error.message)
                 onReject?.()
               }
             }}
@@ -50,6 +55,6 @@ export const ChatDeleteModal = ({ show, onClose, data, onReject, onResolve }: Ch
   )
 }
 
-export const useChatDeleteModal = () => {
-  return useModal<Args>(ChatDeleteModal)
+export const useAgentDeleteModal = () => {
+  return useModal<Args>(AgentDeleteModal)
 }

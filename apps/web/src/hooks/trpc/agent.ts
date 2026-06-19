@@ -28,3 +28,17 @@ export const useAgentEdit = () => {
     },
   }
 }
+
+export const useAgentDelete = () => {
+  const { mutateAsync, mutate: _, ...rest } = trpc.agentDelete.useMutation()
+  return {
+    ...rest,
+    mutateAsync: async (...args: Parameters<typeof mutateAsync>) => {
+      try {
+        return await mutateAsync(...args)
+      } catch (e) {
+        return handleError(e, [], "Failed to delete agent.")
+      }
+    },
+  }
+}

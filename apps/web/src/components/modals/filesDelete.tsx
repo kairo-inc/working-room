@@ -1,16 +1,15 @@
 import { useRouter } from "next/router"
 
-import { DomainFileDescriptor } from "@wr/shared"
-
 import { useNotification } from "../../contexts/notification"
 import { useFileDeleteMany } from "../../hooks/trpc/file"
 import { L } from "../../localization"
+import { AppFileDescriptor } from "../../types/file"
 import { RectangleButton } from "../buttons/rectangleButton"
 import { FileIconSm } from "../file/item"
 import { Modal, ModalBaseArgs, ModalProps, useModal } from "./modal"
 
 type Args = ModalBaseArgs & {
-  data: Pick<DomainFileDescriptor, "id" | "name" | "mimeType">[]
+  data: Pick<AppFileDescriptor, "id" | "name" | "mimeType">[]
 }
 
 type FilesDeleteModalProps = ModalProps & Args

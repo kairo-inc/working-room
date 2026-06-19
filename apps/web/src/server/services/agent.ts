@@ -6,7 +6,14 @@ import { getPrivateContext } from "@wr/shared-node"
 
 import { mapAgentEntityToApp } from "../../map/agent"
 import { AppAgent } from "../../types/agent"
-import { AgentService, AgentServiceCreateArgs, AgentServiceEditArgs, AgentServiceGetArgs, AgentServiceGetListArgs } from "./agentType"
+import {
+  AgentService,
+  AgentServiceCreateArgs,
+  AgentServiceDeleteArgs,
+  AgentServiceEditArgs,
+  AgentServiceGetArgs,
+  AgentServiceGetListArgs,
+} from "./agentType"
 
 @injectable()
 export class AgentServiceImpl extends AgentService {
@@ -34,16 +41,32 @@ export class AgentServiceImpl extends AgentService {
 
   async edit(args: AgentServiceEditArgs): Promise<void> {
     const { id, name, description, descriptionForAgent, tier, prompt, workingFolderId } = args
+
+    const updateData: Parameters<typeof this.agentSource.update>[0]["data"] = {
+      name,
+      tier,
+      descriptionForAgent,
+      prompt,
+    }
+
+    if (description !== undefined) {
+      updateData.description = description ?? null
+    }
+    if (workingFolderId !== undefined) {
+      updateData.workingFolder = workingFolderId ? { connect: { id: workingFolderId } } : { disconnect: true }
+    }
+
     await this.agentSource.update({
       where: { id },
-      data: {
-        name,
-        description: description === undefined ? undefined : (description ?? null),
-        descriptionForAgent,
-        tier,
-        prompt,
-        workingFolder: workingFolderId === undefined ? undefined : { connect: { id: workingFolderId } },
-      },
+      data: updateData,
+    })
+  }
+
+  async delete(args: AgentServiceDeleteArgs): Promise<void> {
+    const { id } = args
+    await this.agentSource.delete({
+      where: { id },
+      physically: false,
     })
   }
 

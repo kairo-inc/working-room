@@ -48,7 +48,12 @@ export const SideMenu = () => {
             variant={getVariant([Route.chat(), Route.home()])}
             href={Route.home()}
           />
-          <SideMenuButton label={"Agents"} icon={<Blend size={size} />} variant={getVariant([Route.agent()])} href={Route.agent()} />
+          <SideMenuButton
+            label={L.sidemenu.agents}
+            icon={<Blend size={size} />}
+            variant={getVariant([Route.agent()])}
+            href={Route.agent()}
+          />
           <SideMenuButton
             label={L.sidemenu.folder}
             icon={<Folder size={size} />}

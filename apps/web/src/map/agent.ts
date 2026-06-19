@@ -1,5 +1,5 @@
 import { EntityAgent } from "@wr/db"
-import { AiModelTier } from "@wr/shared"
+import { AiModelTier, MimeType } from "@wr/shared"
 
 import { AppAgent } from "../types/agent"
 
@@ -11,6 +11,13 @@ export const mapAgentEntityToApp = (agent: EntityAgent): AppAgent => {
     descriptionForAgent: agent.descriptionForAgent,
     tier: agent.tier as AiModelTier,
     prompt: agent.prompt,
-    workingFolderId: agent.workingFolderId ?? undefined,
+    workingFolder: agent.workingFolder
+      ? {
+          id: agent.workingFolder.id,
+          name: agent.workingFolder.name,
+          mimeType: agent.workingFolder.mimeType as MimeType,
+          parentId: agent.workingFolder.parentId ?? undefined,
+        }
+      : undefined,
   }
 }

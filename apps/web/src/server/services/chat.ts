@@ -176,7 +176,7 @@ export class ChatServiceImpl extends ChatService {
             description: agent.descriptionForAgent,
             prompt: agent.prompt,
             isUserFacing: false,
-            workingFolder: agent.workingFolderId ? await this.buildWorkingFolder({ folderId: agent.workingFolderId }) : undefined,
+            workingFolder: agent.workingFolder ? await this.buildWorkingFolder({ folderId: agent.workingFolder.id }) : undefined,
           }) satisfies AgentProps
       )
     )

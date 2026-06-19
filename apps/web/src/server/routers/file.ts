@@ -1,7 +1,7 @@
 import z from "zod"
 import { zfd } from "zod-form-data"
 
-import { FileHistorySortByList } from "@wr/db"
+import { FileDescriptorSortByList, FileHistorySortByList } from "@wr/db"
 import { SortDirectionList } from "@wr/shared"
 
 import { getWebAppDiContainer } from "../container"
@@ -51,6 +51,34 @@ export const fileGet = privateProcedure.input(z.object({ id: z.string() })).quer
   const service = await resolver.resolveFileService()
   const { id } = input
   return await service.get({ id })
+})
+
+export const fileGetList = privateProcedure
+  .input(
+    z.object({
+      parentId: z.string().optional(),
+      cursor: z.number().optional(),
+      sortBy: z.enum(FileDescriptorSortByList).optional(),
+      sortDirection: z.enum(SortDirectionList).optional(),
+    })
+  )
+  .query(async ({ input }) => {
+    const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
+    const service = await resolver.resolveFileService()
+    const { parentId, cursor, ...rest } = input
+    if (!parentId) {
+      const root = await service.ensureRootDir()
+      return await service.getFilesInFolder({ id: root.id, page: cursor, ...rest })
+    } else {
+      return await service.getFilesInFolder({ id: parentId, page: cursor, ...rest })
+    }
+  })
+
+export const fileGetParentOrRoot = privateProcedure.input(z.object({ id: z.string().optional() })).query(async ({ input }) => {
+  const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
+  const service = await resolver.resolveFileService()
+  const { id } = input
+  return await service.getParentOrRoot({ id })
 })
 
 export const fileDeleteMany = privateProcedure.input(z.object({ ids: z.array(z.string()) })).mutation(async ({ input }) => {
