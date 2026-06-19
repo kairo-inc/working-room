@@ -4,6 +4,37 @@ All notable changes to WorkingRoom will be documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] - 2026-06-19
+
+### Added
+
+#### AI Agent System
+
+- Added Agent management: users can now create, view, edit, and delete reusable Agents with a name, model tier, system prompt, and optional working folder.
+- Added sub-agent spawning: the Coordinator Agent can delegate work to user-defined Agents based on the task.
+
+### Changed
+
+#### File Management
+
+- Improved user-facing error messages for file operations to provide clearer, actionable feedback.
+
+### Fixed
+
+#### Access Control
+
+- Fixed an issue where invited users' personal access group incorrectly granted access to the shared root directory; it is now restricted to their private directory only.
+
+### Documentation
+
+#### Access Control
+
+- Added user guide for Access Groups, covering the permission model, personal vs. shared groups, access rules, and default setup for owners and invited users.
+
+#### AI Agent System
+
+- Added user guide for the Agent feature, covering concepts (Model Tier, Working Folder, Description for Agent, System Prompt) and all management workflows.
+
 ## [0.1.0] - 2026-06-16
 
 ### Added
