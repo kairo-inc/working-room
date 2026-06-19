@@ -1,4 +1,4 @@
-import { Folder, MessageSquareText, Moon, Plus, Settings, Sun } from "lucide-react"
+import { Blend, Folder, MessageSquareText, Moon, Plus, Settings, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useRouter } from "next/router"
 
@@ -47,6 +47,12 @@ export const SideMenu = () => {
             icon={<MessageSquareText size={size} />}
             variant={getVariant([Route.chat(), Route.home()])}
             href={Route.home()}
+          />
+          <SideMenuButton
+            label={L.sidemenu.agents}
+            icon={<Blend size={size} />}
+            variant={getVariant([Route.agent()])}
+            href={Route.agent()}
           />
           <SideMenuButton
             label={L.sidemenu.folder}

@@ -40,6 +40,8 @@ import {
 import {
   AccessGroupSource,
   AccessGroupSourceImpl,
+  AgentSource,
+  AgentSourceImpl,
   ChatSource,
   ChatSourceImpl,
   ConsumedTokenSource,
@@ -81,6 +83,7 @@ container.register<FileHistorySource>("FileHistorySource", { useClass: FileHisto
 container.register<MessageSource>("MessageSource", { useClass: MessageSourceImpl })
 container.register<ChatSource>("ChatSource", { useClass: ChatSourceImpl })
 container.register<AccessGroupSource>("AccessGroupSource", { useClass: AccessGroupSourceImpl })
+container.register<AgentSource>("AgentSource", { useClass: AgentSourceImpl })
 container.register<ConsumedTokenSource>("ConsumedTokenSource", { useClass: ConsumedTokenSourceImpl })
 container.register<TokenUsageOnTenantSource>("TokenUsageOnTenantSource", { useClass: TokenUsageOnTenantSourceImpl })
 container.register<TokenUsageOnUserSource>("TokenUsageOnUserSource", { useClass: TokenUsageOnUserSourceImpl })

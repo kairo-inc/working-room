@@ -22,6 +22,21 @@ export class Route {
     return "/account"
   }
 
+  static agent(id?: string) {
+    if (!id) {
+      return "/agent"
+    }
+    return `/agent/${id}`
+  }
+
+  static agentCreation() {
+    return "/agent/create"
+  }
+
+  static agentEdit(id: string) {
+    return `/agent/${id}/edit`
+  }
+
   static file(descId: string, historyId?: string) {
     if (!historyId) {
       return `/file/${descId}`

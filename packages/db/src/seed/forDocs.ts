@@ -46,6 +46,7 @@ const generateData = async () => {
       mimeType: "inode/directory",
       size: 0,
       blobHash: "test-root-blob-hash",
+      tenant: { connect: { id: tenantId } },
     },
   })
 
@@ -61,7 +62,6 @@ const generateData = async () => {
       privateDir: {
         create: {
           id: userPrivateDirId,
-          isPrivate: true,
           parent: { connect: { id: rootDir.id } },
           name: "private",
           birthtime: new Date(),
@@ -72,6 +72,7 @@ const generateData = async () => {
           size: 0,
           // Same as root dir since it's empty at the moment. It will be updated when files are added.
           blobHash: rootDir.blobHash,
+          tenant: { connect: { id: tenantId } },
         },
       },
     },

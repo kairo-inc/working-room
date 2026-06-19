@@ -1,4 +1,4 @@
-import { FileHistorySortBy } from "@wr/db"
+import { FileDescriptorSortBy, FileHistorySortBy } from "@wr/db"
 import {
   BadRequestError,
   InvalidChatDirAccessError,
@@ -68,6 +68,40 @@ export const useFileGetContent = ({ id, historyId }: { id: string; historyId?: s
 
 export const useFileGet = ({ id }: { id: string }) => {
   return trpc.fileGet.useQuery(
+    { id },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      staleTime: Infinity,
+      gcTime: Infinity,
+      retry() {
+        return false
+      },
+    }
+  )
+}
+
+export const useFileGetList = (args?: { parentId?: string; sortBy?: FileDescriptorSortBy; sortDirection?: SortDirection }) => {
+  return trpc.fileGetList.useInfiniteQuery(
+    { ...args },
+    {
+      getPreviousPageParam: (firstPage) => {
+        if (!firstPage.nextPage || firstPage.nextPage <= 1) return undefined
+        return firstPage.nextPage - 1
+      },
+      getNextPageParam: (lastPage) => {
+        if (!lastPage.nextPage || lastPage.nextPage < 0) return undefined
+        return lastPage.nextPage
+      },
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
+  )
+}
+
+export const useFileGetParentOrRoot = (id?: string) => {
+  return trpc.fileGetParentOrRoot.useQuery(
     { id },
     {
       refetchOnMount: false,
