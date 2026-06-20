@@ -11,10 +11,12 @@
   "scripts": {
     "dev:web": "dotenv -e .env.local -- yarn workspace @wr/web dev",
     "dev:docs": "dotenv -e .env.local -- yarn workspace @wr/docs start",
+    "dev:docs:ja": "dotenv -e .env.local -- yarn workspace @wr/docs start:ja",
     "build:web": "dotenv -e .env.local -- yarn workspace @wr/web build",
     "build:docs": "dotenv -e .env.local -- yarn workspace @wr/docs build",
     "start:web": "dotenv -e .env.local -- yarn workspace @wr/web start",
     "start:web:docs": "dotenv -e .env.docs -- yarn workspace @wr/web start",
+    "start:docs": "dotenv -e .env.docs -- yarn workspace @wr/docs serve",
     "prisma:dev": "dotenv -e .env.local -- yarn workspace @wr/db migrate:dev",
     "prisma:reset": "dotenv -e .env.local -- yarn workspace @wr/db migrate:reset",
     "prisma:generate": "dotenv -e .env.local -- yarn workspace @wr/db generate",

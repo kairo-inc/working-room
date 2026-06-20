@@ -1,0 +1,114 @@
+{
+  "hero.badge": {
+    "message": "オープンソース AI ワークスペース",
+    "description": "Badge text in the hero section"
+  },
+  "hero.title": {
+    "message": "チームと AI エージェントのための共有ワークスペース。",
+    "description": "Main heading in the hero section"
+  },
+  "hero.description": {
+    "message": "WorkingRoom は AI エージェントに共有ファイル・権限の境界・変更履歴・承認ワークフローを提供します。",
+    "description": "Subheading description in the hero section"
+  },
+  "hero.getStarted": {
+    "message": "はじめる",
+    "description": "Primary CTA button in the hero section"
+  },
+  "hero.viewOnGitHub": {
+    "message": "GitHub で見る",
+    "description": "Secondary button in the hero section"
+  },
+  "features.sectionTitle": {
+    "message": "安全な人間と AI の協働のために設計",
+    "description": "Section title of the features grid"
+  },
+  "features.sharedWorkspace.title": {
+    "message": "共有ワークスペース",
+    "description": "Feature card title"
+  },
+  "features.sharedWorkspace.desc": {
+    "message": "チームのファイル・意思決定・AI とのやり取りが集まる単一のハブ。",
+    "description": "Feature card description"
+  },
+  "features.accessControl.title": {
+    "message": "ファイルアクセス制御",
+    "description": "Feature card title"
+  },
+  "features.accessControl.desc": {
+    "message": "細かな権限設定で、誰が（またはどの AI が）各ファイルを閲覧・変更できるかを制御。",
+    "description": "Feature card description"
+  },
+  "features.humanApprovals.title": {
+    "message": "人間による承認",
+    "description": "Feature card title"
+  },
+  "features.humanApprovals.desc": {
+    "message": "AI が機密性の高いワークフローを実行する前に、人間の承認を必須とするポリシーを設定。",
+    "description": "Feature card description"
+  },
+  "features.changeHistory.title": {
+    "message": "変更履歴",
+    "description": "Feature card title"
+  },
+  "features.changeHistory.desc": {
+    "message": "すべての編集が完全な履歴とともに記録され、誰がいつ何を変更したかを確認できます。",
+    "description": "Feature card description"
+  },
+  "features.oss.title": {
+    "message": "OSS & セルフホスト",
+    "description": "Feature card title"
+  },
+  "features.oss.desc": {
+    "message": "自分のインフラにデプロイして、データとモデルを完全にコントロール。",
+    "description": "Feature card description"
+  },
+  "features.webAccess.title": {
+    "message": "Web ブラウザからアクセス",
+    "description": "Feature card title"
+  },
+  "features.webAccess.desc": {
+    "message": "クライアントのインストール不要。Web ブラウザだけでどこからでも安全にアクセス。",
+    "description": "Feature card description"
+  },
+  "info.sectionTitle": {
+    "message": "詳細情報",
+    "description": "Section title of the info section"
+  },
+  "info.documentation.title": {
+    "message": "ドキュメント",
+    "description": "Documentation card title in the info section"
+  },
+  "info.documentation.description": {
+    "message": "詳細なガイド、API リファレンス、WorkingRoom を最大限に活用するためのベストプラクティスをドキュメントで確認してください。",
+    "description": "Documentation card description in the info section"
+  },
+  "info.links.gettingStarted": {
+    "message": "はじめる",
+    "description": "Getting Started link in the info section"
+  },
+  "info.links.userGuide": {
+    "message": "ユーザーガイド",
+    "description": "User Guide link in the info section"
+  },
+  "info.links.forDevelopers": {
+    "message": "開発者向け",
+    "description": "For Developers link in the info section"
+  },
+  "info.links.roadmap": {
+    "message": "ロードマップ",
+    "description": "Roadmap link in the info section"
+  },
+  "cta.title": {
+    "message": "AI 協働ファイルシステム。",
+    "description": "Heading in the CTA section"
+  },
+  "cta.startBuilding": {
+    "message": "今すぐはじめる",
+    "description": "Primary button in the CTA section"
+  },
+  "cta.viewOnGitHub": {
+    "message": "GitHub で見る",
+    "description": "Secondary button in the CTA section"
+  }
+}

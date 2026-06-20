@@ -1,0 +1,104 @@
+---
+title: AI エージェント
+sidebar_position: 5
+custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/user-guide/ai-agent.mdx"
+---
+
+# AI エージェント
+
+Agent は、一度定義すると複数のチャットで繰り返し使用できる、再利用可能な事前設定済み AI アシスタントです。
+毎回設定が必要な通常のチャットとは異なり、Agent は永続的なシステムプロンプトと固定のモデルティアを持つため、その Agent を使用して開始したすべてのチャットが同じ動作を継承します。
+
+特定のタスクに対して一貫した AI を使いたい場合に Agent を活用してください：コードレビュアー、ドキュメント要約、カスタマーサポートなど。
+
+## 概念
+
+### モデルティア
+
+各 Agent にはリクエストを処理する AI モデルを決定する**モデルティア**が割り当てられます。
+
+| ティア   | 特徴                                                         |
+| -------- | ------------------------------------------------------------ |
+| `light`  | 最速かつ最もコスト効率が高い。シンプルなタスクに適している。 |
+| `medium` | 速度と性能のバランスが取れている。多くのユースケースに適したデフォルト。 |
+| `heavy`  | 最も高性能なモデル。複雑な推論タスクに最適。               |
+
+各ティアに対応する実際のモデルは、管理者が設定した AI プロバイダーによって異なります。
+
+### Working Folder
+
+Working Folder は WorkingRoom のファイルシステム内のディレクトリで、Agent に関連付けることができます（オプション）。
+Working Folder を持つ Agent を使用してチャットを開始すると、Agent はそのディレクトリに保存されているファイルへの可視性を自動的に持ちます。ユーザーが毎回手動で添付する必要はありません。
+
+ファイルアクセスがどのように管理されるかについては、[ファイルシステム](./file-system)と[ファイルアクセス制御](./access-control)を参照してください。
+
+### Agent の説明（Description for Agent）
+
+**Description for Agent** は AI モデルに対して Agent 自体に関するコンテキストとして直接渡される内部フィールドです。
+Agent の自己紹介として考えてください。モデルが理解できる指示の形式で記述し、人間向けの要約にはしないでください。
+
+これは、Agent 一覧に表示される人間向けのメモである **Description**（説明）とは別のものです。
+
+### システムプロンプト
+
+**システムプロンプト**は Agent の動作、ペルソナ、および制約を定義します。
+この Agent を使用するすべてのチャットの開始時に、ユーザーメッセージよりも前に注入されます。
+
+例：
+
+```
+You are a senior software engineer specializing in TypeScript and React.
+Review code changes and provide concise, actionable feedback.
+Focus on correctness, readability, and maintainability.
+Avoid suggesting style changes unless they affect readability significantly.
+```
+
+## Agent 一覧を表示する
+
+サイドバーの **Agents** をクリックして Agent 一覧を開きます。
+一覧には作成した各 Agent の名前、モデルティア、説明が表示されます。
+
+## Agent を作成する
+
+1. Agent 一覧を開き、**Create** をクリックします。
+2. Agent Descriptions セクションに入力します：
+
+   | フィールド             | 必須 | 説明                                                              |
+   | ---------------------- | :--: | ----------------------------------------------------------------- |
+   | **Name**               | ✅   | Agent 一覧に表示される名前。最大 50 文字。                        |
+   | **Model Tier**         | ✅   | 使用する AI モデルティア（`light`、`medium`、または `heavy`）。   |
+   | **Working Folder**     | —    | Agent がデフォルトで読み取るオプションのディレクトリ。            |
+   | **Description**        | —    | 自分用のメモとなる人間向けの説明。最大 200 文字。                 |
+
+3. Prompt セクションに入力します：
+
+   | フィールド                    | 必須 | 説明                                                              |
+   | ----------------------------- | :--: | ----------------------------------------------------------------- |
+   | **Description for Agent**     | ✅   | この Agent のアイデンティティに関して AI モデルに渡されるコンテキスト。 |
+   | **System Prompt**             | ✅   | すべてのチャットにおける Agent の動作を定義する指示。             |
+
+4. **Create Agent** をクリックします。
+
+作成後、Agent 一覧にリダイレクトされます。
+
+## Agent の詳細を表示する
+
+Agent 一覧の任意の行をクリックして Agent の詳細ページを開きます。
+詳細ページには、Description for Agent とシステムプロンプトの全文を含むすべてのフィールドが表示されます。
+
+## Agent を編集する
+
+Agent の詳細ページを開き、**Edit** をクリックします。
+Working Folder の割り当てを含め、すべてのフィールドを更新できます。
+Working Folder を削除するには、フィールドをクリアして保存します。
+
+## Agent を削除する
+
+Agent 一覧の Agent 行を右クリックしてコンテキストメニューを開き、**Delete** を選択します。
+削除された Agent は復元できません。
+
+:::note
+
+Agent を削除しても、Working Folder 内のファイルや、その Agent を使用して以前に開始されたチャットは削除されません。
+
+:::

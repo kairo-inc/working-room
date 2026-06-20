@@ -1,0 +1,57 @@
+---
+title: インストール
+sidebar_position: 1
+custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/getting-started/index.mdx"
+---
+
+# インストール
+
+## 必要な環境
+
+WorkingRoom を実行する前に、以下の要件を準備してください：
+
+- すべての環境共通：AI プロバイダーの API キーが少なくとも 1 つ必要
+  - `ANTHROPIC_API_KEY` および/または `OPENAI_API_KEY`
+  - アプリケーションの実行にはこれらのキーのいずれか 1 つが必要です。
+- ローカル開発環境の場合：
+  - Node.js 18〜22
+  - Yarn 4 以降（`packageManager: yarn@4.5.3`、`engines.yarn: >=4.0.0`）
+  - リポジトリで管理されている Yarn バージョンを使用するには `corepack enable` を実行
+
+ローカル開発では、リポジトリにコミットされた `.env.local` のデフォルト設定と、シェル環境変数の AI プロバイダーキーを組み合わせて使用します。
+
+## Docker Compose を使用する場合（最も簡単な方法）
+
+```bash
+git clone https://github.com/kairo-inc/workingroom.git
+cd workingroom
+
+# OPENAI_API_KEY または ANTHROPIC_API_KEY をシェルの環境変数に設定してください。
+# その後、以下のコマンドで Docker Compose を使用してアプリケーションを起動します：
+docker compose up
+```
+
+ブラウザで `http://localhost:3000` にアクセスしてアプリケーションを確認してください。
+
+## ローカル開発
+
+```bash
+git clone https://github.com/kairo-inc/workingroom.git
+cd workingroom
+
+# 1. 依存関係のインストール
+corepack enable
+yarn install
+
+# 2. 環境の設定
+# .env.local はローカル開発のデフォルト設定でコミットされています
+# ANTHROPIC_API_KEY および/または OPENAI_API_KEY をシェル環境変数に設定してください
+
+# 3. データベースの初期化
+yarn prisma:dev
+
+# 4. Web アプリの起動
+yarn dev:web
+```
+
+ブラウザで `http://localhost:3000` にアクセスしてアプリケーションを確認してください。
