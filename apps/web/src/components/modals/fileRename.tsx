@@ -22,10 +22,10 @@ type FileRenameModalProps = ModalProps & Args
 
 const validate = (values: FormType, original: Args["data"]) => {
   const error = {} as { name?: string }
-  const nameCheck = formStringRequired().safeParse(values?.name?.trim() ?? "")
+  const nameCheck = formStringRequired({ maxLength: 128 }).safeParse(values?.name?.trim() ?? "")
   if (!nameCheck.success) {
     error.name = nameCheck.error.issues[0]?.message
-  } else if (values.name === original.name) {
+  } else if (values.name.trim() === original.name) {
     error.name = L.modal.fileRename.sameAsCurrentName
   }
   return error

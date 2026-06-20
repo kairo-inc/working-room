@@ -73,9 +73,12 @@ export default {
     noDataAvailable: "データがありません。",
     goBackToHome: "ホームに戻る",
     loading: "読み込み中...",
+    invalidInput: "無効な入力です",
     validation: {
       required: "必須項目です",
+      maxLength: "最大文字数を超えています",
       passwordMinLength: "パスワードは8文字以上で入力してください",
+      invalidEmail: "有効なメールアドレスを入力してください",
     },
   },
   errorPage: {
@@ -138,6 +141,18 @@ export default {
   user: {
     editFailed: "ユーザーの編集に失敗しました。",
     cannotEditUser: "ユーザーを編集できません。",
+  },
+  tenant: {
+    cannotInviteUser: "ユーザーを招待できません。",
+    inviteUserFailed: "ユーザーの招待に失敗しました。",
+    cannotEditTenant: "テナントを編集できません。",
+    editTenantFailed: "テナントの編集に失敗しました。",
+    cannotDeleteUser: "ユーザーを削除できません。",
+    deleteUserFailed: "ユーザーの削除に失敗しました。",
+    cannotResetPassword: "パスワードをリセットできません。",
+    resetPasswordFailed: "パスワードのリセットに失敗しました。",
+    cannotChangeRole: "ロールを変更できません。",
+    changeRoleFailed: "ロールの変更に失敗しました。",
   },
   file: {
     backToDirectory: "ディレクトリに戻る",
@@ -210,7 +225,6 @@ export default {
       title: "ユーザー招待",
       emailLabel: "メールアドレス",
       emailPlaceholder: "user@workingroom.io",
-      invalidEmail: "有効なメールアドレスを入力してください",
       invite: "招待",
       failed: "失敗",
     },
@@ -423,13 +437,8 @@ export default {
         promptPlaceholder: "例: 会社ルールの要約を生成してください",
       },
       validation: {
-        nameRequired: "名前は必須です",
-        nameMaxLength: "名前は50文字以内で入力してください",
-        descriptionForAgentRequired: "エージェント向け説明は必須です",
-        promptRequired: "システムプロンプトは必須です",
         tierRequired: "モデルティアは必須です",
         tierInvalid: "無効なモデルティアです",
-        descriptionMaxLength: "説明は200文字以内で入力してください",
       },
     },
     detail: {

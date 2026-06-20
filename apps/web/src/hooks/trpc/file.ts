@@ -7,6 +7,7 @@ import {
   InvalidSharedDirAccessError,
   PermissionDeniedError,
   SortDirection,
+  ValidationError,
 } from "@wr/shared"
 
 import { L } from "../../localization"
@@ -150,6 +151,7 @@ export const useFileCreateDirectory = () => {
         return handleError(
           e,
           [
+            { error: ValidationError, message: L.common.invalidInput },
             {
               error: PermissionDeniedError,
               message: L.file.errors.createDirectoryPermissionDenied,

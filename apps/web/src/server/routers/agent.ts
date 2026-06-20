@@ -9,12 +9,12 @@ import { privateProcedure } from "../trpc"
 export const agentCreate = privateProcedure
   .input(
     z.object({
-      name: z.string(),
-      description: z.string().optional(),
-      descriptionForAgent: z.string(),
+      name: z.string().min(1).max(128),
+      description: z.string().max(1024).optional(),
+      descriptionForAgent: z.string().min(1).max(2048),
       tier: z.enum(AiModelTierList),
-      prompt: z.string(),
-      workingFolderId: z.string().optional(),
+      prompt: z.string().min(1).max(8192),
+      workingFolderId: z.string().min(1).max(64).optional(),
     })
   )
   .mutation(async ({ input }) => {
@@ -25,13 +25,13 @@ export const agentCreate = privateProcedure
 export const agentEdit = privateProcedure
   .input(
     z.object({
-      id: z.string(),
-      name: z.string().optional(),
-      description: z.string().optional().nullable(),
-      descriptionForAgent: z.string().optional(),
+      id: z.string().min(1).max(64),
+      name: z.string().min(1).max(128).optional(),
+      description: z.string().max(1024).optional().nullable(),
+      descriptionForAgent: z.string().min(1).max(2048).optional(),
       tier: z.enum(AiModelTierList).optional(),
-      prompt: z.string().optional(),
-      workingFolderId: z.string().optional().nullish(),
+      prompt: z.string().min(1).max(8192).optional(),
+      workingFolderId: z.string().min(1).max(64).optional().nullish(),
     })
   )
   .mutation(async ({ input }) => {
@@ -39,7 +39,7 @@ export const agentEdit = privateProcedure
     await service.edit(input)
   })
 
-export const agentDelete = privateProcedure.input(z.object({ id: z.string() })).mutation(async ({ input }) => {
+export const agentDelete = privateProcedure.input(z.object({ id: z.string().min(1).max(64) })).mutation(async ({ input }) => {
   const service = getWebAppDiContainer().resolve<AgentService>("AgentService")
   await service.delete({ id: input.id })
 })

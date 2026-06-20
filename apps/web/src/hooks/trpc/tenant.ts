@@ -1,5 +1,6 @@
-import { PermissionDeniedError } from "@wr/shared"
+import { PermissionDeniedError, ValidationError } from "@wr/shared"
 
+import { L } from "../../localization"
 import { handleError } from "../../middleware/trpc"
 import { trpc } from "../../utils/trpc"
 
@@ -11,7 +12,14 @@ export const useTenantInviteUser = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [{ error: PermissionDeniedError, message: "Cannot invite user." }], "Failed to invite user.")
+        return handleError(
+          e,
+          [
+            { error: ValidationError, message: L.common.invalidInput },
+            { error: PermissionDeniedError, message: L.tenant.cannotInviteUser },
+          ],
+          L.tenant.inviteUserFailed
+        )
       }
     },
   }
@@ -25,7 +33,14 @@ export const useTenantEdit = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [{ error: PermissionDeniedError, message: "Cannot edit tenant." }], "Failed to edit tenant.")
+        return handleError(
+          e,
+          [
+            { error: ValidationError, message: L.common.invalidInput },
+            { error: PermissionDeniedError, message: L.tenant.cannotEditTenant },
+          ],
+          L.tenant.editTenantFailed
+        )
       }
     },
   }
@@ -39,7 +54,7 @@ export const useTenantDeleteUser = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [{ error: PermissionDeniedError, message: "Cannot delete user." }], "Failed to delete user.")
+        return handleError(e, [{ error: PermissionDeniedError, message: L.tenant.cannotDeleteUser }], L.tenant.deleteUserFailed)
       }
     },
   }
@@ -53,7 +68,7 @@ export const useTenantResetUserPassword = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [{ error: PermissionDeniedError, message: "Cannot reset user password." }], "Failed to reset user password.")
+        return handleError(e, [{ error: PermissionDeniedError, message: L.tenant.cannotResetPassword }], L.tenant.resetPasswordFailed)
       }
     },
   }
@@ -67,7 +82,7 @@ export const useTenantChangeUserRole = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [{ error: PermissionDeniedError, message: "Cannot change user role." }], "Failed to change user role.")
+        return handleError(e, [{ error: PermissionDeniedError, message: L.tenant.cannotChangeRole }], L.tenant.changeRoleFailed)
       }
     },
   }

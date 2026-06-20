@@ -18,7 +18,7 @@ const Title = forwardRef<HTMLDivElement, { title: string; description?: string |
           {title}
           {tail}
         </h1>
-        {description && <p className="text-muted-foreground mt-1 text-sm">{description}</p>}
+        {typeof description === "string" ? <p className="text-muted-foreground mt-1 text-sm">{description}</p> : description}
       </div>
     )
   }

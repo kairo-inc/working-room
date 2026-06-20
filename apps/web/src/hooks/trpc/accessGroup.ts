@@ -1,4 +1,10 @@
-import { BadRequestError, InvalidChatDirAccessError, InvalidPrivateDirAccessError, InvalidRootDirAccessError } from "@wr/shared"
+import {
+  BadRequestError,
+  InvalidChatDirAccessError,
+  InvalidPrivateDirAccessError,
+  InvalidRootDirAccessError,
+  ValidationError,
+} from "@wr/shared"
 
 import { L } from "../../localization"
 import { handleError } from "../../middleware/trpc"
@@ -15,6 +21,7 @@ export const useAccessGroupCreate = () => {
         return handleError(
           e,
           [
+            { error: ValidationError, message: "Invalid input data." },
             {
               error: InvalidChatDirAccessError,
               message: L.accessGroup.chatDirNotAllowed,
