@@ -19,7 +19,7 @@ type Variants = VariantProps<typeof variants>
 
 export interface TextFormProps extends ComponentPropsWithoutRef<"input">, Variants {
   // This is for react-final-form to identify the form field, and it should be unique within the form.
-  label: string
+  label?: string
   formName: string
 }
 
@@ -36,9 +36,11 @@ export const TextForm = forwardRef<HTMLInputElement, TextFormProps>(
     }
     return (
       <div className="inline-flex w-full flex-col gap-1">
-        <label htmlFor={formName} className="text-sm">
-          {label}
-        </label>
+        {label && (
+          <label htmlFor={formName} className="text-sm">
+            {label}
+          </label>
+        )}
         <input
           id={formName}
           className={variants({ className, variant })}

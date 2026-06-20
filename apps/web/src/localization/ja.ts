@@ -383,6 +383,7 @@ export default {
     addUser: "ユーザーを追加",
     fileAdded: "ファイルをアクセスグループに追加しました",
     userAdded: "ユーザーをアクセスグループに追加しました",
+    updated: "アクセスグループを更新しました",
     yes: "Yes",
     no: "No",
     details: {

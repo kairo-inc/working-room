@@ -381,6 +381,7 @@ export default {
     addUser: "Add User",
     fileAdded: "File added to access group",
     userAdded: "User added to access group",
+    updated: "Access group updated",
     yes: "Yes",
     no: "No",
     details: {

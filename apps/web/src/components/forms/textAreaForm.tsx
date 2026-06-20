@@ -19,7 +19,7 @@ type Variants = VariantProps<typeof variants>
 
 export interface TextAreaFormProps extends ComponentPropsWithoutRef<"textarea">, Variants {
   // This is for react-final-form to identify the form field, and it should be unique within the form.
-  label: string
+  label?: string
   formName: string
 }
 
@@ -36,9 +36,11 @@ export const TextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps>(
     }
     return (
       <div className="inline-flex w-full flex-col gap-1">
-        <label htmlFor={formName} className="text-sm">
-          {label}
-        </label>
+        {label && (
+          <label htmlFor={formName} className="text-sm">
+            {label}
+          </label>
+        )}
         <textarea id={formName} className={variants({ className, variant })} {...input} {...props} disabled={isDisabled} ref={ref} />
         <span className="text-destructive h-4 text-xs">{showError ? meta.error : ""}</span>
       </div>
