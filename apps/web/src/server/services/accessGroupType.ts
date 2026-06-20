@@ -20,6 +20,7 @@ export type AccessGroupServiceDeleteArgs = {
 export type AccessGroupServiceEditArg = {
   id: string
   name?: string
+  description?: string | null
   write?: boolean
   read?: boolean
   userIdsToAdd?: string[]

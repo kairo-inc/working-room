@@ -26,7 +26,7 @@ type AccessGroupCreateModalProps = ModalProps & Args
 const validate = (values: FormData) => {
   const errors: Partial<Record<keyof FormData, string>> = {}
 
-  const nameCheck = formStringRequired({ maxLength: 255 }).safeParse(values?.name ?? "")
+  const nameCheck = formStringRequired({ maxLength: 128 }).safeParse(values?.name ?? "")
   if (!nameCheck.success) {
     errors.name = nameCheck.error.issues[0]?.message
   }

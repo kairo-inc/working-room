@@ -80,13 +80,14 @@ export class AccessGroupServiceImpl extends AccessGroupService {
 
   @guard({ onlyAccept: ["admin", "owner"] })
   async edit(args: AccessGroupServiceEditArg): Promise<void> {
-    const { id, name, write, read, userIdsToAdd, userIdsToRemove, resourceIdsToAdd, resourceIdsToRemove } = args
+    const { id, name, write, read, description, userIdsToAdd, userIdsToRemove, resourceIdsToAdd, resourceIdsToRemove } = args
     const { tenantId } = getPrivateContext()
 
     const updateData: Parameters<AccessGroupSource["update"]>[0]["data"] = {}
     if (name !== undefined) updateData.name = name
     if (write !== undefined) updateData.write = write
     if (read !== undefined) updateData.read = read
+    if (description !== undefined) updateData.description = description
     if (userIdsToAdd) updateData.users = { connect: userIdsToAdd.map((userId) => ({ id: userId })) }
     if (userIdsToRemove) updateData.users = { disconnect: userIdsToRemove.map((userId) => ({ id: userId })) }
     if (resourceIdsToAdd) updateData.resources = { connect: resourceIdsToAdd.map((resourceId) => ({ id: resourceId })) }

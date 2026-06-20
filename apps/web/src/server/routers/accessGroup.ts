@@ -7,7 +7,7 @@ import { privateProcedure } from "../trpc"
 export const accessGroupCreate = privateProcedure
   .input(
     z.object({
-      name: z.string().min(1).max(255),
+      name: z.string().min(1).max(128),
       description: z.string().max(1024).optional(),
       resourceId: z.string().min(1).max(64),
       write: z.boolean(),
@@ -23,7 +23,7 @@ export const accessGroupEdit = privateProcedure
   .input(
     z.object({
       id: z.string().min(1).max(64),
-      name: z.string().min(1).max(255).optional(),
+      name: z.string().min(1).max(128).optional(),
       description: z.string().max(1024).optional().nullable(),
       write: z.boolean().optional(),
       read: z.boolean().optional(),
