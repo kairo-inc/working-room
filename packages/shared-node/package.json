@@ -6,19 +6,19 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "jsonwebtoken": "^9.0.3",
-    "jwks-rsa": "^4.1.0"
+    "jsonwebtoken": "9.0.3",
+    "jwks-rsa": "4.1.0"
   },
   "peerDependencies": {
-    "@ai-sdk/anthropic": "^3.0.0",
-    "@ai-sdk/openai": "^3.0.0",
+    "@ai-sdk/anthropic": "3.0.0",
+    "@ai-sdk/openai": "3.0.0",
     "@wr/shared": "workspace:*",
-    "ai": "^6.0.0",
-    "bcryptjs": "^3.0.3",
-    "cuid": "^3.0.0",
-    "pino": "^10.3.1"
+    "ai": "6.0.0",
+    "bcryptjs": "3.0.3",
+    "cuid": "3.0.0",
+    "pino": "10.3.1"
   },
   "devDependencies": {
-    "@types/node": "^25.9.4"
+    "@types/node": "25.9.4"
   }
 }
