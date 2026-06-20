@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe"
 
 import { AccessGroupSource, UserSource } from "@wr/db"
-import { BadRequestError, PageResult } from "@wr/shared"
+import { BadRequestError, InvalidPrivateDirAccessError, InvalidRootDirAccessError, PageResult } from "@wr/shared"
 import { getPrivateContext } from "@wr/shared-node"
 
 import { mapAccessGroupEntityToApp } from "../../map/accessGroup"
@@ -69,6 +69,8 @@ export class AccessGroupServiceImpl extends AccessGroupService {
     // Check whether it's not a personal access group, which cannot be deleted.
     if (target.isPersonal) {
       throw new BadRequestError("Personal access groups cannot be deleted")
+    } else if (target.isOwner) {
+      throw new BadRequestError("Owner access groups cannot be deleted")
     }
 
     await this.accessGroupSource.delete({
@@ -78,17 +80,38 @@ export class AccessGroupServiceImpl extends AccessGroupService {
 
   @guard({ onlyAccept: ["admin", "owner"] })
   async edit(args: AccessGroupServiceEditArg): Promise<void> {
-    const { id, name, write, read, userIdsToAdd, userIdsToRemove, resourceIdsToAdd, resourceIdsToRemove } = args
+    const { id, name, write, read, description, userIdsToAdd, userIdsToRemove, resourceIdsToAdd, resourceIdsToRemove } = args
     const { tenantId } = getPrivateContext()
 
     const updateData: Parameters<AccessGroupSource["update"]>[0]["data"] = {}
     if (name !== undefined) updateData.name = name
     if (write !== undefined) updateData.write = write
     if (read !== undefined) updateData.read = read
+    if (description !== undefined) updateData.description = description
     if (userIdsToAdd) updateData.users = { connect: userIdsToAdd.map((userId) => ({ id: userId })) }
     if (userIdsToRemove) updateData.users = { disconnect: userIdsToRemove.map((userId) => ({ id: userId })) }
     if (resourceIdsToAdd) updateData.resources = { connect: resourceIdsToAdd.map((resourceId) => ({ id: resourceId })) }
     if (resourceIdsToRemove) updateData.resources = { disconnect: resourceIdsToRemove.map((resourceId) => ({ id: resourceId })) }
+
+    // Check permission. Rules:
+    // 1. Personal/Owner access group can not accept any user to be added or removed.
+    // 2. Personal/Owner access group can not accept any resource to be added or removed.
+    const target = await this.accessGroupSource.find("EntityAccessGroup", {
+      where: { id, tenantId },
+    })
+    if (target.isPersonal) {
+      if (userIdsToAdd || userIdsToRemove) {
+        throw new InvalidPrivateDirAccessError("Personal access groups cannot accept any user to be added or removed")
+      } else if (resourceIdsToAdd || resourceIdsToRemove) {
+        throw new InvalidPrivateDirAccessError("Personal access groups cannot accept any resource to be added or removed")
+      }
+    } else if (target.isOwner) {
+      if (userIdsToAdd || userIdsToRemove) {
+        throw new InvalidRootDirAccessError("Owner access groups cannot accept any user to be added or removed")
+      } else if (resourceIdsToAdd || resourceIdsToRemove) {
+        throw new InvalidRootDirAccessError("Owner access groups cannot accept any resource to be added or removed")
+      }
+    }
 
     // Requires write permission for the resource to be added or removed.
     if (resourceIdsToAdd || resourceIdsToRemove) {

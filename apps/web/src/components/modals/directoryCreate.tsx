@@ -24,7 +24,7 @@ type DirectoryCreateModalProps = ModalProps & Args
 const validate = (values: FormType) => {
   const error = {} as { name?: string }
 
-  const nameCheck = formStringRequired().safeParse(values?.name ?? "")
+  const nameCheck = formStringRequired({ maxLength: 128 }).safeParse(values?.name ?? "")
   if (!nameCheck.success) {
     error.name = nameCheck.error.issues[0]?.message
   }

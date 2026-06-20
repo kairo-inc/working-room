@@ -6,19 +6,19 @@
     ".": "./src/index.ts"
   },
   "peerDependencies": {
-    "@ai-sdk/anthropic": "^3.0.0",
-    "@ai-sdk/openai": "^3.0.0",
+    "@ai-sdk/anthropic": "3.0.0",
+    "@ai-sdk/openai": "3.0.0",
     "@wr/access": "workspace:*",
     "@wr/shared": "workspace:*",
     "@wr/shared-node": "workspace:*",
-    "ai": "^6.0.0",
-    "chardet": "^2.1.1",
-    "cuid": "^3.0.0",
-    "mime": "^4.1.0",
-    "node-poppler": "^9.1.2",
-    "tsyringe": "^4.10.0"
+    "ai": "6.0.0",
+    "chardet": "2.1.1",
+    "cuid": "3.0.0",
+    "mime": "4.1.0",
+    "node-poppler": "9.1.2",
+    "tsyringe": "4.10.0"
   },
   "devDependencies": {
-    "@types/node": "^25.9.3"
+    "@types/node": "25.9.4"
   }
 }

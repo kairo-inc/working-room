@@ -10,6 +10,7 @@ import { AppUser } from "../../../../types/user"
 import { RectangleButton } from "../../../buttons/rectangleButton"
 import { BodyLayout } from "../../../layout/body"
 import { PageLayout } from "../../../layout/page"
+import { VerticalAlignedItems } from "../../../layout/verticalAlignedItems"
 import { useAccessGroupDeleteModal } from "../../../modals/accessGroupDelete"
 import { Pager } from "../../../pager"
 import { Section } from "../../../section"
@@ -36,24 +37,41 @@ export const PageSettingAccessGroup = ({ userList, resourceList, data }: PageSet
         description={L.settingAccessGroup.description}
         containerClassName="gap-10"
         tail={
-          <RectangleButton variant="destructive" onClick={() => showAccessGroupDeleteModal({ data })}>
-            {L.settingAccessGroup.delete}
-          </RectangleButton>
+          <div className="flex gap-4">
+            <RectangleButton variant="defaultOutline" onClick={() => router.push(Route.settingAccessGroupEdit(data.id))}>
+              {L.settingAccessGroup.edit}
+            </RectangleButton>
+            <RectangleButton variant="destructive" onClick={() => showAccessGroupDeleteModal({ data })}>
+              {L.settingAccessGroup.delete}
+            </RectangleButton>
+          </div>
         }
       >
         <Section title={L.settingAccessGroup.details.title}>
-          <div className="grid grid-cols-[auto_1fr] gap-2 gap-x-4 text-base">
-            <div className="font-bold">{L.settingAccessGroup.details.name}</div>
-            <div>{data.name}</div>
-            <div className="font-bold">{L.settingAccessGroup.details.description}</div>
-            <div>{data.description ?? "-"}</div>
-            <div className="font-bold">{L.settingAccessGroup.details.type}</div>
-            <div>{data.isPersonal ? L.settingAccessGroup.details.personal : L.settingAccessGroup.details.group}</div>
-            <div className="font-bold">{L.settingAccessGroup.details.read}</div>
-            <div>{data.read ? yesComponent : noComponent}</div>
-            <div className="font-bold">{L.settingAccessGroup.details.write}</div>
-            <div>{data.write ? yesComponent : noComponent}</div>
-          </div>
+          <VerticalAlignedItems
+            items={[
+              {
+                label: L.settingAccessGroup.details.name,
+                value: data.name,
+              },
+              {
+                label: L.settingAccessGroup.details.description,
+                value: data.description ?? "-",
+              },
+              {
+                label: L.settingAccessGroup.details.type,
+                value: data.isPersonal ? L.settingAccessGroup.details.personal : L.settingAccessGroup.details.group,
+              },
+              {
+                label: L.settingAccessGroup.details.read,
+                value: data.read ? yesComponent : noComponent,
+              },
+              {
+                label: L.settingAccessGroup.details.write,
+                value: data.write ? yesComponent : noComponent,
+              },
+            ]}
+          />
         </Section>
         <Section title={L.settingAccessGroup.resources.title}>
           <Table
@@ -69,7 +87,7 @@ export const PageSettingAccessGroup = ({ userList, resourceList, data }: PageSet
             headers={[L.settingAccessGroup.users.name, L.settingAccessGroup.users.email]}
             rows={userList.data.map((user) => ({ items: [user.name, user.email] }))}
           />
-          <Pager {...userList} className="mt-4" />
+          <Pager {...userList} className="mt-2" />
         </Section>
       </BodyLayout>
       {AccessGroupDeleteModal}

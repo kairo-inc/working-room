@@ -29,9 +29,9 @@ type FileListProps = ComponentPropsWithoutRef<"table"> & {
 export const FileList = ({ data, parent, className, ...props }: FileListProps) => {
   const router = useRouter()
   const isAdminOrOwner = useIsAdminOrOwner()
-  const gridHeaderClassName = "grid border-b py-1 grid-cols-[minmax(0,1fr)_minmax(80px,160px)_minmax(100px,180px)]"
-  const gridRowClassName = `${gridHeaderClassName} py-1.5 bg-card hover:bg-muted cursor-pointer`
-  const selectedRowClassName = "!bg-primary/20 !text-primary"
+  const gridHeaderClassName = "grid border-b py-1 grid-cols-[minmax(0,1fr)_minmax(80px,160px)_minmax(100px,180px)] text-sm"
+  const gridRowClassName = `${gridHeaderClassName} py-1.5 bg-card hover:bg-muted cursor-pointer text-sm`
+  const selectedRowClassName = "!bg-primary/20 !text-primary text-sm"
   const sortedFiles = [...data.data].sort((a, b) => {
     if (a.isDirectory === b.isDirectory) {
       return a.name.localeCompare(b.name)

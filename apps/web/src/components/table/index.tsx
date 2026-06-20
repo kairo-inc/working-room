@@ -16,8 +16,8 @@ type TableProps = React.ComponentPropsWithoutRef<"table"> & {
 
 export const Table = ({ headers, rows, className, ...props }: TableProps) => {
   const hasRow = rows.length > 0
-  const thClassName = "px-2 py-2 text-left text-muted-foreground font-normal"
-  const tdClassName = "px-2 py-2 text-left"
+  const thClassName = "px-2 py-2 text-left text-muted-foreground font-normal text-sm"
+  const tdClassName = "px-2 py-2 text-left text-sm"
   return (
     <table className={clsx(className, "w-full")} {...props}>
       <thead>
@@ -35,14 +35,14 @@ export const Table = ({ headers, rows, className, ...props }: TableProps) => {
             <tr key={index} className="hover:bg-muted bg-card border-t" {...row.dataAttrs} onClick={row.onClick}>
               {row.items.map((cell, cellIndex) => (
                 <td key={cellIndex} className={tdClassName}>
-                  {cell}
+                  <div className="flex items-center truncate">{cell}</div>
                 </td>
               ))}
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan={headers.length} className="text-muted-foreground bg-card py-2 text-center">
+            <td colSpan={headers.length} className="text-muted-foreground bg-card py-2 text-center text-sm">
               {L.common.noDataAvailable}
             </td>
           </tr>

@@ -24,7 +24,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "kairo-inc", // Usually your GitHub org/user name.
-  projectName: "workingroom", // Usually your repo name.
+  projectName: "working-room", // Usually your repo name.
 
   onBrokenLinks: "throw",
 
@@ -33,7 +33,7 @@ const config: Config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
-    locales: ["en"],
+    locales: ["en", "ja"],
   },
 
   presets: [
@@ -89,6 +89,10 @@ const config: Config = {
         {
           href: "https://github.com/kairo-inc/working-room",
           label: "GitHub",
+          position: "right",
+        },
+        {
+          type: "localeDropdown",
           position: "right",
         },
       ],

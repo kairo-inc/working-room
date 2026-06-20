@@ -1,3 +1,4 @@
+import Translate from "@docusaurus/Translate"
 import { Zap } from "lucide-react"
 
 import { Section } from "../Section"
@@ -17,15 +18,17 @@ export function Cta() {
         </div>
       </div>
 
-      <h2 className="text-foreground mb-8 max-w-2xl text-4xl font-semibold tracking-tight md:text-5xl">AI collaborative file system.</h2>
+      <h2 className="text-foreground mb-8 max-w-2xl text-4xl font-semibold tracking-tight md:text-5xl">
+        <Translate id="cta.title">AI collaborative file system.</Translate>
+      </h2>
 
       <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
         <button className="bg-primary text-background flex h-12 w-full items-center justify-center gap-2 rounded-md border-none px-8 font-medium transition-opacity hover:opacity-80 sm:w-auto">
           <Zap className="fill-background h-4 w-4" />
-          Start Building
+          <Translate id="cta.startBuilding">Start Building</Translate>
         </button>
         <button className="border-border bg-card text-foreground hover:bg-muted flex h-12 w-full items-center justify-center gap-2 rounded-md border px-8 font-bold transition-colors sm:w-auto">
-          View on GitHub
+          <Translate id="cta.viewOnGitHub">View on GitHub</Translate>
         </button>
       </div>
     </Section>

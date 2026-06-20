@@ -5,6 +5,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start --port 3001",
+    "start:ja": "docusaurus start --port 3002 --locale ja",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -18,21 +19,21 @@
     "@docusaurus/core": "3.10.1",
     "@docusaurus/faster": "3.10.1",
     "@docusaurus/preset-classic": "3.10.1",
-    "@docusaurus/theme-mermaid": "^3.10.1",
-    "@mdx-js/react": "^3.1.1",
-    "clsx": "^2.1.1",
-    "prism-react-renderer": "^2.4.1",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "@docusaurus/theme-mermaid": "3.10.1",
+    "@mdx-js/react": "3.1.1",
+    "clsx": "2.1.1",
+    "prism-react-renderer": "2.4.1",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.10.1",
     "@docusaurus/tsconfig": "3.10.1",
     "@docusaurus/types": "3.10.1",
-    "@tailwindcss/postcss": "^4.3.1",
-    "@types/react": "^19.2.17",
-    "postcss": "^8.5.15",
-    "tailwindcss": "^4.3.1",
+    "@tailwindcss/postcss": "4.3.1",
+    "@types/react": "19.2.17",
+    "postcss": "8.5.15",
+    "tailwindcss": "4.3.1",
     "typescript": "~6.0.3"
   },
   "browserslist": {

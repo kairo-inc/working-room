@@ -1,6 +1,6 @@
 import z from "zod"
 
-import { MessageSortByList } from "@wr/db"
+import { ChatSortByList, MessageSortByList } from "@wr/db"
 import { SortDirectionList } from "@wr/shared"
 
 import { getWebAppDiContainer } from "../container"
@@ -10,10 +10,10 @@ import { privateProcedure } from "../trpc"
 export const chatGetMessages = privateProcedure
   .input(
     z.object({
-      id: z.string(),
+      id: z.string().min(1).max(64),
       // Ths name must be `cursor` for getNextPageParam to work,
       // but it can be any name as long as it's consistent between here and the service.
-      cursor: z.number().optional(),
+      cursor: z.number().min(0).optional(),
       sortBy: z.enum(MessageSortByList).optional(),
       sortDirection: z.enum(SortDirectionList).optional(),
     })
@@ -27,8 +27,8 @@ export const chatGetMessages = privateProcedure
 export const chatGetList = privateProcedure
   .input(
     z.object({
-      cursor: z.number().optional(),
-      sortBy: z.enum(["updatedAt", "createdAt"]).optional(),
+      cursor: z.number().min(0).optional(),
+      sortBy: z.enum(ChatSortByList).optional(),
       sortDirection: z.enum(SortDirectionList).optional(),
     })
   )
@@ -38,12 +38,12 @@ export const chatGetList = privateProcedure
     return await service.getList({ page: cursor, ...rest })
   })
 
-export const chatCreate = privateProcedure.input(z.object({})).mutation(async ({ input }) => {
+export const chatCreate = privateProcedure.mutation(async () => {
   const service = getWebAppDiContainer().resolve<ChatService>("ChatService")
-  return await service.create(input)
+  return await service.create({})
 })
 
-export const chatDelete = privateProcedure.input(z.object({ id: z.string() })).mutation(async ({ input }) => {
+export const chatDelete = privateProcedure.input(z.object({ id: z.string().min(1).max(64) })).mutation(async ({ input }) => {
   const service = getWebAppDiContainer().resolve<ChatService>("ChatService")
   await service.delete(input)
 })

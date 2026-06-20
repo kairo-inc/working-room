@@ -23,7 +23,7 @@
 
 - [ ] Base branch is `dev`
 - [ ] PR is focused on a single concern
-- [ ] Branch name follows `prefix/issue-number` using one of `feature`, `fix`, `refactor`, `chore`, `docs`, or `test`
+- [ ] Branch name follows `prefix/#issue-number` using one of `feature`, `fix`, `refactor`, `chore`, `docs`, or `test`
 - [ ] Commit messages explain why the change is needed
 - [ ] Docs were updated if needed
 - [ ] Screenshots or recordings are attached for UI changes

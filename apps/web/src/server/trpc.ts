@@ -17,6 +17,15 @@ const isBaseErrorLike = (obj: unknown): obj is { errorCode: string; statusCode: 
   )
 }
 
+const isZodError = (obj: unknown): obj is { issues: unknown[] } => {
+  return (
+    obj != null &&
+    typeof obj === "object" &&
+    typeof (obj as { issues?: unknown }).issues === "object" &&
+    Array.isArray((obj as { issues?: unknown }).issues)
+  )
+}
+
 // Server side File polyfill to support file upload in tRPC procedures using undici's File implementation.
 if (typeof window === "undefined") {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -50,6 +59,18 @@ const t = initTRPC.context<Context>().create({
           name,
           errorCode,
           httpStatus: statusCode,
+        },
+      }
+    } else if (isZodError(error.cause)) {
+      console.error(
+        `Caught a Zod validation error: ${error.cause.issues.map((issue) => (issue as { message: string }).message).join(", ")}`
+      )
+      return {
+        ...shape,
+        data: {
+          name: "ValidationError",
+          errorCode: "VALIDATION_ERROR",
+          issues: error.cause.issues,
         },
       }
     } else {

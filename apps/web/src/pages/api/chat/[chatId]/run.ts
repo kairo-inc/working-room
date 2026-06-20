@@ -8,12 +8,8 @@ import type { ChatService } from "../../../../server/services/chatType"
 import { ensureQuery } from "../../../../utils/queryParser"
 
 const schema = z.object({
-  message: z.string().optional(),
-  resources: z
-    .object({
-      descIds: z.string().array(),
-    })
-    .optional(),
+  message: z.string().max(8192).optional(),
+  resources: z.object({ descIds: z.string().array() }).optional(),
   approvals: z
     .object({
       approvalId: z.string(),

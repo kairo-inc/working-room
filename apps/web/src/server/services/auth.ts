@@ -92,7 +92,7 @@ export class AuthServiceImpl extends AuthService {
                 description: `Access group for tenant owners`,
                 read: true,
                 write: true,
-                isPersonal: false,
+                isOwner: true,
                 tenant: { connect: { id: tenantId } },
                 resources: {
                   connect: { id: rootDir.id },

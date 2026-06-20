@@ -37,7 +37,7 @@ export const fileUploadFileToChat = privateProcedure
   })
 
 export const fileGetContent = privateProcedure
-  .input(z.object({ id: z.string(), historyId: z.string().optional() }))
+  .input(z.object({ id: z.string().min(1).max(64), historyId: z.string().min(1).max(64).optional() }))
   .query(async ({ input }) => {
     const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
     const service = await resolver.resolveFileService()
@@ -46,7 +46,7 @@ export const fileGetContent = privateProcedure
     return Array.from(new Uint8Array(content))
   })
 
-export const fileGet = privateProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
+export const fileGet = privateProcedure.input(z.object({ id: z.string().min(1).max(64) })).query(async ({ input }) => {
   const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
   const service = await resolver.resolveFileService()
   const { id } = input
@@ -56,8 +56,8 @@ export const fileGet = privateProcedure.input(z.object({ id: z.string() })).quer
 export const fileGetList = privateProcedure
   .input(
     z.object({
-      parentId: z.string().optional(),
-      cursor: z.number().optional(),
+      parentId: z.string().min(1).max(64).optional(),
+      cursor: z.number().min(0).optional(),
       sortBy: z.enum(FileDescriptorSortByList).optional(),
       sortDirection: z.enum(SortDirectionList).optional(),
     })
@@ -74,14 +74,16 @@ export const fileGetList = privateProcedure
     }
   })
 
-export const fileGetParentOrRoot = privateProcedure.input(z.object({ id: z.string().optional() })).query(async ({ input }) => {
-  const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
-  const service = await resolver.resolveFileService()
-  const { id } = input
-  return await service.getParentOrRoot({ id })
-})
+export const fileGetParentOrRoot = privateProcedure
+  .input(z.object({ id: z.string().min(1).max(64).optional() }))
+  .query(async ({ input }) => {
+    const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
+    const service = await resolver.resolveFileService()
+    const { id } = input
+    return await service.getParentOrRoot({ id })
+  })
 
-export const fileDeleteMany = privateProcedure.input(z.object({ ids: z.array(z.string()) })).mutation(async ({ input }) => {
+export const fileDeleteMany = privateProcedure.input(z.object({ ids: z.array(z.string().min(1).max(64)) })).mutation(async ({ input }) => {
   const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
   const service = await resolver.resolveFileService()
   const { ids } = input
@@ -89,7 +91,7 @@ export const fileDeleteMany = privateProcedure.input(z.object({ ids: z.array(z.s
 })
 
 export const fileCreateDirectory = privateProcedure
-  .input(z.object({ parentId: z.string(), name: z.string() }))
+  .input(z.object({ parentId: z.string().min(1).max(64), name: z.string().min(1).max(128) }))
   .mutation(async ({ input }) => {
     const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
     const service = await resolver.resolveFileService()
@@ -97,15 +99,17 @@ export const fileCreateDirectory = privateProcedure
     return await service.createDirectory({ parentId, name })
   })
 
-export const fileRename = privateProcedure.input(z.object({ descId: z.string(), newName: z.string() })).mutation(async ({ input }) => {
-  const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
-  const service = await resolver.resolveFileService()
-  const { descId, newName } = input
-  return await service.rename({ descId, newName })
-})
+export const fileRename = privateProcedure
+  .input(z.object({ descId: z.string().min(1).max(64), newName: z.string().min(1).max(128) }))
+  .mutation(async ({ input }) => {
+    const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
+    const service = await resolver.resolveFileService()
+    const { descId, newName } = input
+    return await service.rename({ descId, newName })
+  })
 
 export const fileCopy = privateProcedure
-  .input(z.object({ descId: z.string(), newName: z.string().optional() }))
+  .input(z.object({ descId: z.string().min(1).max(64), newName: z.string().min(1).max(128).optional() }))
   .mutation(async ({ input }) => {
     const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
     const service = await resolver.resolveFileService()
@@ -113,18 +117,20 @@ export const fileCopy = privateProcedure
     return await service.copyFile({ descId, newName })
   })
 
-export const fileMove = privateProcedure.input(z.object({ descId: z.string(), targetFolderId: z.string() })).mutation(async ({ input }) => {
-  const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
-  const service = await resolver.resolveFileService()
-  const { descId, targetFolderId } = input
-  return await service.moveFile({ descId, targetFolderId })
-})
+export const fileMove = privateProcedure
+  .input(z.object({ descId: z.string().min(1).max(64), targetFolderId: z.string().min(1).max(64) }))
+  .mutation(async ({ input }) => {
+    const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
+    const service = await resolver.resolveFileService()
+    const { descId, targetFolderId } = input
+    return await service.moveFile({ descId, targetFolderId })
+  })
 
 export const fileHistoryGetList = privateProcedure
   .input(
     z.object({
-      descId: z.string().optional(),
-      cursor: z.number().optional(),
+      descId: z.string().min(1).max(64).optional(),
+      cursor: z.number().min(0).optional(),
       sortBy: z.enum(FileHistorySortByList).optional(),
       sortDirection: z.enum(SortDirectionList).optional(),
     })
@@ -145,7 +151,7 @@ export const fileHistoryGetList = privateProcedure
     }
   })
 
-export const fileHistoryRestore = privateProcedure.input(z.object({ historyId: z.string() })).mutation(async ({ input }) => {
+export const fileHistoryRestore = privateProcedure.input(z.object({ historyId: z.string().min(1).max(64) })).mutation(async ({ input }) => {
   const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
   const service = await resolver.resolveFileService()
   await service.restoreHistory(input.historyId)

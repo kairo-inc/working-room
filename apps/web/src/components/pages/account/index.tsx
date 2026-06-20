@@ -11,6 +11,7 @@ import { useNotification } from "../../../contexts/notification"
 import { useAuthSignout } from "../../../hooks/api/auth"
 import { L } from "../../../localization"
 import { AppUserSetting } from "../../../types/user"
+import { VerticalAlignedItems } from "../../layout/verticalAlignedItems"
 
 export interface PageAccountProps extends React.HTMLAttributes<HTMLDivElement> {
   data: AppUserSetting
@@ -28,16 +29,14 @@ export const PageAccount = ({ data }: PageAccountProps) => {
     <PageLayout>
       <BodyLayout title={L.account.title} description={L.account.description} containerClassName="gap-10">
         <Section title={L.account.userData.title} tail={editButton}>
-          <div className="grid grid-cols-[auto_1fr] gap-2 gap-x-4 text-base">
-            <div className="font-bold">{L.account.userData.name}</div>
-            <div>{data.name}</div>
-            <div className="font-bold">{L.account.userData.email}</div>
-            <div>{data.email}</div>
-            <div className="font-bold">{L.account.userData.role}</div>
-            <div>{data.role}</div>
-          </div>
+          <VerticalAlignedItems
+            items={[
+              { label: L.account.userData.name, value: data.name },
+              { label: L.account.userData.email, value: data.email },
+              { label: L.account.userData.role, value: data.role },
+            ]}
+          />
         </Section>
-
         <Section title={L.account.signout.title}>
           <div className="grid grid-cols-[auto_1fr] gap-2 gap-x-4 text-base">
             <RectangleButton

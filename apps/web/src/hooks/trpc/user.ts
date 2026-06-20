@@ -1,5 +1,7 @@
-import { BadRequestError } from "@wr/shared"
+import { UserSortBy } from "@wr/db"
+import { BadRequestError, SortDirection } from "@wr/shared"
 
+import { L } from "../../localization"
 import { handleError } from "../../middleware/trpc"
 import { trpc } from "../../utils/trpc"
 
@@ -11,8 +13,26 @@ export const useUserEdit = () => {
       try {
         return await mutateAsync(...args)
       } catch (e) {
-        return handleError(e, [{ error: BadRequestError, message: "Cannot edit user." }], "Failed to edit user.")
+        return handleError(e, [{ error: BadRequestError, message: L.user.cannotEditUser }], L.user.editFailed)
       }
     },
   }
+}
+
+export const useUserGetList = (args: { charContains?: string; take?: number; sortBy?: UserSortBy; sortDirection?: SortDirection }) => {
+  return trpc.userGetList.useInfiniteQuery(
+    { ...args },
+    {
+      getPreviousPageParam: (firstPage) => {
+        if (!firstPage.nextPage || firstPage.nextPage <= 1) return undefined
+        return firstPage.nextPage - 1
+      },
+      getNextPageParam: (lastPage) => {
+        if (!lastPage.nextPage || lastPage.nextPage < 0) return undefined
+        return lastPage.nextPage
+      },
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
+  )
 }
