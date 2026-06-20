@@ -36,9 +36,14 @@ export const PageSettingAccessGroup = ({ userList, resourceList, data }: PageSet
         description={L.settingAccessGroup.description}
         containerClassName="gap-10"
         tail={
-          <RectangleButton variant="destructive" onClick={() => showAccessGroupDeleteModal({ data })}>
-            {L.settingAccessGroup.delete}
-          </RectangleButton>
+          <div className="flex gap-4">
+            <RectangleButton variant="defaultOutline" onClick={() => router.push(Route.settingAccessGroupEdit(data.id))}>
+              {L.settingAccessGroup.edit}
+            </RectangleButton>
+            <RectangleButton variant="destructive" onClick={() => showAccessGroupDeleteModal({ data })}>
+              {L.settingAccessGroup.delete}
+            </RectangleButton>
+          </div>
         }
       >
         <Section title={L.settingAccessGroup.details.title}>

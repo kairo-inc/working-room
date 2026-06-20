@@ -19,6 +19,25 @@ export const accessGroupCreate = privateProcedure
     return await service.create(input)
   })
 
+export const accessGroupEdit = privateProcedure
+  .input(
+    z.object({
+      id: z.string(),
+      name: z.string().optional(),
+      description: z.string().optional().nullable(),
+      write: z.boolean().optional(),
+      read: z.boolean().optional(),
+      resourceIdsToAdd: z.array(z.string()).optional(),
+      resourceIdsToRemove: z.array(z.string()).optional(),
+      userIdsToAdd: z.array(z.string()).optional(),
+      userIdsToRemove: z.array(z.string()).optional(),
+    })
+  )
+  .mutation(async ({ input }) => {
+    const service = getWebAppDiContainer().resolve<AccessGroupService>("AccessGroupService")
+    return await service.edit(input)
+  })
+
 export const accessGroupDelete = privateProcedure
   .input(
     z.object({

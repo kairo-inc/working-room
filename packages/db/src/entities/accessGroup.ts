@@ -10,6 +10,7 @@ export class EntityAccessGroup implements Omit<AccessGroup, "deletedAt" | "users
   read: boolean
   write: boolean
   isPersonal: boolean
+  isOwner: boolean
   resources: {
     id: string
     name: string
@@ -27,6 +28,7 @@ export class EntityAccessGroup implements Omit<AccessGroup, "deletedAt" | "users
     read: true,
     write: true,
     isPersonal: true,
+    isOwner: true,
     resources: {
       select: {
         id: true,

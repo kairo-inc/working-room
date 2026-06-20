@@ -68,4 +68,8 @@ export class Route {
     }
     return `/setting/accessGroup/${id}`
   }
+
+  static settingAccessGroupEdit(id: string) {
+    return `/setting/accessGroup/${id}/edit`
+  }
 }

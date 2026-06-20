@@ -73,6 +73,8 @@ model AccessGroup {
   // Personal access groups are automatically created for each user and can only be accessed by that user.
   // They are used to manage the user's private files and resources.
   isPersonal Boolean @default(false)
+  // Owner access groups are automatically created for each tenant and can only be accessed by the tenant owner.
+  isOwner    Boolean @default(false)
 
   resources FileDescriptor[]
   read      Boolean          @default(false)

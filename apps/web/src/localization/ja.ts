@@ -127,10 +127,17 @@ export default {
   },
   accessGroup: {
     createFailed: "アクセスグループの作成に失敗しました。",
+    editFailed: "アクセスグループの編集に失敗しました。",
     deleteFailed: "アクセスグループの削除に失敗しました。",
     chatDirNotAllowed: "チャットディレクトリはアクセスグループに追加できません",
     privateDirNotAllowed: "プライベートディレクトリはアクセスグループに追加できません",
     personalGroupNotDeletable: "個人用アクセスグループは削除できません",
+    personalGroupNotEditable: "個人用アクセスグループのリソースとユーザーは編集できません",
+    ownerGroupNotEditable: "オーナーアクセスグループのリソースとユーザーは編集できません",
+  },
+  user: {
+    editFailed: "ユーザーの編集に失敗しました。",
+    cannotEditUser: "ユーザーを編集できません。",
   },
   file: {
     backToDirectory: "ディレクトリに戻る",
@@ -297,6 +304,14 @@ export default {
       confirm: "以下のアクセスグループを削除してもよろしいですか？",
       failed: "失敗",
     },
+    accessGroupResourceDelete: {
+      title: "リソースをアクセスグループから削除",
+      confirm: "このリソースをアクセスグループから削除してもよろしいですか？",
+    },
+    accessGroupUserDelete: {
+      title: "ユーザーをアクセスグループから削除",
+      confirm: "このユーザーをアクセスグループから削除してもよろしいですか？",
+    },
     agentDelete: {
       title: "エージェント削除",
       confirm: 'エージェント "{0}" を削除してもよろしいですか？',
@@ -309,6 +324,14 @@ export default {
       noFiles: "ファイルがありません",
       select: "選択",
       close: "閉じる",
+    },
+    userSelect: {
+      title: "ユーザー選択",
+      name: "名前",
+      email: "メールアドレス",
+      role: "権限",
+      noUsers: "ユーザーがありません",
+      searchPlaceholder: "ユーザー名またはメールアドレスで検索",
     },
   },
   settingUser: {
@@ -339,7 +362,13 @@ export default {
   settingAccessGroup: {
     title: "アクセスグループ管理",
     description: "アクセスグループを管理します",
+    editTitle: "アクセスグループ編集",
+    edit: "編集",
     delete: "削除",
+    addResource: "リソースを追加",
+    addUser: "ユーザーを追加",
+    fileAdded: "ファイルをアクセスグループに追加しました",
+    userAdded: "ユーザーをアクセスグループに追加しました",
     yes: "Yes",
     no: "No",
     details: {

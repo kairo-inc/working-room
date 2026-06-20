@@ -5,7 +5,9 @@ import { AppUser, AppUserSetting } from "../../types/user"
 
 export type UserServiceGetMySettingResult = AppUserSetting
 
-export type UserServiceGetListArg = PageArg<UserSortBy>
+export type UserServiceGetListArg = PageArg<UserSortBy> & {
+  charContains?: string
+}
 export type UserServiceGetListResult = PageResult<AppUser>
 
 export type UserServiceEditMySelfArg = {

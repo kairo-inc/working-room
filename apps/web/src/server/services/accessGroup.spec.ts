@@ -255,4 +255,73 @@ describe("[Failure] AccessGroupService", () => {
       await expect(result).rejects.toThrow(NoContextError)
     })
   })
+
+  it("Can't edit a personal access group to add/remove users or resources", async () => {
+    await runWithDiContainer(testContainer, async () => {
+      const accessGroupService = testContainer.resolve<AccessGroupService>("AccessGroupService")
+      const personalAccessGroup = await prismaClient.accessGroup.findFirstOrThrow({
+        where: { users: { some: { id: testUserId } }, isPersonal: true },
+      })
+
+      const resultAddUser = runWithPrivateContext({ idToken: testUserIdTokenAdmin }, async () => {
+        return await accessGroupService.edit({
+          id: personalAccessGroup.id,
+          userIdsToAdd: ["any-user-id"],
+        })
+      })
+      await expect(resultAddUser).rejects.toThrow(InvalidPrivateDirAccessError)
+
+      const resultRemoveUser = runWithPrivateContext({ idToken: testUserIdTokenAdmin }, async () => {
+        return await accessGroupService.edit({
+          id: personalAccessGroup.id,
+          userIdsToRemove: ["any-user-id"],
+        })
+      })
+      await expect(resultRemoveUser).rejects.toThrow(InvalidPrivateDirAccessError)
+
+      const resultAddResource = runWithPrivateContext({ idToken: testUserIdTokenAdmin }, async () => {
+        return await accessGroupService.edit({
+          id: personalAccessGroup.id,
+          resourceIdsToAdd: ["any-resource-id"],
+        })
+      })
+      await expect(resultAddResource).rejects.toThrow(InvalidPrivateDirAccessError)
+
+      const resultRemoveResource = runWithPrivateContext({ idToken: testUserIdTokenAdmin }, async () => {
+        return await accessGroupService.edit({
+          id: personalAccessGroup.id,
+          resourceIdsToRemove: ["any-resource-id"],
+        })
+      })
+      await expect(resultRemoveResource).rejects.toThrow(InvalidPrivateDirAccessError)
+    })
+  })
+
+  it("Can't delete personal access group even with owner role", async () => {
+    await runWithDiContainer(testContainer, async () => {
+      const accessGroupService = testContainer.resolve<AccessGroupService>("AccessGroupService")
+      const personalAccessGroup = await prismaClient.accessGroup.findFirstOrThrow({
+        where: { users: { some: { id: testUserId } }, isPersonal: true },
+      })
+
+      const resultDelete = runWithPrivateContext({ idToken: testUserIdTokenAdmin }, async () => {
+        return await accessGroupService.delete({ id: personalAccessGroup.id })
+      })
+      await expect(resultDelete).rejects.toThrow(BadRequestError)
+    })
+  })
+
+  it("Can't delete owner access group even with owner role", async () => {
+    await runWithDiContainer(testContainer, async () => {
+      const accessGroupService = testContainer.resolve<AccessGroupService>("AccessGroupService")
+      const ownerAccessGroup = await prismaClient.accessGroup.findFirstOrThrow({
+        where: { users: { some: { id: testUserId } }, isOwner: true },
+      })
+
+      const resultDelete = runWithPrivateContext({ idToken: testUserIdTokenAdmin }, async () => {
+        return await accessGroupService.delete({ id: ownerAccessGroup.id })
+      })
+      await expect(resultDelete).rejects.toThrow(BadRequestError)
+    })
+  })
 })

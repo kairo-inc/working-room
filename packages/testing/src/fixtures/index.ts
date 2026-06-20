@@ -166,7 +166,7 @@ export const createTestPrismaClient = async (options?: { withoutFixtures?: boole
             name: `Owner access group`,
             read: true,
             write: true,
-            isPersonal: false,
+            isOwner: true,
             tenant: { connect: { id: tenant.id } },
             resources: {
               connect: { id: rootDir.id },
