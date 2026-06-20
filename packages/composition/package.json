@@ -6,21 +6,21 @@
     ".": "./src/index.ts"
   },
   "peerDependencies": {
-    "@ai-sdk/anthropic": "^3.0.0",
-    "@ai-sdk/openai": "^3.0.0",
-    "@prisma/client": "^6.19.3",
+    "@ai-sdk/anthropic": "3.0.0",
+    "@ai-sdk/openai": "3.0.0",
+    "@prisma/client": "6.19.3",
     "@wr/access": "workspace:*",
     "@wr/core": "workspace:*",
     "@wr/db": "workspace:*",
     "@wr/shared": "workspace:*",
     "@wr/shared-node": "workspace:*",
-    "ai": "^6.0.0",
-    "chardet": "^2.1.1",
-    "cuid": "^3.0.0",
-    "mime": "^4.1.0",
-    "tsyringe": "^4.10.0"
+    "ai": "6.0.0",
+    "chardet": "2.1.1",
+    "cuid": "3.0.0",
+    "mime": "4.1.0",
+    "tsyringe": "4.10.0"
   },
   "devDependencies": {
-    "@types/node": "^25.9.4"
+    "@types/node": "25.9.4"
   }
 }
