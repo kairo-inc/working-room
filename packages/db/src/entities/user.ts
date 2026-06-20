@@ -67,4 +67,5 @@ export class EntityUserSecret implements Omit<User, "deletedAt" | "privateDirId"
   } as const satisfies Prisma.UserSelect
 }
 
-export type UserSortBy = "createdAt" | "updatedAt" | "email" | "name"
+export const UserSortByList = ["createdAt", "updatedAt", "email", "name"] as const
+export type UserSortBy = (typeof UserSortByList)[number]

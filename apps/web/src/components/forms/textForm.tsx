@@ -24,7 +24,7 @@ export interface TextFormProps extends ComponentPropsWithoutRef<"input">, Varian
 }
 
 export const TextForm = forwardRef<HTMLInputElement, TextFormProps>(
-  ({ className, variant = "default", formName, label, disabled, ...props }, ref) => {
+  ({ className, variant = "default", formName, label, disabled, onChange, ...props }, ref) => {
     const { input, meta } = useField(formName)
     const isDisabled = meta.submitting || disabled
     const showError = meta.touched && meta.error
@@ -39,7 +39,18 @@ export const TextForm = forwardRef<HTMLInputElement, TextFormProps>(
         <label htmlFor={formName} className="text-sm">
           {label}
         </label>
-        <input id={formName} className={variants({ className, variant })} {...input} {...props} disabled={isDisabled} ref={ref} />
+        <input
+          id={formName}
+          className={variants({ className, variant })}
+          {...input}
+          {...props}
+          disabled={isDisabled}
+          ref={ref}
+          onChange={(e) => {
+            input.onChange(e)
+            onChange?.(e)
+          }}
+        />
         <span className="text-destructive h-4 text-xs">{showError ? meta.error : ""}</span>
       </div>
     )

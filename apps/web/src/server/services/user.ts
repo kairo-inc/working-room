@@ -39,8 +39,15 @@ export class UserServiceImpl extends UserService {
 
   @guard({ onlyAccept: ["admin", "owner"] })
   async getList(args: UserServiceGetListArg): Promise<UserServiceGetListResult> {
-    const { ...page } = args
-    const { data, ...rest } = await this.userSource.findMany("EntityUser", { where: {}, ...page })
+    const { charContains, ...page } = args
+
+    const hasQurery = charContains && charContains.trim().length > 0
+    const { data, ...rest } = await this.userSource.findMany("EntityUser", {
+      where: {
+        OR: hasQurery ? [{ name: { contains: charContains } }, { email: { contains: charContains } }] : undefined,
+      },
+      ...page,
+    })
     return {
       data: data.map(mapUserEntityToApp),
       ...rest,

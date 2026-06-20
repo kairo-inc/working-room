@@ -1,4 +1,4 @@
-import { BadRequestError, InvalidChatDirAccessError, InvalidPrivateDirAccessError } from "@wr/shared"
+import { BadRequestError, InvalidChatDirAccessError, InvalidPrivateDirAccessError, InvalidRootDirAccessError } from "@wr/shared"
 
 import { L } from "../../localization"
 import { handleError } from "../../middleware/trpc"
@@ -25,6 +25,37 @@ export const useAccessGroupCreate = () => {
             },
           ],
           L.accessGroup.createFailed
+        )
+      }
+    },
+  }
+}
+
+export const useAccessGroupEdit = () => {
+  const { mutateAsync, mutate: _, ...rest } = trpc.accessGroupEdit.useMutation()
+  return {
+    ...rest,
+    mutateAsync: async (...args: Parameters<typeof mutateAsync>) => {
+      try {
+        return await mutateAsync(...args)
+      } catch (e) {
+        return handleError(
+          e,
+          [
+            {
+              error: InvalidChatDirAccessError,
+              message: L.accessGroup.chatDirNotAllowed,
+            },
+            {
+              error: InvalidPrivateDirAccessError,
+              message: L.accessGroup.personalGroupNotEditable,
+            },
+            {
+              error: InvalidRootDirAccessError,
+              message: L.accessGroup.ownerGroupNotEditable,
+            },
+          ],
+          L.accessGroup.editFailed
         )
       }
     },

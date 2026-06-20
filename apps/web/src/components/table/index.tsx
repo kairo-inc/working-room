@@ -35,7 +35,7 @@ export const Table = ({ headers, rows, className, ...props }: TableProps) => {
             <tr key={index} className="hover:bg-muted bg-card border-t" {...row.dataAttrs} onClick={row.onClick}>
               {row.items.map((cell, cellIndex) => (
                 <td key={cellIndex} className={tdClassName}>
-                  {cell}
+                  <div className="flex items-center truncate">{cell}</div>
                 </td>
               ))}
             </tr>

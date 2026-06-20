@@ -125,10 +125,17 @@ export default {
   },
   accessGroup: {
     createFailed: "Failed to create access group.",
+    editFailed: "Failed to edit access group.",
     deleteFailed: "Failed to delete access group.",
     chatDirNotAllowed: "Chat directories cannot be added to access groups",
     privateDirNotAllowed: "Private directories cannot be added to access groups",
     personalGroupNotDeletable: "Personal access groups cannot be deleted",
+    personalGroupNotEditable: "Personal access groups cannot have resources or users edited",
+    ownerGroupNotEditable: "Owner access groups cannot have resources or users edited",
+  },
+  user: {
+    editFailed: "Failed to edit user.",
+    cannotEditUser: "Cannot edit user.",
   },
   file: {
     backToDirectory: "Back to directory",
@@ -295,6 +302,14 @@ export default {
       confirm: "Are you sure you want to delete the following access group?",
       failed: "Failed",
     },
+    accessGroupResourceDelete: {
+      title: "Delete Resource from Access Group",
+      confirm: "Are you sure you want to remove this resource from the access group?",
+    },
+    accessGroupUserDelete: {
+      title: "Delete User from Access Group",
+      confirm: "Are you sure you want to remove this user from the access group?",
+    },
     agentDelete: {
       title: "Delete Agent",
       confirm: 'Are you sure you want to delete the agent "{0}"?',
@@ -307,6 +322,14 @@ export default {
       noFiles: "No files found",
       select: "Select",
       close: "Close",
+    },
+    userSelect: {
+      title: "Select User",
+      name: "Name",
+      email: "Email",
+      role: "Role",
+      noUsers: "No users found",
+      searchPlaceholder: "Search users by name or email",
     },
   },
   settingUser: {
@@ -337,7 +360,13 @@ export default {
   settingAccessGroup: {
     title: "Access Group Management",
     description: "Manage access group",
+    editTitle: "Edit Access Group",
+    edit: "Edit",
     delete: "Delete",
+    addResource: "Add Resource",
+    addUser: "Add User",
+    fileAdded: "File added to access group",
+    userAdded: "User added to access group",
     yes: "Yes",
     no: "No",
     details: {

@@ -2,7 +2,7 @@ import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import { getServerSession } from "next-auth"
 
 import { UserRole } from "@wr/db"
-import { AuthenticationError, NotFoundError } from "@wr/shared"
+import { AuthenticationError, NotFoundError, PermissionDeniedError, isErrorEqual } from "@wr/shared"
 import { runWithPrivateContext, runWithPublicContext } from "@wr/shared-node"
 
 import { Route } from "../route"
@@ -77,13 +77,14 @@ export const handleSsr = <T>(args?: Args<T>) => {
       }
     } catch (e) {
       console.error("Error in handleSsr:", e)
-      if (e instanceof NotFoundError) {
+      if (isErrorEqual(e, NotFoundError)) {
         return { redirect: { destination: "/404", permanent: false } }
-      }
-      if (e instanceof AuthenticationError) {
+      } else if (isErrorEqual(e, AuthenticationError)) {
         if (!isPublicPage) {
           return { redirect: { destination: Route.signin(), permanent: false } }
         }
+      } else if (isErrorEqual(e, PermissionDeniedError)) {
+        return { redirect: { destination: "/403", permanent: false } }
       }
       return { redirect: { destination: "/500", permanent: false } }
     }
