@@ -20,7 +20,7 @@ type UserInviteModalProps = ModalProps & Args
 
 const validate = (values: FormType) => {
   const error = {} as { email?: string }
-  const emailCheck = formStringRequired().safeParse(values?.email ?? "")
+  const emailCheck = formStringRequired({ maxLength: 128 }).safeParse(values?.email ?? "")
   const hasAtSign = values?.email?.includes("@")
   const hasDotAfterAtSign = values?.email?.split("@")[1]?.includes(".")
   const notEndWithDot = values?.email?.endsWith(".") === false
@@ -29,7 +29,7 @@ const validate = (values: FormType) => {
     error.email = emailCheck.error.issues[0]?.message
   } else {
     if (!hasAtSign || !hasDotAfterAtSign || !notEndWithDot || hasSpaces) {
-      error.email = L.modal.userInvite.invalidEmail
+      error.email = L.common.validation.invalidEmail
     }
   }
   return error

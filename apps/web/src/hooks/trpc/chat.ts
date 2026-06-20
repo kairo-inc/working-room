@@ -5,20 +5,6 @@ import { handleError } from "../../middleware/trpc"
 import { AppStreamEvent } from "../../types/stream"
 import { trpc } from "../../utils/trpc"
 
-export const useChatCreate = () => {
-  const { mutateAsync, mutate: _, ...rest } = trpc.chatCreate.useMutation()
-  return {
-    ...rest,
-    mutateAsync: async (...args: Parameters<typeof mutateAsync>) => {
-      try {
-        return await mutateAsync(...args)
-      } catch (e) {
-        return handleError(e, [], "Failed to create a new chat.")
-      }
-    },
-  }
-}
-
 export const useChatGetList = ({ sortBy, sortDirection }: { sortBy?: ChatSortBy; sortDirection?: SortDirection }) => {
   return trpc.chatGetList.useInfiniteQuery(
     { sortBy, sortDirection },

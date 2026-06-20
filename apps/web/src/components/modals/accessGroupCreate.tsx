@@ -1,11 +1,13 @@
 import { useRouter } from "next/router"
 import { Form } from "react-final-form"
+import { z } from "zod"
 
 import { useNotification } from "../../contexts/notification"
 import { useAccessGroupCreate } from "../../hooks/trpc/accessGroup"
 import { L } from "../../localization"
 import { AppFileDescriptorEssential } from "../../types/file"
 import { RectangleButton } from "../buttons/rectangleButton"
+import { formStringRequired } from "../formSchema"
 import { TextAreaForm } from "../forms/textAreaForm"
 import { TextForm } from "../forms/textForm"
 import { Modal, ModalBaseArgs, ModalProps, useModal } from "./modal"
@@ -23,11 +25,19 @@ type AccessGroupCreateModalProps = ModalProps & Args
 
 const validate = (values: FormData) => {
   const errors: Partial<Record<keyof FormData, string>> = {}
-  if (!values.name) {
-    errors.name = L.modal.accessGroupCreate.groupNameRequired
-  } else if (values.name.length > 50) {
-    errors.name = L.modal.accessGroupCreate.groupNameMaxLength
+
+  const nameCheck = formStringRequired({ maxLength: 255 }).safeParse(values?.name ?? "")
+  if (!nameCheck.success) {
+    errors.name = nameCheck.error.issues[0]?.message
   }
+
+  if (values.description !== undefined && values.description !== null) {
+    const descriptionCheck = z.string().max(1024, L.common.validation.maxLength).safeParse(values.description)
+    if (!descriptionCheck.success) {
+      errors.description = descriptionCheck.error.issues[0]?.message
+    }
+  }
+
   return errors
 }
 

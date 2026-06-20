@@ -18,9 +18,17 @@ type FormData = {
 
 const validate = (values: FormData) => {
   const error = {} as { email?: string }
-  const emailCheck = formStringRequired().safeParse(values.email ?? "")
+  const emailCheck = formStringRequired({ maxLength: 128 }).safeParse(values.email ?? "")
   if (!emailCheck.success) {
     error.email = emailCheck.error.issues[0]?.message
+  } else {
+    const hasAtSign = values.email?.includes("@")
+    const hasDotAfterAtSign = values.email?.split("@")[1]?.includes(".")
+    const notEndWithDot = values.email?.endsWith(".") === false
+    const hasSpaces = values.email?.includes(" ")
+    if (!hasAtSign || !hasDotAfterAtSign || !notEndWithDot || hasSpaces) {
+      error.email = L.common.validation.invalidEmail
+    }
   }
   return error
 }

@@ -9,6 +9,7 @@ import { L } from "../../../localization"
 import { Route } from "../../../route"
 import { AppFileDescriptor } from "../../../types/file"
 import { RectangleButton } from "../../buttons/rectangleButton"
+import { formStringRequired } from "../../formSchema"
 import { DummyForm } from "../../forms/dummyForm"
 import { SelectForm } from "../../forms/selectForm"
 import { TextAreaForm } from "../../forms/textAreaForm"
@@ -29,19 +30,15 @@ type FormData = {
 
 const validate = (values: FormData) => {
   const errors: Partial<Record<keyof FormData, string>> = {}
-  if (!values.name) {
-    errors.name = L.agent.create.validation.nameRequired
-  } else if (values.name.length > 50) {
-    errors.name = L.agent.create.validation.nameMaxLength
-  }
 
-  if (!values.descriptionForAgent) {
-    errors.descriptionForAgent = L.agent.create.validation.descriptionForAgentRequired
-  }
+  const nameCheck = formStringRequired({ maxLength: 128 }).safeParse(values.name ?? "")
+  if (!nameCheck.success) errors.name = nameCheck.error.issues[0]?.message
 
-  if (!values.prompt) {
-    errors.prompt = L.agent.create.validation.promptRequired
-  }
+  const descriptionForAgentCheck = formStringRequired({ maxLength: 2048 }).safeParse(values.descriptionForAgent ?? "")
+  if (!descriptionForAgentCheck.success) errors.descriptionForAgent = descriptionForAgentCheck.error.issues[0]?.message
+
+  const promptCheck = formStringRequired({ maxLength: 8192 }).safeParse(values.prompt ?? "")
+  if (!promptCheck.success) errors.prompt = promptCheck.error.issues[0]?.message
 
   if (!values.tier) {
     errors.tier = L.agent.create.validation.tierRequired
@@ -49,8 +46,8 @@ const validate = (values: FormData) => {
     errors.tier = L.agent.create.validation.tierInvalid
   }
 
-  if (values.description && values.description.length > 200) {
-    errors.description = L.agent.create.validation.descriptionMaxLength
+  if (values.description && values.description.length > 1024) {
+    errors.description = L.common.validation.maxLength
   }
 
   return errors

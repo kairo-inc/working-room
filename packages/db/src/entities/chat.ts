@@ -41,4 +41,5 @@ export class EntityChat implements Omit<Chat, "deletedAt" | "userId" | "pendingA
   } as const satisfies Prisma.ChatSelect
 }
 
-export type ChatSortBy = "createdAt" | "updatedAt"
+export const ChatSortByList = ["createdAt", "updatedAt"] as const
+export type ChatSortBy = (typeof ChatSortByList)[number]

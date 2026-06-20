@@ -135,3 +135,8 @@ export class AiProviderError extends BaseError {
   public statusCode = 502
   public errorCode = "AI_PROVIDER_ERROR"
 }
+
+export class ValidationError extends BaseError {
+  public statusCode = 400
+  public errorCode = "VALIDATION_ERROR"
+}

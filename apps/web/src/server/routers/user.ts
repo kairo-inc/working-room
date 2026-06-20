@@ -7,7 +7,7 @@ import { getWebAppDiContainer } from "../container"
 import { UserService } from "../services/userType"
 import { privateProcedure } from "../trpc"
 
-export const userEdit = privateProcedure.input(z.object({ name: z.string().optional() })).mutation(async ({ input }) => {
+export const userEdit = privateProcedure.input(z.object({ name: z.string().min(1).max(128).optional() })).mutation(async ({ input }) => {
   const service = getWebAppDiContainer().resolve<UserService>("UserService")
   await service.editMySelf({ name: input.name })
 })
@@ -15,10 +15,10 @@ export const userEdit = privateProcedure.input(z.object({ name: z.string().optio
 export const userGetList = privateProcedure
   .input(
     z.object({
-      cursor: z.number().optional(),
+      cursor: z.number().min(0).optional(),
       sortBy: z.enum(UserSortByList).optional(),
       sortDirection: z.enum(SortDirectionList).optional(),
-      take: z.number().optional(),
+      take: z.number().int().min(1).optional(),
 
       // Fileter query parameters
       charContains: z.string().max(128).optional(),

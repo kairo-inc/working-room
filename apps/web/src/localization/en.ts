@@ -71,9 +71,12 @@ export default {
     noDataAvailable: "No data available.",
     goBackToHome: "Go back to home",
     loading: "Loading...",
+    invalidInput: "Invalid input",
     validation: {
       required: "Required",
+      maxLength: "Exceeds maximum length",
       passwordMinLength: "Password must be at least 8 characters long",
+      invalidEmail: "Please enter a valid email address",
     },
   },
   errorPage: {
@@ -136,6 +139,18 @@ export default {
   user: {
     editFailed: "Failed to edit user.",
     cannotEditUser: "Cannot edit user.",
+  },
+  tenant: {
+    cannotInviteUser: "Cannot invite user.",
+    inviteUserFailed: "Failed to invite user.",
+    cannotEditTenant: "Cannot edit tenant.",
+    editTenantFailed: "Failed to edit tenant.",
+    cannotDeleteUser: "Cannot delete user.",
+    deleteUserFailed: "Failed to delete user.",
+    cannotResetPassword: "Cannot reset password.",
+    resetPasswordFailed: "Failed to reset password.",
+    cannotChangeRole: "Cannot change role.",
+    changeRoleFailed: "Failed to change role.",
   },
   file: {
     backToDirectory: "Back to directory",
@@ -208,7 +223,6 @@ export default {
       title: "Invite User",
       emailLabel: "Email",
       emailPlaceholder: "user@workingroom.io",
-      invalidEmail: "Please enter a valid email address",
       invite: "Invite",
       failed: "Failed",
     },
@@ -421,13 +435,8 @@ export default {
         promptPlaceholder: "e.g. Generate a summary of company rules",
       },
       validation: {
-        nameRequired: "Name is required",
-        nameMaxLength: "Name must be less than 50 characters",
-        descriptionForAgentRequired: "Description for agent is required",
-        promptRequired: "System prompt is required",
         tierRequired: "Model tier is required",
         tierInvalid: "Invalid model tier",
-        descriptionMaxLength: "Description must be less than 200 characters",
       },
     },
     detail: {
