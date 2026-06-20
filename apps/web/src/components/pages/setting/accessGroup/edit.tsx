@@ -150,7 +150,7 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
               })),
             ]}
           />
-          <Pager {...userList} className="mt-4" />
+          <Pager {...userList} className="mt-2" />
         </Section>
       </BodyLayout>
       {FileSelectModal}

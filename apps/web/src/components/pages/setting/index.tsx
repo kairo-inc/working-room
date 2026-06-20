@@ -10,6 +10,8 @@ import { L } from "../../../localization"
 import { Route } from "../../../route"
 import { AppTenant } from "../../../types/tenant"
 import { AppTokenUsageOnTenant } from "../../../types/tokenUsage"
+import { HorizontalAlignedItems } from "../../layout/horizontalAlignedItems"
+import { VerticalAlignedItems } from "../../layout/verticalAlignedItems"
 import { TokenUsageTable } from "./tokenUsage"
 
 export interface PageSettingProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -27,10 +29,7 @@ export const PageSetting = ({ data, tokenUsage }: PageSettingProps) => {
     <PageLayout>
       <BodyLayout title={L.setting.title} description={L.setting.description} containerClassName="gap-10">
         <Section title={L.setting.organization.title} tail={editButton}>
-          <div className="grid grid-cols-[auto_1fr] gap-2 gap-x-4 text-base">
-            <div className="font-bold">{L.setting.organization.name}</div>
-            <div>{data.name}</div>
-          </div>
+          <VerticalAlignedItems items={[{ label: L.setting.organization.name, value: data.name }]} />
         </Section>
         <Section title={L.setting.userManagement.title}>
           <RectangleButton href={Route.settingUserList()}>{L.setting.userManagement.goToList}</RectangleButton>
@@ -39,14 +38,13 @@ export const PageSetting = ({ data, tokenUsage }: PageSettingProps) => {
           <RectangleButton href={Route.settingAccessGroup()}>{L.setting.accessGroup.goToList}</RectangleButton>
         </Section>
         <Section title={L.setting.agentSettings.title}>
-          <div className="grid grid-cols-[auto_1fr] gap-2 gap-x-4 text-base">
-            <div className="font-bold">{L.setting.agentSettings.name}</div>
-            <div className="font-bold">{L.setting.agentSettings.description}</div>
-            <div>{L.setting.agentSettings.coordinator.name}</div>
-            <div>{L.setting.agentSettings.coordinator.description}</div>
-            <div>{L.setting.agentSettings.heavy.name}</div>
-            <div>{L.setting.agentSettings.heavy.description}</div>
-          </div>
+          <HorizontalAlignedItems
+            header={[L.setting.agentSettings.name, L.setting.agentSettings.description]}
+            items={[
+              { values: [L.setting.agentSettings.coordinator.name, L.setting.agentSettings.coordinator.description] },
+              { values: [L.setting.agentSettings.heavy.name, L.setting.agentSettings.heavy.description] },
+            ]}
+          />
         </Section>
         <Section title={L.setting.tokenUsage.title}>
           <TokenUsageTable data={tokenUsage} />

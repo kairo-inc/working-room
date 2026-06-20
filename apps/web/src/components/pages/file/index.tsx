@@ -68,7 +68,7 @@ export const PageFile = ({ data }: PageFileProps) => {
         return (
           <object data={urlObject} type="application/pdf" className="flex-1">
             <p>
-              {L.file.noPdfPlugin}{" "}
+              {L.file.noPdfPlugin}
               <a href={urlObject} target="_blank" rel="noopener noreferrer">
                 {L.file.downloadPdf}
               </a>
@@ -103,7 +103,7 @@ export const PageFile = ({ data }: PageFileProps) => {
           </div>
         }
       >
-        <div className="flex h-full w-full flex-1 gap-8 pb-8">
+        <div className="flex h-full w-full flex-1 gap-8">
           <div className="flex min-h-full flex-1 flex-col wrap-break-word">{renderContent()}</div>
           <FileHistoryPanel
             descId={data.id}
