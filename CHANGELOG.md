@@ -4,6 +4,20 @@ All notable changes to WorkingRoom will be documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.1] - 2026-06-20
+
+### Added
+
+#### Access Control
+
+- Added an Access Group edit page where owners can update the group name, description, and settings.
+- Added member management for Access Groups: owners can now add and remove users directly from the edit page.
+- Added inline editing for Access Group details, allowing the name, description, and toggle settings to be edited in place without navigating to a separate form.
+
+### Documentation
+
+- Localized the user-facing documentation site into Japanese.
+
 ## [0.2.0] - 2026-06-19
 
 ### Added
