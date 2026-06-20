@@ -8356,21 +8356,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:26.0.0":
   version: 26.0.0
   resolution: "@types/node@npm:26.0.0"
   dependencies:
     undici-types: "npm:~8.3.0"
   checksum: 10c0/f36e21634fd8e8ded162ca486508bd8bb229d398a8d5541f6d8c1255968d4464e53327a77f403b216ef98e3b6f6956882eef83e4857d4bc2be9569dd55d37aae
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:25.9.4":
-  version: 25.9.4
-  resolution: "@types/node@npm:25.9.4"
-  dependencies:
-    undici-types: "npm:>=7.24.0 <7.24.7"
-  checksum: 10c0/4b19670ef5dbefa836a2d4a9ed0b5ac6befbc0844bfdd12833234ff8fa68da1f65e6362d2ef87acf7e7da9d6ff649bf81c454d12e802b7e7fa9246a15c0edcf6
   languageName: node
   linkType: hard
 
@@ -9292,7 +9283,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/access@workspace:packages/access"
   dependencies:
-    "@types/node": "npm:25.9.4"
+    "@types/node": "npm:26.0.0"
   peerDependencies:
     "@ai-sdk/anthropic": 3.0.0
     "@ai-sdk/openai": 3.0.0
@@ -9316,7 +9307,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/composition@workspace:packages/composition"
   dependencies:
-    "@types/node": "npm:25.9.4"
+    "@types/node": "npm:26.0.0"
   peerDependencies:
     "@ai-sdk/anthropic": 3.0.0
     "@ai-sdk/openai": 3.0.0
@@ -9338,7 +9329,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/core@workspace:packages/core"
   dependencies:
-    "@types/node": "npm:25.9.4"
+    "@types/node": "npm:26.0.0"
   peerDependencies:
     "@ai-sdk/anthropic": 3.0.0
     "@ai-sdk/openai": 3.0.0
@@ -9400,7 +9391,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/shared-node@workspace:packages/shared-node"
   dependencies:
-    "@types/node": "npm:25.9.4"
+    "@types/node": "npm:26.0.0"
     jsonwebtoken: "npm:9.0.3"
     jwks-rsa: "npm:4.1.0"
   peerDependencies:
@@ -9418,7 +9409,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/shared@workspace:packages/shared"
   dependencies:
-    "@types/node": "npm:25.9.4"
+    "@types/node": "npm:26.0.0"
   peerDependencies:
     "@ai-sdk/anthropic": 3.0.0
     "@ai-sdk/openai": 3.0.0
@@ -9431,7 +9422,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/testing@workspace:packages/testing"
   dependencies:
-    "@types/node": "npm:25.9.4"
+    "@types/node": "npm:26.0.0"
     jsonwebtoken: "npm:9.0.3"
     jwks-rsa: "npm:4.1.0"
   peerDependencies:
@@ -21597,13 +21588,6 @@ __metadata:
     has-symbols: "npm:^1.1.0"
     which-boxed-primitive: "npm:^1.1.1"
   checksum: 10c0/7dbd35ab02b0e05fe07136c72cb9355091242455473ec15057c11430129bab38b7b3624019b8778d02a881c13de44d63cd02d122ee782fb519e1de7775b5b982
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:>=7.24.0 <7.24.7":
-  version: 7.24.6
-  resolution: "undici-types@npm:7.24.6"
-  checksum: 10c0/d9cd8befb643ac904615c280a095ba4240531f6bb4a5e75a22a7483630ca8d3f1016d2ab6ace6ceda1f63b3a2db2fe037fafe121d6917a0187573aa548ff78ca
   languageName: node
   linkType: hard
 

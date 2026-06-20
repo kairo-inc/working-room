@@ -19,6 +19,6 @@
     "tsyringe": "4.10.0"
   },
   "devDependencies": {
-    "@types/node": "25.9.4"
+    "@types/node": "26.0.0"
   }
 }
