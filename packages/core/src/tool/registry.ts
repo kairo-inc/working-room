@@ -38,8 +38,12 @@ export class ToolRegistry {
     })
   }
 
-  getAsAiTools(): Record<string, DomainToolDef> {
+  getAsAiTools(options?: { withoutApprovalOnly?: boolean }): Record<string, DomainToolDef> {
     const tools = Array.from(this.tools.values())
+    if (options?.withoutApprovalOnly) {
+      // Filter out tools that require approval when the option is set, as sub-agents cannot invoke such tools without user approval.
+      return Object.fromEntries(tools.filter((t) => !t.needApproval).map((t) => [t.name, this.toAiTool(t)]))
+    }
     return Object.fromEntries(tools.map((t) => [t.name, this.toAiTool(t)]))
   }
 

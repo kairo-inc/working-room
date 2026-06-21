@@ -31,7 +31,7 @@ export interface PageChatProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Placeholder = () => {
   return (
-    <div className="text-muted-foreground/60 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-4xl font-bold select-none">
+    <div className="text-muted-foreground/60 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-4xl font-bold whitespace-nowrap select-none">
       {L.chat.placeholder}
     </div>
   )
