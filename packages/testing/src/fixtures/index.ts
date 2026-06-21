@@ -206,7 +206,7 @@ export const createTestPrismaClient = async (options?: { withoutFixtures?: boole
           isPersonal: true,
           tenant: { connect: { id: tenant.id } },
           resources: {
-            connect: { id: privateOtherUserRootDir.id },
+            connect: { id: testPrivateOtherUserRootDirId },
           },
         },
       },
