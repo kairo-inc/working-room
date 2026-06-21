@@ -26,7 +26,7 @@ const UserList = (args: {
   const { isLoading, userList, onUserSelected } = args
 
   const rowClassName = "text-sm cursor-pointer p-2 hover:bg-muted border-t border-border first:border-t-0"
-  const selectedRowClassName = "!bg-primary/20 !text-primary"
+  const selectedRowClassName = "!bg-link/20 !text-link"
   const placeholderClassName = "text-sm text-muted-foreground p-2 border-t border-border first:border-t-0 text-center"
   const headerCellClassName = "py-2 px-2 text-left text-sm font-normal text-muted-foreground p-2"
   const cellClassName = "py-2 px-2 border-t border-border text-sm text-left p-2"

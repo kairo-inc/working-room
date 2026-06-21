@@ -68,7 +68,7 @@ export const PageAgentList = ({ data }: PageAgentListProps) => {
         }
       >
         <Table
-          headers={[L.agent.list.name, L.agent.list.tier, L.agent.list.description]}
+          headers={[{ label: L.agent.list.name }, { label: L.agent.list.tier }, { label: L.agent.list.description }]}
           rows={data.data.map((item) => ({
             onClick: () => router.push(Route.agent(item.id)),
             items: [item.name, item.tier, item.description ?? L.agent.list.noData],

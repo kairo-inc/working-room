@@ -10,7 +10,7 @@ type RowData = {
 }
 
 type TableProps = React.ComponentPropsWithoutRef<"table"> & {
-  headers: string[]
+  headers: { label: string; tight?: boolean }[]
   rows: RowData[]
 }
 
@@ -23,8 +23,8 @@ export const Table = ({ headers, rows, className, ...props }: TableProps) => {
       <thead>
         <tr className="border-b text-base">
           {headers.map((header) => (
-            <th key={header} className={thClassName}>
-              {header}
+            <th key={header.label} className={clsx(thClassName, header.tight && "w-1")}>
+              {header.label}
             </th>
           ))}
         </tr>
