@@ -31,6 +31,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.1",
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
+    "@types/node": "24.13.2",
     "@vitest/coverage-v8": "4.1.9",
     "dotenv-cli": "11.0.0",
     "eslint": "9.39.4",
@@ -44,7 +45,7 @@
   },
   "packageManager": "yarn@4.5.3",
   "engines": {
-    "node": ">=20 <=22.x.x",
+    "node": ">=20 <25",
     "yarn": ">=4.0.0"
   }
 }

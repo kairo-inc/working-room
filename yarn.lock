@@ -8365,12 +8365,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:25.9.4":
-  version: 25.9.4
-  resolution: "@types/node@npm:25.9.4"
+"@types/node@npm:24.13.2":
+  version: 24.13.2
+  resolution: "@types/node@npm:24.13.2"
   dependencies:
-    undici-types: "npm:>=7.24.0 <7.24.7"
-  checksum: 10c0/4b19670ef5dbefa836a2d4a9ed0b5ac6befbc0844bfdd12833234ff8fa68da1f65e6362d2ef87acf7e7da9d6ff649bf81c454d12e802b7e7fa9246a15c0edcf6
+    undici-types: "npm:~7.18.0"
+  checksum: 10c0/d7d48a88a4feb0a6aac3cbfaf9ef3b12752b4b09447f88dd0b4c77c03b281e3d4330fe6982a99aedcd63fc16c7540a0c248b91eb2abb0b3edd884d7fe684e9ea
   languageName: node
   linkType: hard
 
@@ -9291,8 +9291,6 @@ __metadata:
 "@wr/access@workspace:packages/access":
   version: 0.0.0-use.local
   resolution: "@wr/access@workspace:packages/access"
-  dependencies:
-    "@types/node": "npm:25.9.4"
   peerDependencies:
     "@ai-sdk/anthropic": 3.0.0
     "@ai-sdk/openai": 3.0.0
@@ -9315,8 +9313,6 @@ __metadata:
 "@wr/composition@workspace:*, @wr/composition@workspace:packages/composition":
   version: 0.0.0-use.local
   resolution: "@wr/composition@workspace:packages/composition"
-  dependencies:
-    "@types/node": "npm:25.9.4"
   peerDependencies:
     "@ai-sdk/anthropic": 3.0.0
     "@ai-sdk/openai": 3.0.0
@@ -9337,8 +9333,6 @@ __metadata:
 "@wr/core@workspace:*, @wr/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@wr/core@workspace:packages/core"
-  dependencies:
-    "@types/node": "npm:25.9.4"
   peerDependencies:
     "@ai-sdk/anthropic": 3.0.0
     "@ai-sdk/openai": 3.0.0
@@ -9361,8 +9355,6 @@ __metadata:
     "@prisma/client": "npm:6.19.3"
     bcryptjs: "npm:3.0.3"
     prisma: "npm:6.19.3"
-    tsx: "npm:4.22.4"
-    typescript: "npm:6.0.3"
   peerDependencies:
     "@wr/shared": "workspace:*"
     "@wr/shared-node": "workspace:*"
@@ -9400,7 +9392,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/shared-node@workspace:packages/shared-node"
   dependencies:
-    "@types/node": "npm:25.9.4"
     jsonwebtoken: "npm:9.0.3"
     jwks-rsa: "npm:4.1.0"
   peerDependencies:
@@ -9417,8 +9408,6 @@ __metadata:
 "@wr/shared@workspace:*, @wr/shared@workspace:packages/shared":
   version: 0.0.0-use.local
   resolution: "@wr/shared@workspace:packages/shared"
-  dependencies:
-    "@types/node": "npm:25.9.4"
   peerDependencies:
     "@ai-sdk/anthropic": 3.0.0
     "@ai-sdk/openai": 3.0.0
@@ -9431,7 +9420,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/testing@workspace:packages/testing"
   dependencies:
-    "@types/node": "npm:25.9.4"
     jsonwebtoken: "npm:9.0.3"
     jwks-rsa: "npm:4.1.0"
   peerDependencies:
@@ -16900,11 +16888,11 @@ __metadata:
   linkType: hard
 
 "nanoid@npm:^3.3.12, nanoid@npm:^3.3.6":
-  version: 3.3.13
-  resolution: "nanoid@npm:3.3.13"
+  version: 3.3.14
+  resolution: "nanoid@npm:3.3.14"
   bin:
     nanoid: bin/nanoid.cjs
-  checksum: 10c0/e913cd6d081e3b646788aa36e686964f2746f15935759425c98344053676b9444efedff4d87915bfb38b1626057e66c788f59ee7746b48c2b7886a4b049ca2ac
+  checksum: 10c0/7e725371b561f91c808ca0c4f4752d8678695bb77fe0292c852dcbb23ea4d6b4a103f35fc5d5e95497cf9f2d7f93f5e9f459052170f61d6a3d0b49999f0a65c1
   languageName: node
   linkType: hard
 
@@ -21600,10 +21588,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:>=7.24.0 <7.24.7":
-  version: 7.24.6
-  resolution: "undici-types@npm:7.24.6"
-  checksum: 10c0/d9cd8befb643ac904615c280a095ba4240531f6bb4a5e75a22a7483630ca8d3f1016d2ab6ace6ceda1f63b3a2db2fe037fafe121d6917a0187573aa548ff78ca
+"undici-types@npm:~7.18.0":
+  version: 7.18.2
+  resolution: "undici-types@npm:7.18.2"
+  checksum: 10c0/85a79189113a238959d7a647368e4f7c5559c3a404ebdb8fc4488145ce9426fcd82252a844a302798dfc0e37e6fb178ff481ed03bc4caf634c5757d9ef43521d
   languageName: node
   linkType: hard
 
@@ -22501,6 +22489,7 @@ __metadata:
   dependencies:
     "@tailwindcss/postcss": "npm:4.3.1"
     "@trivago/prettier-plugin-sort-imports": "npm:6.0.2"
+    "@types/node": "npm:24.13.2"
     "@vitest/coverage-v8": "npm:4.1.9"
     dotenv-cli: "npm:11.0.0"
     eslint: "npm:9.39.4"
