@@ -6,10 +6,10 @@ import { useField } from "react-final-form"
 const variants = cva("h-8 w-14 outline-1 outline-border rounded-full relative inline-block cursor-pointer", {
   variants: {
     variant: {
-      on: "after:absolute after:inset-0 after:rounded-full after:bg-primary after:transition-transform after:w-6 after:h-6 after:top-1 after:translate-x-7",
-      off: "after:absolute after:inset-0 after:rounded-full after:bg-muted-foreground after:transition-transform after:w-6 after:h-6 after:top-1 after:translate-x-1",
+      on: "bg-card after:absolute after:inset-0 after:rounded-full after:bg-primary after:transition-transform after:w-6 after:h-6 after:top-1 after:translate-x-7",
+      off: "bg-background after:absolute after:inset-0 after:rounded-full after:bg-muted-foreground after:transition-transform after:w-6 after:h-6 after:top-1 after:translate-x-1",
       error: "!outline-destructive after:!bg-destructive",
-      disabled: "after:!bg-disabled-foreground cursor-not-allowed",
+      disabled: "!bg-disabled after:!bg-disabled-foreground !cursor-not-allowed",
     },
   },
 })

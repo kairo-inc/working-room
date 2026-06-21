@@ -82,14 +82,13 @@ export const UserSelectModal = ({ show, onClose, onUserSelected }: UserSelectMod
 
   return (
     <Modal show={show} onClose={onClose} title={L.modal.userSelect.title} containerClassName="w-[clamp(30vw,600px,80vw)] h-1/2">
-      <div className="flex-1 text-sm">
+      <div className="mt-4 flex-1 text-sm">
         <Form<FormData>
           onSubmit={() => {}}
           render={() => (
             <form>
               <TextForm
                 formName="search"
-                label={""}
                 placeholder={L.modal.userSelect.searchPlaceholder}
                 onChange={(e) => {
                   const value = e.target.value
