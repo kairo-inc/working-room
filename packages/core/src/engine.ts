@@ -220,7 +220,7 @@ export class ChatEngine {
 
   private async agentLoop(ctx: AgentContext, chatState: ChatState, signal?: AbortSignal): Promise<AgentRunResult> {
     const agent = this.agentRegistry.get(ctx.agentName)
-    const tools = this.buildTools()
+    const tools = this.buildTools(ctx.depth)
 
     let iterations = 0
     const textContents: string[] = []
@@ -428,9 +428,10 @@ export class ChatEngine {
 
   // spawn_agent is a built-in tool managed by the Engine, not the ToolRegistry.
   // The schema is built dynamically so the LLM knows exactly which agents are available.
-  private buildTools() {
+  private buildTools(depth: number = 0) {
     const spawnableAgents = this.agentRegistry.getSpawnableAgents()
-    const effectTools = this.toolRegistry.getAsAiTools()
+    // Sub-agents can not invoke tools that require approval, since there's no user to approve the tool calls.
+    const effectTools = this.toolRegistry.getAsAiTools({ withoutApprovalOnly: depth > 0 })
     if (spawnableAgents.length === 0) return effectTools
     const agentDescriptions = spawnableAgents.map((a) => `- ${a.name}: ${a.description}`).join("\n")
     const agentNameEnum = z.enum(spawnableAgents.map((a) => a.name) as [string, ...string[]])

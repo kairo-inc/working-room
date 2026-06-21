@@ -1,11 +1,11 @@
 import { VariantProps, cva } from "class-variance-authority"
 import clsx from "clsx"
 
-const variants = cva("w-full flex items-center gap-3 pl-4 py-2.5 transition-colors cursor-pointer border-transparent text-sm", {
+const variants = cva("w-full flex h-12 cursor-pointer items-center gap-3 border-transparent pl-5 text-sm transition-colors", {
   variants: {
     variant: {
-      default: "text-muted-foreground hover:bg-muted hover:text-foreground font-normal ",
-      selected: "bg-primary/10 text-primary font-medium ",
+      default: "font-normal text-muted-foreground hover:bg-muted hover:text-foreground ",
+      selected: "bg-primary/10 font-medium text-primary",
     },
   },
 })
@@ -20,7 +20,7 @@ export const SideMenuButton = ({ href, label, icon, variant = "default", classNa
   return (
     <a href={href} className={clsx(variants({ variant: variant }), className)} {...props}>
       {icon}
-      {label}
+      <div className="hidden md:block">{label}</div>
     </a>
   )
 }
