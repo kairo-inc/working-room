@@ -648,7 +648,6 @@ export class FileAccessServiceImpl extends FileAccessService {
     const { userId } = this.fileAccessContext
     const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
     const remaining = maxItems - collected.length
-
     let children: DomainFileDescriptor[]
     const otherUserPrivateDirIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
       where: {
@@ -681,8 +680,9 @@ export class FileAccessServiceImpl extends FileAccessService {
           },
         },
       })
-      const visibleFolderIds = visiblePolicies.flatMap((policy) => policy.resources.map((res) => res.id))
-
+      const visibleFolderIds = visiblePolicies
+        .flatMap((policy) => policy.resources.map((res) => res.pathIds.split("/").filter(Boolean)))
+        .flat()
       const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
         where: {
           parentId: descId,
