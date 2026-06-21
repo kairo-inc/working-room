@@ -60,7 +60,7 @@ export const AccessGroupCreateModal = ({ show, data, onClose, onReject, onResolv
             })
             notify.info(L.modal.accessGroupCreate.success, L.modal.accessGroupCreate.successMessage.replace("{0}", values.name))
             onClose?.()
-            router.replace(router.asPath)
+            router.push(router.asPath)
             onResolve?.()
           } catch (e) {
             notify.error(L.modal.accessGroupCreate.failed, e.message)

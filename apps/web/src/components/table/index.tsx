@@ -32,7 +32,12 @@ export const Table = ({ headers, rows, className, ...props }: TableProps) => {
       <tbody>
         {hasRow ? (
           rows.map((row, index) => (
-            <tr key={index} className="hover:bg-muted bg-card border-t" {...row.dataAttrs} onClick={row.onClick}>
+            <tr
+              key={index}
+              className={clsx("hover:bg-muted bg-card border-t", row.onClick && "cursor-pointer")}
+              {...row.dataAttrs}
+              onClick={row.onClick}
+            >
               {row.items.map((cell, cellIndex) => (
                 <td key={cellIndex} className={tdClassName}>
                   <div className="flex items-center truncate">{cell}</div>
