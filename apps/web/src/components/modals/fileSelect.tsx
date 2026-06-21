@@ -37,7 +37,7 @@ const FileList = ({
   const hasFiles = files.length > 0
   const headerClassName = "text-sm font-normal text-muted-foreground p-2"
   const rowClassName = "text-sm cursor-pointer p-2 hover:bg-muted border-t border-border first:border-t-0"
-  const selectedRowClassName = "!bg-primary/20 !text-primary"
+  const selectedRowClassName = "!bg-link/20 !text-link "
   const notDirectoryRowClassName = "cursor-not-allowed text-sm text-muted-foreground p-2 border-t border-border first:border-t-0"
   const placeholderClassName = "text-sm text-muted-foreground p-2 border-t border-border first:border-t-0 text-center"
   return (

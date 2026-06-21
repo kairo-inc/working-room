@@ -21,9 +21,9 @@ export const PageSettingAccessGroupList = ({ data }: PageSettingAccessGroupListP
       <BodyLayout title={L.settingAccessGroupList.title} description={L.settingAccessGroupList.description}>
         <Table
           headers={[
-            L.settingAccessGroupList.headers.name,
-            L.settingAccessGroupList.headers.type,
-            L.settingAccessGroupList.headers.description,
+            { label: L.settingAccessGroupList.headers.name },
+            { label: L.settingAccessGroupList.headers.type },
+            { label: L.settingAccessGroupList.headers.description },
           ]}
           rows={data.data.map((item) => ({
             onClick: () => router.push(Route.settingAccessGroup(item.id)),

@@ -17,7 +17,12 @@ export const TokenUsageTable = ({ data, ...props }: TokenUsageTableProps) => {
   return (
     <Table
       {...props}
-      headers={[L.setting.tokenUsage.date, L.setting.tokenUsage.model, L.setting.tokenUsage.inputCached, L.setting.tokenUsage.output]}
+      headers={[
+        { label: L.setting.tokenUsage.date },
+        { label: L.setting.tokenUsage.model },
+        { label: L.setting.tokenUsage.inputCached },
+        { label: L.setting.tokenUsage.output },
+      ]}
       rows={data.map((d) => ({
         items: [
           dayjs(d.createdAt).format("YYYY-MM-DD"),

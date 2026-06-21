@@ -64,7 +64,12 @@ export const UserList = ({ data, className, ...props }: UserListProps) => {
   return (
     <>
       <Table
-        headers={[L.settingUser.headers.name, L.settingUser.headers.email, L.settingUser.headers.role, L.settingUser.headers.createdAt]}
+        headers={[
+          { label: L.settingUser.headers.name },
+          { label: L.settingUser.headers.email },
+          { label: L.settingUser.headers.role },
+          { label: L.settingUser.headers.createdAt },
+        ]}
         rows={data.map((user) => ({
           dataAttrs: {
             "data-user-id": user.id,
