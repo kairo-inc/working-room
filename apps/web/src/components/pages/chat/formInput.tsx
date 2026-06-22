@@ -7,7 +7,7 @@ import { FileUploadPane } from "../../../components/file/upload"
 import { useNotification } from "../../../contexts/notification"
 import { useSetting } from "../../../contexts/setting"
 import { useChatEdit } from "../../../hooks/trpc/chat"
-import { useFileUploadFileToChat } from "../../../hooks/trpc/file"
+import { useFileGetParentOrRoot, useFileUploadFileToChat } from "../../../hooks/trpc/file"
 import { L } from "../../../localization"
 import { Route } from "../../../route"
 import { AppChatStatus } from "../../../types/chat"
@@ -50,7 +50,11 @@ export const ChatInputForm = ({ onSubmit, chat }: ChatInputFormProps) => {
   const { mutateAsync: uploadFile } = useFileUploadFileToChat()
   const { mutateAsync: editChat } = useChatEdit()
   const { show: showFileSelectModal, modal: FileSelectModal } = useFileSelectModal()
+
+  // This will be the default working folder when the user opens the file select modal.
   const workingFolder = chat.workingFolder ?? { id: privateDirId, name: L.chat.privateFolder }
+  const { data: parentWorkingFolder } = useFileGetParentOrRoot(workingFolder.id)
+
   return (
     <>
       <Form<ChatInputFormType>
@@ -70,7 +74,7 @@ export const ChatInputForm = ({ onSubmit, chat }: ChatInputFormProps) => {
                 type="button"
                 onClick={() =>
                   showFileSelectModal({
-                    initialParentFolderId: workingFolder.id,
+                    initialParentFolderId: parentWorkingFolder?.parentId,
                     onFileSelected: async (file) => {
                       try {
                         await editChat({ id: chatId, workingFolderId: file.id })
