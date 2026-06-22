@@ -7,6 +7,7 @@ import { ensureQuery } from "../../utils/queryParser"
 export default function File(props: PageFileProps) {
   return (
     <>
+      <title>{props.data.name}</title>
       <PageFile {...props} />
     </>
   )

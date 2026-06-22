@@ -67,6 +67,20 @@ export const useChatDelete = () => {
   }
 }
 
+export const useChatEdit = () => {
+  const { mutateAsync, mutate: _, ...rest } = trpc.chatEdit.useMutation()
+  return {
+    ...rest,
+    mutateAsync: async (...args: Parameters<typeof mutateAsync>) => {
+      try {
+        return await mutateAsync(...args)
+      } catch (e) {
+        return handleError(e, [{ error: NotFoundError, message: "Chat not found." }], "Failed to edit the chat.")
+      }
+    },
+  }
+}
+
 export const useChatRunSingleLoop = () => {
   return async function* ({
     id,

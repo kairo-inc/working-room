@@ -14,6 +14,11 @@ export type ChatServiceDeleteArg = {
   id: string
 }
 
+export type ChatServiceEditArg = {
+  id: string
+  workingFolderId?: string
+}
+
 export type ChatServiceGetListArg = PageArg<ChatSortBy> & {}
 
 export type ChatServiceRunSingleLoopArg = {
@@ -35,6 +40,7 @@ export type ChatServiceGetMessagesArg = PageArg<MessageSortBy> & {
 export abstract class ChatService {
   abstract create(args: ChatServiceCreateArg): Promise<AppChat>
   abstract delete(args: ChatServiceDeleteArg): Promise<void>
+  abstract edit(args: ChatServiceEditArg): Promise<void>
   abstract getStatus(args: ChatServiceGetStatusArg): Promise<AppChatStatus>
   abstract getList(args: ChatServiceGetListArg): Promise<PageResult<AppChat>>
   abstract getMessages(args: ChatServiceGetMessagesArg): Promise<PageResult<AppMessage>>

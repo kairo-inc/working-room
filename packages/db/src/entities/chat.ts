@@ -3,7 +3,7 @@ import { Chat, Prisma } from "@prisma/client"
 import { EntityFileDescriptor } from "./fileDescriptor"
 import { EntityMessage } from "./message"
 
-export class EntityChatStatus implements Omit<Chat, "deletedAt"> {
+export class EntityChatStatus implements Omit<Chat, "deletedAt" | "workingFolderId"> {
   id: string
   createdAt: Date
   updatedAt: Date
@@ -12,6 +12,10 @@ export class EntityChatStatus implements Omit<Chat, "deletedAt"> {
   interactions: string | null
   resources: EntityFileDescriptor[]
   requireApproval: boolean
+  workingFolder: {
+    id: string
+    name: string
+  } | null
 
   static select = {
     id: true,
@@ -22,15 +26,26 @@ export class EntityChatStatus implements Omit<Chat, "deletedAt"> {
     interactions: true,
     requireApproval: true,
     resources: { select: EntityFileDescriptor.select },
+    workingFolder: {
+      select: { id: true, name: true },
+      where: { deletedAt: null },
+    },
   } as const satisfies Prisma.ChatSelect
 }
 
-export class EntityChat implements Omit<Chat, "deletedAt" | "userId" | "pendingApproval" | "interactions" | "resources"> {
+export class EntityChat implements Omit<
+  Chat,
+  "deletedAt" | "userId" | "pendingApproval" | "interactions" | "resources" | "workingFolderId"
+> {
   id: string
   createdAt: Date
   updatedAt: Date
   messages: EntityMessage[]
   requireApproval: boolean
+  workingFolder: {
+    id: string
+    name: string
+  } | null
 
   static select = {
     id: true,
@@ -38,6 +53,10 @@ export class EntityChat implements Omit<Chat, "deletedAt" | "userId" | "pendingA
     updatedAt: true,
     requireApproval: true,
     messages: { select: EntityMessage.select, take: 1, orderBy: { createdAt: "desc" }, where: { role: "user" } },
+    workingFolder: {
+      select: { id: true, name: true },
+      where: { deletedAt: null },
+    },
   } as const satisfies Prisma.ChatSelect
 }
 

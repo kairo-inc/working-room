@@ -29,4 +29,8 @@ export type AppChatStatus = {
   id: string
   requireApproval: boolean
   needApprovals: AppChatNeedApproval[]
+  workingFolder?: {
+    id: string
+    name: string
+  }
 }

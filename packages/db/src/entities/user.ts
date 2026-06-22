@@ -26,18 +26,20 @@ export class EntityUser implements Omit<User, "deletedAt" | "localSecretHash" | 
 }
 export class EntityUserSetting implements Omit<
   User,
-  "tenantId" | "sub" | "updatedAt" | "createdAt" | "deletedAt" | "localSecretHash" | "refreshToken" | "privateDirId"
+  "tenantId" | "sub" | "updatedAt" | "createdAt" | "deletedAt" | "localSecretHash" | "refreshToken"
 > {
   email: string
   id: string
   name: string
   role: $Enums.UserRole
+  privateDirId: string
 
   static select = {
     id: true,
     name: true,
     email: true,
     role: true,
+    privateDirId: true,
   } as const satisfies Prisma.UserSelect
 }
 
