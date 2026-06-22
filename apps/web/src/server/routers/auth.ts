@@ -2,7 +2,7 @@ import Zod from "zod"
 
 import { getWebAppDiContainer } from "../../server/container"
 import { AuthService } from "../../server/services/authType"
-import { publicProcedure } from "../../server/trpc"
+import { privateProcedure, publicProcedure } from "../../server/trpc"
 
 export const authSignup = publicProcedure
   .input(
@@ -29,3 +29,8 @@ export const authInitiatePassword = publicProcedure
     const service = getWebAppDiContainer().resolve<AuthService>("AuthService")
     await service.initiatePassword({ ...input })
   })
+
+export const authSignout = privateProcedure.mutation(async () => {
+  const service = getWebAppDiContainer().resolve<AuthService>("AuthService")
+  await service.signout()
+})
