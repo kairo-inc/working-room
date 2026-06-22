@@ -4,6 +4,31 @@ All notable changes to WorkingRoom will be documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.2] - 2026-06-22
+
+### Added
+
+#### Chat
+
+- Added working folder configuration per chat, allowing users to set a directory as the default context for file selection.
+
+### Fixed
+
+#### Authentication
+
+- Fixed sign-out not invalidating the session server-side, which previously allowed the same JWT to be reused after logout.
+
+#### File Management
+
+- Fixed an issue where ancestor directories were not visible when listing a directory with an accessible nested target.
+- Fixed an issue where the file select modal froze when the configured working folder became inaccessible (e.g., due to Access Group changes); the modal now falls back to the root directory.
+
+### Changed
+
+#### Platform
+
+- Upgraded runtime to Node.js 24.
+
 ## [0.2.1] - 2026-06-20
 
 ### Added
