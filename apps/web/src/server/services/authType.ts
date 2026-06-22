@@ -60,6 +60,7 @@ export type AuthConfirmResetPasswordArg = {
 export abstract class AuthService {
   abstract signup(args: AuthSignupArg): Promise<AuthSignupRet>
   abstract signinWithEmail(arg: AuthSigninWithEmailArg): Promise<AuthSigninRet>
+  abstract signout(): Promise<void>
   abstract verifyToken(arg: AuthVerifyTokenArg): Promise<void>
   abstract refreshToken(arg: AuthRefreshTokenArg): Promise<AuthRefreshTokenRet>
   abstract initiatePassword(arg: AuthInitiatePasswordArg): Promise<AuthSigninRet>

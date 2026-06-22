@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe"
 
 import { AccessGroupSource, TenantSource, UserSource } from "@wr/db"
 import { AlreadyExistsError, AuthenticationError, PasswordInitializationRequired, isErrorEqual } from "@wr/shared"
-import { decodeJwt, encodeJwt, randomId, runWithPrivateContext } from "@wr/shared-node"
+import { decodeJwt, encodeJwt, getPrivateContext, randomId, runWithPrivateContext } from "@wr/shared-node"
 
 import { serverConfig } from "../config"
 import { Resolver } from "../resolver"
@@ -175,6 +175,12 @@ export class AuthServiceImpl extends AuthService {
     } finally {
       await sleep
     }
+  }
+
+  async signout(): Promise<void> {
+    const { userId } = getPrivateContext()
+    const user = await this.userSource.find("EntityUserSecret", { where: { id: userId } })
+    await this.authSource.signout({ userId, sub: user.sub })
   }
 
   async verifyToken(arg: AuthVerifyTokenArg): Promise<void> {

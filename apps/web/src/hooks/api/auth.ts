@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
-import { getProviders, signIn, signOut } from "next-auth/react"
+import { getProviders, signIn } from "next-auth/react"
 
 import { AuthenticationError, PasswordInitializationRequired } from "@wr/shared"
 
@@ -39,14 +39,6 @@ export const useAuthSigninByEmail = () => {
         // Throw same error independent of the reason.
         throw new AuthenticationError("Sign in failed.")
       }
-    },
-  })
-}
-
-export const useAuthSignout = () => {
-  return useMutation({
-    mutationFn: async () => {
-      await signOut({ redirect: false })
     },
   })
 }

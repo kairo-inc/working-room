@@ -18,6 +18,11 @@ export type AuthSourceSigninWithEmailArg = {
   password: string
 }
 
+export type AuthSourceSignoutArg = {
+  sub: string
+  userId: string
+}
+
 export type AuthSourceSigninWithEmailRet = {
   idToken: string
   refreshToken: string
@@ -95,6 +100,7 @@ export type AuthSourceChangeRoleArg = {
 export abstract class AuthSource {
   abstract signup(arg: AuthSourceSignupArg): Promise<AuthSourceSignupRet>
   abstract signinWithEmail(arg: AuthSourceSigninWithEmailArg): Promise<AuthSourceSigninWithEmailRet>
+  abstract signout(arg: AuthSourceSignoutArg): Promise<void>
   abstract getUserOrNull(arg: AuthSourceGetUserOrNullArg): Promise<AuthSourceGetUserOrNullRet>
   abstract initiatePassword(arg: AuthSourceInitiatePasswordArg): Promise<AuthSourceInitiatePasswordRet>
   abstract verifyIdToken(arg: AuthSourceVerifyIdTokenArg): Promise<void>
