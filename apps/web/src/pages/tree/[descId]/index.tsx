@@ -8,7 +8,7 @@ export default function Tree(props: PageTreeProps) {
   return (
     <>
       <title>/{props.parent.name}</title>
-      <PageTree {...props} />
+      <PageTree key={props.parent.id} {...props} />
     </>
   )
 }
@@ -20,13 +20,11 @@ export const getServerSideProps = handleSsr<PageTreeProps>({
     const service = await resolver.resolveFileService()
     const parent = await service.getParentOrRoot({ id: parentFileId })
     const ancestorsPromise = service.getAncestors({ id: parent.id })
-    const fileListPromise = service.getFilesInFolder({ id: parent.id })
-    const [ancestors, fileList] = await Promise.all([ancestorsPromise, fileListPromise])
+    const ancestors = await ancestorsPromise
     return {
       props: {
         parent,
         ancestors,
-        fileList,
       },
     }
   },
