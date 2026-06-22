@@ -196,6 +196,11 @@ model Chat {
   messages        Message[]
   requireApproval Boolean   @default(false)
 
+  // Default it user's private root directory.
+  // This is the working folder for the chat, where the chat assumes the files in this folder are accessible to it.
+  workingFolderId String?
+  workingFolder   FileDescriptor? @relation("workingFolder", fields: [workingFolderId], references: [id], onDelete: Cascade)
+
   // Other status.
   resources       FileDescriptor[]
   pendingApproval String? // Json.
@@ -268,10 +273,11 @@ model FileDescriptor {
   ownerId String?
   owner   User?   @relation("owner", fields: [ownerId], references: [id], onDelete: Cascade)
 
-  chats        Chat[]
-  histories    FileHistory[]
-  accessGroups AccessGroup[]
-  agents       Agent[]
+  chatWorkingFolders Chat[]        @relation("workingFolder")
+  chats              Chat[]
+  histories          FileHistory[]
+  accessGroups       AccessGroup[]
+  agents             Agent[]
 
   tenant   Tenant @relation(fields: [tenantId], references: [id])
   tenantId String

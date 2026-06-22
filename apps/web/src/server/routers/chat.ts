@@ -47,3 +47,15 @@ export const chatDelete = privateProcedure.input(z.object({ id: z.string().min(1
   const service = getWebAppDiContainer().resolve<ChatService>("ChatService")
   await service.delete(input)
 })
+
+export const chatEdit = privateProcedure
+  .input(
+    z.object({
+      id: z.string().min(1).max(64),
+      workingFolderId: z.string().min(1).max(64).optional(),
+    })
+  )
+  .mutation(async ({ input }) => {
+    const service = getWebAppDiContainer().resolve<ChatService>("ChatService")
+    await service.edit(input)
+  })

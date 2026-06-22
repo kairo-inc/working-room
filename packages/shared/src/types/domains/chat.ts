@@ -53,4 +53,8 @@ export type DomainChatStatus = {
   requireApproval: boolean
   interactions: DomainAgentInteraction[]
   pendingApproval?: DomainPendingApproval
+  workingFolder?: {
+    id: string
+    name: string
+  }
 }

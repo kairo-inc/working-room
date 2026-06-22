@@ -26,5 +26,6 @@ export const mapChatStatusDomainToApp = (domain: DomainChatStatus): AppChatStatu
     id: domain.id,
     requireApproval: domain.requireApproval,
     needApprovals: domain.pendingApproval ? domain.pendingApproval.needApprovals.map(mapChatNeedApprovalDomainToApp) : [],
+    workingFolder: domain.workingFolder ? { id: domain.workingFolder.id, name: domain.workingFolder.name } : undefined,
   }
 }

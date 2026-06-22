@@ -341,7 +341,7 @@ export const PageChat = ({ data }: PageChatProps) => {
             />
           )}
         </div>
-        {needApprovals.length === 0 && <ChatInputForm onSubmit={onSubmit} chatId={data.id} />}
+        {needApprovals.length === 0 && <ChatInputForm onSubmit={onSubmit} chat={data} />}
       </BodyLayout>
     </PageLayout>
   )
