@@ -17,8 +17,5 @@
     "mime": "4.1.0",
     "node-poppler": "9.1.2",
     "tsyringe": "4.10.0"
-  },
-  "devDependencies": {
-    "@types/node": "25.9.4"
   }
 }

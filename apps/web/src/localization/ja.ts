@@ -118,6 +118,9 @@ export default {
   chat: {
     placeholder: "Chat with your assistant",
     inputPlaceholder: "メッセージを入力してください...",
+    currentDirectory: "現在のディレクトリ",
+    changeDirectory: "ディレクトリを変更",
+    privateFolder: "プライベート",
     moreFileSingular: "他 {0} ファイル",
     moreFilePlural: "他 {0} ファイル",
   },

@@ -22,6 +22,7 @@ import {
   AuthSourceResetPasswordRet,
   AuthSourceSigninWithEmailArg,
   AuthSourceSigninWithEmailRet,
+  AuthSourceSignoutArg,
   AuthSourceSignupArg,
   AuthSourceSignupRet,
   AuthSourceVerifyIdTokenArg,
@@ -139,6 +140,19 @@ export class LocalAuthSourceImpl extends AuthSource {
     const refreshToken = randomId()
     // In a real implementation, you would return a JWT or similar token here. For simplicity, we just return a dummy token.
     return { idToken, refreshToken }
+  }
+
+  async signout(arg: AuthSourceSignoutArg): Promise<void> {
+    const { userId } = arg
+    const session = await this.localSessionSource.findIfExists("EntityLocalSession", {
+      where: { userId, deletedAt: null },
+    })
+    if (session) {
+      await this.localSessionSource.update({
+        where: { id: session.id },
+        data: { expiresAt: new Date() },
+      })
+    }
   }
 
   async getUserOrNull(arg: AuthSourceGetUserOrNullArg): Promise<AuthSourceGetUserOrNullRet> {

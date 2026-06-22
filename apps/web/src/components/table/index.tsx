@@ -10,7 +10,7 @@ type RowData = {
 }
 
 type TableProps = React.ComponentPropsWithoutRef<"table"> & {
-  headers: string[]
+  headers: { label: string; tight?: boolean }[]
   rows: RowData[]
 }
 
@@ -23,8 +23,8 @@ export const Table = ({ headers, rows, className, ...props }: TableProps) => {
       <thead>
         <tr className="border-b text-base">
           {headers.map((header) => (
-            <th key={header} className={thClassName}>
-              {header}
+            <th key={header.label} className={clsx(thClassName, header.tight && "w-1")}>
+              {header.label}
             </th>
           ))}
         </tr>
@@ -32,7 +32,12 @@ export const Table = ({ headers, rows, className, ...props }: TableProps) => {
       <tbody>
         {hasRow ? (
           rows.map((row, index) => (
-            <tr key={index} className="hover:bg-muted bg-card border-t" {...row.dataAttrs} onClick={row.onClick}>
+            <tr
+              key={index}
+              className={clsx("hover:bg-muted bg-card border-t", row.onClick && "cursor-pointer")}
+              {...row.dataAttrs}
+              onClick={row.onClick}
+            >
               {row.items.map((cell, cellIndex) => (
                 <td key={cellIndex} className={tdClassName}>
                   <div className="flex items-center truncate">{cell}</div>

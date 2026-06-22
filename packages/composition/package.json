@@ -19,8 +19,5 @@
     "cuid": "3.0.0",
     "mime": "4.1.0",
     "tsyringe": "4.10.0"
-  },
-  "devDependencies": {
-    "@types/node": "25.9.4"
   }
 }

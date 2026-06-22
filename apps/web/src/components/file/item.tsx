@@ -37,15 +37,15 @@ const getIcon = (type: string, size: "sm" | "md" | "lg") => {
 }
 
 export const FileIconSm = ({ type, className }: FileIconProps) => {
-  return <div className={clsx("text-primary", className)}>{getIcon(type, "sm")}</div>
+  return <div className={clsx(className)}>{getIcon(type, "sm")}</div>
 }
 
 export const FileIconMd = ({ type, className }: FileIconProps) => {
-  return <div className={clsx("text-primary", className)}>{getIcon(type, "md")}</div>
+  return <div className={clsx(className)}>{getIcon(type, "md")}</div>
 }
 
 export const FileIconLg = ({ type, className }: FileIconProps) => {
-  return <div className={clsx("text-primary", className)}>{getIcon(type, "lg")}</div>
+  return <div className={clsx(className)}>{getIcon(type, "lg")}</div>
 }
 
 export const FileListItem = ({ descId }: FileItemProps) => {

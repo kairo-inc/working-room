@@ -46,6 +46,7 @@ import {
   ChatService,
   ChatServiceCreateArg,
   ChatServiceDeleteArg,
+  ChatServiceEditArg,
   ChatServiceGetListArg,
   ChatServiceGetMessagesArg,
   ChatServiceGetStatusArg,
@@ -108,6 +109,16 @@ export class ChatServiceImpl extends ChatService {
     const { id } = args
     const { userId } = getPrivateContext()
     await this.chatSource.delete({ where: { id, userId } })
+  }
+
+  async edit(args: ChatServiceEditArg): Promise<void> {
+    const { id, workingFolderId } = args
+    const { userId } = getPrivateContext()
+    const updateData: Parameters<typeof this.chatSource.update>[0]["data"] = {}
+    if (workingFolderId !== undefined) {
+      updateData.workingFolder = { connect: { id: workingFolderId } }
+    }
+    await this.chatSource.update({ where: { id, userId }, data: updateData })
   }
 
   async getMessages(args: ChatServiceGetMessagesArg): Promise<PageResult<AppMessage>> {
@@ -280,7 +291,7 @@ export class ChatServiceImpl extends ChatService {
         // You can adjust or remove it as needed based on your specific requirements.
         coordinator: "medium",
       },
-      workingFolder: await this.buildWorkingFolder(),
+      workingFolder: await this.buildWorkingFolder({ folderId: chat.workingFolder?.id }),
     })
     engine.registerHooks({ onChunk })
 
@@ -376,7 +387,7 @@ export class ChatServiceImpl extends ChatService {
     return queue.iterator()
   }
 
-  private async buildWorkingFolder(args?: { folderId: string }): Promise<AiWorkingFolder | undefined> {
+  private async buildWorkingFolder(args?: { folderId?: string }): Promise<AiWorkingFolder | undefined> {
     const { folderId } = args || {}
     let targetFolder: EntityFileDescriptor | null = null
     let parentFolder: EntityFileDescriptor | null = null

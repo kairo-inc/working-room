@@ -133,7 +133,6 @@ export class AccessGroupServiceImpl extends AccessGroupService {
     const entity = await this.accessGroupSource.find("EntityAccessGroup", {
       where: { id, tenantId },
     })
-    if (!entity) throw new Error("Access group not found")
     return mapAccessGroupEntityToApp(entity)
   }
 

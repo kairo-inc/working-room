@@ -116,6 +116,9 @@ export default {
   chat: {
     placeholder: "Chat with your assistant",
     inputPlaceholder: "Type your message here...",
+    currentDirectory: "Current directory",
+    changeDirectory: "Change directory",
+    privateFolder: "private",
     moreFileSingular: "and {0} more file",
     moreFilePlural: "and {0} more files",
   },

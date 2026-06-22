@@ -1,3 +1,5 @@
+import { signOut } from "next-auth/react"
+
 import { AlreadyExistsError } from "@wr/shared"
 
 import { handleError } from "../../middleware/trpc"
@@ -35,6 +37,21 @@ export const useAuthInitiatePassword = () => {
         return await mutateAsync(...args)
       } catch (e) {
         return handleError(e, [], "Failed to initialize password.")
+      }
+    },
+  }
+}
+
+export const useAuthSignout = () => {
+  const { mutateAsync, mutate: _, ...rest } = trpc.authSignout.useMutation()
+  return {
+    ...rest,
+    mutateAsync: async (...args: Parameters<typeof mutateAsync>) => {
+      try {
+        await mutateAsync(...args)
+        await signOut()
+      } catch (e) {
+        return handleError(e, [], "Failed to sign out.")
       }
     },
   }

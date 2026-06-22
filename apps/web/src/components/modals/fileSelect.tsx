@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import { ArrowLeft } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { useFileGetList, useFileGetParentOrRoot } from "../../hooks/trpc/file"
 import { L } from "../../localization"
@@ -37,7 +37,7 @@ const FileList = ({
   const hasFiles = files.length > 0
   const headerClassName = "text-sm font-normal text-muted-foreground p-2"
   const rowClassName = "text-sm cursor-pointer p-2 hover:bg-muted border-t border-border first:border-t-0"
-  const selectedRowClassName = "!bg-primary/20 !text-primary"
+  const selectedRowClassName = "!bg-link/20 !text-link "
   const notDirectoryRowClassName = "cursor-not-allowed text-sm text-muted-foreground p-2 border-t border-border first:border-t-0"
   const placeholderClassName = "text-sm text-muted-foreground p-2 border-t border-border first:border-t-0 text-center"
   return (
@@ -83,10 +83,18 @@ export const FileSelectModal = ({ show, onClose, onFileSelected, initialParentFo
   const [queryArgs, setQueryArgs] = useState<Parameters<typeof useFileGetList>[0]>({ parentId: initialParentFolderId })
 
   const { data: grandParent, isPending: isGrandParentPending } = useFileGetParentOrRoot(queryArgs?.parentId)
-  const { data, isPending: isFilesPending } = useFileGetList(queryArgs)
+  const { data, isPending: isFilesPending, isError } = useFileGetList(queryArgs)
 
   const isPending = isFilesPending || isGrandParentPending
   const files = data?.pages.flatMap((page) => page.data) ?? []
+
+  useEffect(() => {
+    if (isError) {
+      // Can be 403 error.
+      // Redirect to root folder if the user doesn't have access to the current folder.
+      setQueryArgs({ parentId: undefined })
+    }
+  }, [isError])
 
   return (
     <Modal show={show} onClose={onClose} title={L.modal.fileSelect.title} containerClassName="w-[clamp(30vw,600px,80vw)] h-1/2">

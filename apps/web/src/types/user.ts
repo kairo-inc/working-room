@@ -10,5 +10,6 @@ export type AppUserSetting = {
   email: string
   id: string
   name: string
+  privateDirId: string
   role: "owner" | "admin" | "member" | "guest"
 }

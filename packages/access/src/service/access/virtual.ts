@@ -19,9 +19,9 @@ import {
   InvalidRootDirAccessError,
   InvalidSharedDirAccessError,
   MimeType,
+  PageArg,
   PageResult,
   PermissionDeniedError,
-  SortArg,
 } from "@wr/shared"
 import { randomId } from "@wr/shared-node"
 
@@ -617,7 +617,7 @@ export class FileAccessServiceImpl extends FileAccessService {
   }
 
   async list(arg: FileAccessServiceListArg): Promise<PageResult<DomainFileDescriptor>> {
-    const { descId, maxDepth = 0, maxItems = 100, sortBy, sortDirection } = arg
+    const { descId, maxDepth = 0, maxItems = 100, sortBy, sortDirection, page } = arg
     const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
 
     const dir = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
@@ -630,7 +630,7 @@ export class FileAccessServiceImpl extends FileAccessService {
     }
 
     const collected: DomainFileDescriptor[] = []
-    await this.collectItems(descId, 0, maxDepth, maxItems, { sortBy, sortDirection }, collected)
+    await this.collectItems(descId, 0, maxDepth, maxItems, { sortBy, sortDirection, page }, collected)
 
     return { data: collected, count: collected.length, nextPage: null, maxPage: 1 }
   }
@@ -640,7 +640,7 @@ export class FileAccessServiceImpl extends FileAccessService {
     currentDepth: number,
     maxDepth: number,
     maxItems: number,
-    sort: SortArg<FileDescriptorSortBy>,
+    sort: PageArg<FileDescriptorSortBy>,
     collected: DomainFileDescriptor[]
   ): Promise<void> {
     if (collected.length >= maxItems) return
@@ -648,7 +648,6 @@ export class FileAccessServiceImpl extends FileAccessService {
     const { userId } = this.fileAccessContext
     const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
     const remaining = maxItems - collected.length
-
     let children: DomainFileDescriptor[]
     const otherUserPrivateDirIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
       where: {
@@ -681,8 +680,9 @@ export class FileAccessServiceImpl extends FileAccessService {
           },
         },
       })
-      const visibleFolderIds = visiblePolicies.flatMap((policy) => policy.resources.map((res) => res.id))
-
+      const visibleFolderIds = visiblePolicies
+        .flatMap((policy) => policy.resources.map((res) => res.pathIds.split("/").filter(Boolean)))
+        .flat()
       const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
         where: {
           parentId: descId,

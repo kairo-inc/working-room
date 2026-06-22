@@ -7,6 +7,8 @@ import { RectangleButton } from "../../buttons/rectangleButton"
 import { FileIconSm } from "../../file/item"
 import { BodyLayout } from "../../layout/body"
 import { PageLayout } from "../../layout/page"
+import { VerticalAlignedItems } from "../../layout/verticalAlignedItems"
+import { Link } from "../../link"
 import { Markdown } from "../../markdown"
 import { Section } from "../../section"
 
@@ -27,25 +29,33 @@ export const PageAgent = ({ data }: PageAgentProps) => {
       >
         <div className="flex w-full flex-col gap-6">
           <Section title={L.agent.detail.sectionDescriptions} containerClassName="flex flex-col items-start gap-2">
-            <div className="grid grid-cols-[auto_1fr] gap-2 gap-x-4 text-base">
-              <div className="font-bold">{L.agent.detail.fields.name}</div>
-              <div>{data.name}</div>
-              <div className="font-bold">{L.agent.detail.fields.tier}</div>
-              <div>{data.tier}</div>
-              <div className="font-bold">{L.agent.detail.fields.workingFolder}</div>
-              <div>
-                {data.workingFolder ? (
-                  <a href={Route.tree(data.workingFolder.id)} className="inline-flex items-center gap-1">
-                    <FileIconSm type={data.workingFolder.mimeType} />
-                    {data.workingFolder.name}
-                  </a>
-                ) : (
-                  L.agent.detail.fields.noData
-                )}
-              </div>
-              <div className="font-bold">{L.agent.detail.fields.description}</div>
-              <div>{data.description ?? L.agent.detail.fields.noData}</div>
-            </div>
+            <VerticalAlignedItems
+              items={[
+                {
+                  label: L.agent.detail.fields.name,
+                  value: data.name,
+                },
+                {
+                  label: L.agent.detail.fields.tier,
+                  value: data.tier,
+                },
+                {
+                  label: L.agent.detail.fields.workingFolder,
+                  value: data.workingFolder ? (
+                    <Link href={Route.tree(data.workingFolder.id)} className="inline-flex items-center gap-1">
+                      <FileIconSm type={data.workingFolder.mimeType} />
+                      {data.workingFolder.name}
+                    </Link>
+                  ) : (
+                    L.agent.detail.fields.noData
+                  ),
+                },
+                {
+                  label: L.agent.detail.fields.description,
+                  value: data.description ?? L.agent.detail.fields.noData,
+                },
+              ]}
+            />
           </Section>
           <Section title={L.agent.detail.sectionDescriptionForAgent} containerClassName="flex flex-col gap-8">
             <Markdown markdown={data.descriptionForAgent} />

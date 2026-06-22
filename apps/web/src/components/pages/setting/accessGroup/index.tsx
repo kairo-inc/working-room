@@ -75,7 +75,7 @@ export const PageSettingAccessGroup = ({ userList, resourceList, data }: PageSet
         </Section>
         <Section title={L.settingAccessGroup.resources.title}>
           <Table
-            headers={[L.settingAccessGroup.resources.name, L.settingAccessGroup.resources.type]}
+            headers={[{ label: L.settingAccessGroup.resources.name }, { label: L.settingAccessGroup.resources.type }]}
             rows={resourceList.map((resource) => ({
               onClick: () => router.push(Route.tree(resource.id)),
               items: [resource.name, resource.mimeType],
@@ -84,7 +84,7 @@ export const PageSettingAccessGroup = ({ userList, resourceList, data }: PageSet
         </Section>
         <Section title={L.settingAccessGroup.users.title}>
           <Table
-            headers={[L.settingAccessGroup.users.name, L.settingAccessGroup.users.email]}
+            headers={[{ label: L.settingAccessGroup.users.name }, { label: L.settingAccessGroup.users.email }]}
             rows={userList.data.map((user) => ({ items: [user.name, user.email] }))}
           />
           <Pager {...userList} className="mt-2" />

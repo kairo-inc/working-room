@@ -17,8 +17,5 @@
     "bcryptjs": "3.0.3",
     "cuid": "3.0.0",
     "pino": "10.3.1"
-  },
-  "devDependencies": {
-    "@types/node": "25.9.4"
   }
 }

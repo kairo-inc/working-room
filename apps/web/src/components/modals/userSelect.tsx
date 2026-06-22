@@ -26,7 +26,7 @@ const UserList = (args: {
   const { isLoading, userList, onUserSelected } = args
 
   const rowClassName = "text-sm cursor-pointer p-2 hover:bg-muted border-t border-border first:border-t-0"
-  const selectedRowClassName = "!bg-primary/20 !text-primary"
+  const selectedRowClassName = "!bg-link/20 !text-link"
   const placeholderClassName = "text-sm text-muted-foreground p-2 border-t border-border first:border-t-0 text-center"
   const headerCellClassName = "py-2 px-2 text-left text-sm font-normal text-muted-foreground p-2"
   const cellClassName = "py-2 px-2 border-t border-border text-sm text-left p-2"
@@ -82,14 +82,13 @@ export const UserSelectModal = ({ show, onClose, onUserSelected }: UserSelectMod
 
   return (
     <Modal show={show} onClose={onClose} title={L.modal.userSelect.title} containerClassName="w-[clamp(30vw,600px,80vw)] h-1/2">
-      <div className="flex-1 text-sm">
+      <div className="mt-4 flex-1 text-sm">
         <Form<FormData>
           onSubmit={() => {}}
           render={() => (
             <form>
               <TextForm
                 formName="search"
-                label={""}
                 placeholder={L.modal.userSelect.searchPlaceholder}
                 onChange={(e) => {
                   const value = e.target.value

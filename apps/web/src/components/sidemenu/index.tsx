@@ -27,11 +27,11 @@ export const SideMenu = () => {
   }
 
   return (
-    <aside className="bg-card flex min-h-0 w-59 flex-col">
-      <div className="flex h-16 items-center px-4">
-        <a href="/" className="flex items-center justify-start gap-2 transition-opacity hover:opacity-80">
-          <LogoIcon size={size} />
-          <span className="text-primary text-lg font-bold">WorkingRoom</span>
+    <aside className="bg-card flex min-h-0 w-16 shrink-0 flex-col md:w-52">
+      <div className="flex h-16 items-center pl-4.5">
+        <a href="/" className="flex items-center justify-start gap-2.5 transition-opacity hover:opacity-80">
+          <LogoIcon size={size + 4} />
+          <span className="text-primary hidden text-lg font-bold md:block">WorkingRoom</span>
         </a>
       </div>
       <div className="flex flex-1 flex-col items-center justify-between overflow-y-auto">
@@ -72,10 +72,10 @@ export const SideMenu = () => {
         <div className="w-full">
           <button
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            className="text-muted-foreground hover:bg-muted hover:text-foreground flex w-full cursor-pointer items-center gap-3 py-2.5 pl-4 text-sm font-normal transition-colors"
+            className="text-muted-foreground hover:bg-muted hover:text-foreground flex h-12 w-full cursor-pointer items-center gap-3 pl-5 text-sm font-normal transition-colors"
           >
             {resolvedTheme === "dark" ? <Sun size={size} /> : <Moon size={size} />}
-            {resolvedTheme === "dark" ? L.sidemenu.mode.light : L.sidemenu.mode.dark}
+            <div className="hidden md:block">{resolvedTheme === "dark" ? L.sidemenu.mode.light : L.sidemenu.mode.dark}</div>
           </button>
           <Avatar className="w-full" href={Route.account()} />
         </div>

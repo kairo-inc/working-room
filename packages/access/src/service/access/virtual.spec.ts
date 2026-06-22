@@ -8,6 +8,8 @@ import { runWithDiContainer, runWithPrivateContext } from "@wr/shared-node"
 import {
   createTestConfigWithTmpFolder,
   createTestPrismaClient,
+  testOtherUserId,
+  testOtherUserIdTokenAdmin,
   testPrivateOtherUserRootDirId,
   testPrivateUserRootDirId,
   testRootDirId,
@@ -303,6 +305,64 @@ describe("[Success] FileAccessService", () => {
           expect.objectContaining({ id: testPrivateOtherUserRootDirId }),
         ])
       )
+    })
+  })
+
+  it("Can list ancestor directory of accessible directory", async () => {
+    // "Other user" who has access to root -> shared -> targetDir, should be able to list the ancestor directories, but can not write or delete files in those ancestor directories.
+    // Also, "other user" can not see root -> common because it is not an ancestor of the accessible directory.
+
+    // Preare directory structure: root -> shared -> targetDir as an owner.
+    const [sharedDirId, targetDirId, commonDirId] = await runWithDiContainer(testContainer, async () => {
+      const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
+      return await runWithPrivateContext({ idToken: testIdToken }, async () => {
+        const sharedDir = await fileAccessProvider.makeDirectory({ parentDescId: testRootDirId, dirName: "shared" })
+        const targetDir = await fileAccessProvider.makeDirectory({ parentDescId: sharedDir.id, dirName: "targetDir" })
+        const commonDir = await fileAccessProvider.makeDirectory({ parentDescId: testRootDirId, dirName: "common" })
+
+        // Create an access group and participate the "other user" in that group.
+        await prismaClient.accessGroup.create({
+          data: {
+            name: "Test Access Group",
+            description: "A test access group for unit testing.",
+            tenantId: testTenantId,
+            read: true,
+            write: true,
+            users: {
+              connect: { id: testOtherUserId },
+            },
+            resources: {
+              connect: { id: targetDir.id },
+            },
+          },
+        })
+        return [sharedDir.id, targetDir.id, commonDir.id]
+      })
+    })
+
+    // Override fileAccessContext to simulate "other user" and list the ancestor directories.
+    testContainer.registerInstance<FileAccessContext>("FileAccessContext", {
+      userId: testOtherUserId,
+      showHiddenFiles: false,
+    })
+    await runWithDiContainer(testContainer, async () => {
+      // Run as "other user" to list the ancestor directories.
+      const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
+      await runWithPrivateContext({ idToken: testOtherUserIdTokenAdmin }, async () => {
+        // This should contain the sharedDir but not the commonDir.
+        const { data: listRootDir } = await fileAccessProvider.list({ descId: testRootDirId })
+        expect(listRootDir.find((desc) => desc.id === sharedDirId)).toBeDefined()
+        expect(listRootDir.find((desc) => desc.id === commonDirId)).toBeUndefined()
+        expect(listRootDir.find((desc) => desc.id === testPrivateOtherUserRootDirId)).toBeDefined()
+        expect(listRootDir.find((desc) => desc.id === testPrivateUserRootDirId)).toBeUndefined()
+
+        const sharedFolderDeleteResult = fileAccessProvider.deleteMany({ ids: [sharedDirId] })
+        const commonFolderDeleteResult = fileAccessProvider.deleteMany({ ids: [commonDirId] })
+        const targetFolderDeleteResult = fileAccessProvider.deleteMany({ ids: [targetDirId] })
+        await expect(sharedFolderDeleteResult).rejects.toThrow(PermissionDeniedError)
+        await expect(commonFolderDeleteResult).rejects.toThrow(PermissionDeniedError)
+        await expect(targetFolderDeleteResult).resolves.not.toThrow()
+      })
     })
   })
 })

@@ -156,7 +156,11 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
         </Section>
         <Section title={L.settingAccessGroup.resources.title}>
           <Table
-            headers={[L.settingAccessGroup.resources.name, L.settingAccessGroup.resources.type, ""]}
+            headers={[
+              { label: L.settingAccessGroup.resources.name },
+              { label: L.settingAccessGroup.resources.type },
+              { label: "", tight: true },
+            ]}
             rows={[
               {
                 items: [
@@ -164,6 +168,7 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
                     <Plus />
                     {L.settingAccessGroup.addResource}
                   </div>,
+                  "",
                   "",
                 ],
                 onClick: () =>
@@ -191,7 +196,7 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
         </Section>
         <Section title={L.settingAccessGroup.users.title}>
           <Table
-            headers={[L.settingAccessGroup.users.name, L.settingAccessGroup.users.email, ""]}
+            headers={[{ label: L.settingAccessGroup.users.name }, { label: L.settingAccessGroup.users.email }, { label: "", tight: true }]}
             rows={[
               {
                 items: [
@@ -199,6 +204,7 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
                     <Plus />
                     {L.settingAccessGroup.addUser}
                   </div>,
+                  "",
                   "",
                 ],
                 onClick: () =>

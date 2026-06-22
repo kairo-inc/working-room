@@ -82,6 +82,7 @@ export const mapChatStatusEntityToDomain = (entity: EntityChatStatus): DomainCha
     requireApproval: entity.requireApproval,
     pendingApproval: pendingApproval ?? undefined,
     interactions,
+    workingFolder: entity.workingFolder ?? undefined,
   }
 }
 
@@ -93,5 +94,6 @@ export const mapChatStatusDomainToEntity = (domain: DomainChatStatus): PartialEn
     requireApproval: domain.requireApproval,
     pendingApproval: domain.pendingApproval ? JSON.stringify(domain.pendingApproval) : null,
     interactions: domain.interactions ? JSON.stringify(domain.interactions) : null,
+    workingFolder: domain.workingFolder ?? null,
   }
 }
