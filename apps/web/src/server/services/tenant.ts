@@ -81,9 +81,9 @@ export class TenantServiceImpl extends TenantService {
       // This method is outside of private context guard since it needs to create a temporary context for the new user invitation process.
       // The actual permission check is done in the resolver of this method.
       const tmpToken = encodeJwt({ email, userId, tenantId, role }, randomId())
-      const [sharedDir, newUserPrivateDir] = await runWithPrivateContext({ idToken: tmpToken }, async () => {
+      const newUserPrivateDir = await runWithPrivateContext({ idToken: tmpToken }, async () => {
         const fileService = await this.resolver.resolveFileService()
-        return await Promise.all([fileService.ensureSharedRootDir(), fileService.ensurePrivateDir()])
+        return await fileService.ensurePrivateDir()
       })
 
       const name = email.split("@")[0] || "member"
