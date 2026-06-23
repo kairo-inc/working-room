@@ -65,7 +65,7 @@ Open `http://localhost:3000`.
 
 ## Local Development
 
-**Prerequisites:** Node.js 20–22, Yarn 4+, Anthropic and/or OpenAI API key
+**Prerequisites:** Node.js 20–24, Yarn 4+, Anthropic and/or OpenAI API key
 
 ```bash
 # 1. Install dependencies

@@ -133,7 +133,6 @@ const createTenantWithOwner = async () => {
       mtime: new Date(),
       isRoot: false,
       isDirectory: true,
-      isSharedRoot: true,
       parentId: rootDir.id,
       pathIds: `${rootDir.pathIds}/${sharedRootDirId}`,
       mimeType: "inode/directory",

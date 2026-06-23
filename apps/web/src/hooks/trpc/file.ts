@@ -4,7 +4,6 @@ import {
   InvalidChatDirAccessError,
   InvalidPrivateDirAccessError,
   InvalidRootDirAccessError,
-  InvalidSharedDirAccessError,
   PermissionDeniedError,
   SortDirection,
   ValidationError,
@@ -131,7 +130,6 @@ export const useFileDeleteMany = () => {
             { error: InvalidRootDirAccessError, message: L.file.errors.cannotDeleteRoot },
             { error: InvalidPrivateDirAccessError, message: L.file.errors.cannotDeletePrivate },
             { error: InvalidChatDirAccessError, message: L.file.errors.cannotDeleteChat },
-            { error: InvalidSharedDirAccessError, message: L.file.errors.cannotDeleteShared },
           ],
           L.file.errors.deleteFailed
         )

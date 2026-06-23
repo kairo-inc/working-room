@@ -2,14 +2,7 @@ import { createPatch } from "diff"
 import { inject, injectable } from "tsyringe"
 
 import { CoreConfig } from "@wr/core"
-import {
-  AccessGroupSource,
-  FileDescriptorSortBy,
-  FileDescriptorSource,
-  FileHistorySource,
-  UserSource,
-  mapFileDescriptorEntityToDomain,
-} from "@wr/db"
+import { AccessGroupSource, FileDescriptorSortBy, FileDescriptorSource, FileHistorySource, mapFileDescriptorEntityToDomain } from "@wr/db"
 import {
   BadRequestError,
   DomainFileDescriptor,
@@ -17,7 +10,6 @@ import {
   InvalidChatDirAccessError,
   InvalidPrivateDirAccessError,
   InvalidRootDirAccessError,
-  InvalidSharedDirAccessError,
   MimeType,
   PageArg,
   PageResult,
@@ -60,7 +52,6 @@ import { FileAccessListener } from "../../types/listener"
 @injectable()
 export class FileAccessServiceImpl extends FileAccessService {
   constructor(
-    @inject("UserSource") private userSource: UserSource,
     @inject("FileAccessContext") private fileAccessContext: FileAccessContext,
     @inject("FileAccessListener") private fileAccessListener: FileAccessListener,
     @inject("FileDescriptorSource") private fileDescriptorSource: FileDescriptorSource,
@@ -339,8 +330,6 @@ export class FileAccessServiceImpl extends FileAccessService {
           throw new InvalidPrivateDirAccessError(`Cannot delete user private directory.`)
         } else if (desc.isChatDir) {
           throw new InvalidChatDirAccessError(`Cannot delete chat directory.`)
-        } else if (desc.isSharedRoot) {
-          throw new InvalidSharedDirAccessError(`Cannot delete shared root directory.`)
         }
         await this.fileDescriptorSource.delete({ where: { id: descId } })
         await this.fileDescriptorSource.deleteMany({ where: { pathIds: { contains: descId } } })
@@ -535,38 +524,6 @@ export class FileAccessServiceImpl extends FileAccessService {
   // Everyone can create root dir, so no need to check access policy here.
   async createRootDir(): Promise<DomainFileDescriptor> {
     return await this.mkdirRoot()
-  }
-
-  async createSharedRootDir(): Promise<DomainFileDescriptor> {
-    const rootDesc = await this.mkdirRoot()
-    const blobHash = await this.blobStore.createBlobHash(new ArrayBuffer(0))
-    const count = await this.fileDescriptorSource.count({ where: { isSharedRoot: true } })
-    if (count === 1) {
-      const sharedRoot = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { isSharedRoot: true } })
-      return mapFileDescriptorEntityToDomain(sharedRoot)
-    } else {
-      if (count > 1) {
-        throw new BadRequestError(`Multiple shared root directories exist.`)
-      }
-    }
-
-    const id = randomId()
-    const desc = await this.fileDescriptorSource.create({
-      data: {
-        id,
-        name: "shared",
-        isDirectory: true,
-        isSharedRoot: true,
-        parent: { connect: { id: rootDesc.id } },
-        birthtime: new Date(),
-        mtime: new Date(),
-        blobHash,
-        mimeType: "inode/directory",
-        size: 0,
-        pathIds: `${rootDesc.pathIds}/${id}`,
-      },
-    })
-    return mapFileDescriptorEntityToDomain(desc)
   }
 
   async createPrivateDir(): Promise<DomainFileDescriptor> {
