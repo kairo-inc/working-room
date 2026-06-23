@@ -1,12 +1,12 @@
 import pathLib from "path"
 import "reflect-metadata"
-import { beforeEach, describe, expect, it } from "vitest"
+import { afterEach, beforeEach, describe, expect, it } from "vitest"
 
 import { getDiContainer } from "@wr/composition"
 import { CoreConfig } from "@wr/core"
 import { ConfigError, ImplementationError, NotFoundError } from "@wr/shared"
 import { runWithDiContainer } from "@wr/shared-node"
-import { createTestConfigWithTmpFolder } from "@wr/testing"
+import { fixtureFactory } from "@wr/testing"
 
 import { BlobStore } from "../type"
 
@@ -16,8 +16,12 @@ describe("[Success] LocalBlobStore", () => {
 
   beforeEach(() => {
     testContainer = getDiContainer().createChildContainer()
-    config = createTestConfigWithTmpFolder()
+    config = fixtureFactory.createTestConfigWithTmpFolder()
     testContainer.registerInstance<CoreConfig>("CoreConfig", config)
+  })
+
+  afterEach(async () => {
+    await fixtureFactory.removeTestFolder(config)
   })
 
   it("Should generate hash and store blob correctly", async () => {
@@ -50,8 +54,12 @@ describe("[Failure] LocalBlobStore - with invalid configuration", () => {
 
   beforeEach(() => {
     testContainer = getDiContainer().createChildContainer()
-    config = createTestConfigWithTmpFolder({ root: "./test-root", blobDir: "./blobs" }) // Invalid blobDir
+    config = fixtureFactory.createTestConfigWithTmpFolder({ root: "./test-root", blobDir: "./blobs" }) // Invalid blobDir
     testContainer.registerInstance<CoreConfig>("CoreConfig", config)
+  })
+
+  afterEach(async () => {
+    await fixtureFactory.removeTestFolder(config)
   })
 
   it("Should throw an error when blob dir is not a child of root", async () => {
@@ -72,8 +80,12 @@ describe("[Failure] LocalBlobStore - with invalid hash or missing blob", () => {
 
   beforeEach(() => {
     testContainer = getDiContainer().createChildContainer()
-    config = createTestConfigWithTmpFolder()
+    config = fixtureFactory.createTestConfigWithTmpFolder()
     testContainer.registerInstance<CoreConfig>("CoreConfig", config)
+  })
+
+  afterEach(async () => {
+    await fixtureFactory.removeTestFolder(config)
   })
 
   it("Should throw an error when hash value is invalid", async () => {

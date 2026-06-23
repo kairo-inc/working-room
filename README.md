@@ -136,4 +136,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 ## License
 
 Licensed under the Apache License 2.0.
-See [LICENSE](LICENSE).
+See [LICENSE](LICENSE.md).

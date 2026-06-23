@@ -126,6 +126,7 @@ export class FileServiceImpl extends FileService {
       }
       return []
     }
+    // NOTE: Include itself.
     return [...(await getParent(desc)), mapFileDescriptorDomainToApp(desc)]
   }
 
