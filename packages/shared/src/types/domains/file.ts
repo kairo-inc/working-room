@@ -16,7 +16,6 @@ export type DomainFileDescriptor = {
   blobHash: string
   pathIds: string
   parentId: string | null
-  isSharedRoot: boolean
   isPrivateRoot: boolean
   isChatDir: boolean
   status: "exist" | "missing" | "deleted"

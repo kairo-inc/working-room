@@ -113,6 +113,5 @@ export abstract class FileService {
 
   // Server side utility
   abstract ensureRootDir(): Promise<DomainFileDescriptor>
-  abstract ensureSharedRootDir(): Promise<DomainFileDescriptor>
   abstract ensurePrivateDir(): Promise<DomainFileDescriptor>
 }

@@ -67,12 +67,11 @@ export class AuthServiceImpl extends AuthService {
 
       // Execute folder creation as a temporary user.
       const tmpJwt = encodeJwt({ email, userId, tenantId, role: "owner" }, randomId())
-      const [rootDir, _, privateDir] = await runWithPrivateContext({ idToken: tmpJwt }, async () => {
+      const [rootDir, privateDir] = await runWithPrivateContext({ idToken: tmpJwt }, async () => {
         const fileService = await this.resolver.resolveFileService()
         const rootDir = await fileService.ensureRootDir()
-        const shared = await fileService.ensureSharedRootDir()
         const privateDir = await fileService.ensurePrivateDir()
-        return [rootDir, shared, privateDir]
+        return [rootDir, privateDir]
       })
 
       await this.userSource.create({
