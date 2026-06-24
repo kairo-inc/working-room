@@ -1,5 +1,13 @@
 # WorkingRoom
 
+<p align="center">
+  <a href="https://github.com/kairo-inc/working-room/actions">
+    <img src="https://github.com/kairo-inc/working-room/actions/workflows/ci.yml/badge.svg" />
+  </a>
+  <img src="https://img.shields.io/github/license/kairo-inc/working-room" />
+  <img src="https://img.shields.io/github/v/release/kairo-inc/working-room" />
+</p>
+
 [WorkingRoom](https://workingroom.io) is an open source shared workspace for teams and AI agents.
 
 <p align="center">
@@ -21,7 +29,7 @@ AI agents can safely read, write, search, and process content under human-define
 </p>
 
 > [!WARNING]
-> WorkingRoom is currently in early development (v0.1.x).
+> WorkingRoom is currently in early development (v0.2.x).
 > APIs and database schemas may change before v1.0.
 
 ## Features
