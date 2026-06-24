@@ -5,15 +5,15 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@ai-sdk/anthropic@npm:3.0.85":
-  version: 3.0.85
-  resolution: "@ai-sdk/anthropic@npm:3.0.85"
+"@ai-sdk/anthropic@npm:3.0.86":
+  version: 3.0.86
+  resolution: "@ai-sdk/anthropic@npm:3.0.86"
   dependencies:
     "@ai-sdk/provider": "npm:3.0.10"
     "@ai-sdk/provider-utils": "npm:4.0.30"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/fd6569e141965c3e96875af91bf3d708a31c7b00a5343441db1ca5c532b6e12a3d37fb7ae16f48cf826cfeeabdb74cec2508bedd74390cf8edea5e8546dd74c4
+  checksum: 10c0/426ffe7264fe0764fdc666850246abfa64861d1ae43ba8bcb849f16c1ec96840daa988806eac24004293adad4a630ad2c6f44a93f5d7f7adb8306fc164a978fd
   languageName: node
   linkType: hard
 
@@ -9426,7 +9426,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/web@workspace:apps/web"
   dependencies:
-    "@ai-sdk/anthropic": "npm:3.0.85"
+    "@ai-sdk/anthropic": "npm:3.0.86"
     "@ai-sdk/openai": "npm:3.0.74"
     "@aws-sdk/client-s3": "npm:3.1075.0"
     "@tanstack/react-query": "npm:5.101.0"
