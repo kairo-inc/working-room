@@ -59,6 +59,15 @@ const generateData = async () => {
       role: "owner",
       localSecretHash: hashedPassword,
       tenant: { connect: { id: tenantId } },
+      accessGroups: {
+        create: {
+          name: "Docs Access Group",
+          read: true,
+          write: true,
+          tenant: { connect: { id: tenantId } },
+          resources: { connect: { id: rootDir.id } },
+        },
+      },
       privateDir: {
         create: {
           id: userPrivateDirId,

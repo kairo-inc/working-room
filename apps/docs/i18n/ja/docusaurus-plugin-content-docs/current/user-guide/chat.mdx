@@ -4,6 +4,8 @@ sidebar_position: 1
 custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/user-guide/chat.mdx"
 ---
 
+import Screenshot from "@site/src/components/Screenshot"
+
 # チャット
 
 チャットは WorkingRoom で AI エージェントと作業するための主要なインターフェースです。自然な会話を通じてファイルの作成・編集、ワークスペースの整理、複雑なタスクの実行が可能です。
@@ -17,6 +19,16 @@ custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/user-
 入力フィールドにメッセージを入力して送信ボタンを押すか、**Enter** キーを押します。入力フィールドは入力中に最大 10 行まで自動的に拡張されます。改行を挿入するには **Shift + Enter** を使用します。
 
 レスポンスは段階的にストリーミングされます。エージェントが処理中の間、現在実行されているツールやサブエージェントの名前がリアルタイムで表示されます。
+
+## ワーキングフォルダ
+
+各チャットには **ワーキングフォルダ** が設定されており、エージェントがファイルの読み書きを行う際の作業ディレクトリとして使用されます。現在のワーキングフォルダはメッセージ入力欄の下に **Current directory** として表示されます。
+
+<Screenshot alt="チャット入力欄の下に表示されるワーキングフォルダ" light="/img/screenshots/file_select_button_light.png" dark="/img/screenshots/file_select_button_dark.png" />
+
+デフォルトではプライベートフォルダが設定されています。変更するには、現在のフォルダ名の横にある **Change directory** をクリックし、ファイルピッカーから別のフォルダを選択します。選択はすぐに保存され、セッションをまたいで維持されます。
+
+<Screenshot alt="フォルダ選択モーダル" light="/img/screenshots/file_select_modal_light.png" dark="/img/screenshots/file_select_modal_dark.png" />
 
 ## ファイルを添付する
 
