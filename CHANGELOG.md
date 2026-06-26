@@ -4,6 +4,27 @@ All notable changes to WorkingRoom will be documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.3] - 2026-06-26
+
+### Added
+
+#### File Management
+
+- Added a download button to the file content page, allowing users to save files directly from the browser.
+
+### Fixed
+
+#### File Management
+
+- Fixed an issue where the pager displayed the incorrect current page and the file list did not refresh after operations such as delete or move.
+- Fixed an issue where the file select modal and user select modal did not scroll when the list contained many items, making lower entries inaccessible.
+
+### Documentation
+
+#### Chat Experience
+
+- Added documentation for the working folder feature in the Chat user guide, including screenshots showing how to view and change the current directory.
+
 ## [0.2.2] - 2026-06-22
 
 ### Added
