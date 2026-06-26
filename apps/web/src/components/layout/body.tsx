@@ -14,10 +14,10 @@ const Title = forwardRef<HTMLDivElement, { title: string; description?: string |
   ({ title, description, tail }: { title: string; description?: string | ReactElement; tail?: ReactElement }, ref) => {
     return (
       <div className="mt-8" ref={ref}>
-        <h1 className="flex h-10 items-center justify-between text-2xl font-bold">
-          {title}
-          {tail}
-        </h1>
+        <div className="flex h-10 items-center justify-between text-2xl font-bold">
+          <h1 className="flex-1">{title}</h1>
+          <div className="flex-0">{tail}</div>
+        </div>
         {typeof description === "string" ? <p className="text-muted-foreground mt-1 text-sm">{description}</p> : description}
       </div>
     )

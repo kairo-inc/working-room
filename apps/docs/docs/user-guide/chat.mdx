@@ -4,6 +4,8 @@ sidebar_position: 1
 custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/user-guide/chat.mdx"
 ---
 
+import Screenshot from "@site/src/components/Screenshot"
+
 # Chat
 
 Chat is the primary interface for working with the AI agent in WorkingRoom. You can create and edit files, organize your workspace, and carry out complex tasks through natural conversation.
@@ -17,6 +19,16 @@ Click **New Chat** in the sidebar or **Start your first chat** on the home scree
 Type your message in the input field and press the send button or **Enter**. The input field expands automatically up to 10 rows as you type. Use **Shift + Enter** to insert a line break.
 
 Responses stream in progressively. While the agent is working, the names of any tools or sub-agents currently running are shown in real time.
+
+## Working folder
+
+Each chat has a **working folder** — the directory the agent uses as its working context when reading and writing files. The current working folder is shown below the message input as **Current directory**.
+
+<Screenshot alt="Current directory shown below the chat input" light="/img/screenshots/file_select_button_light.png" dark="/img/screenshots/file_select_button_dark.png" />
+
+By default, the working folder is set to your private folder. To change it, click **Change directory** next to the current folder name and select a different folder from the file picker. The selection is saved immediately and persists across sessions.
+
+<Screenshot alt="Folder selection modal" light="/img/screenshots/file_select_modal_light.png" dark="/img/screenshots/file_select_modal_dark.png" />
 
 ## Attaching files
 

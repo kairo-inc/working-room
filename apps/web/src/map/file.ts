@@ -27,7 +27,6 @@ export const mapFileDescriptorEntityToApp = (entity: EntityFileDescriptor): AppF
     isRoot: entity.isRoot,
     parentId: entity.parentId || undefined,
     pathIds: entity.pathIds,
-    isSharedRoot: entity.isSharedRoot,
     isChatDir: entity.isChatDir,
     isPrivateRoot: !!entity.privateRootOf,
   }
@@ -45,7 +44,6 @@ export const mapFileDescriptorDomainToApp = (entity: DomainFileDescriptor): AppF
     isRoot: entity.isRoot,
     parentId: entity.parentId || undefined,
     pathIds: entity.pathIds,
-    isSharedRoot: entity.isSharedRoot,
     isChatDir: entity.isChatDir,
     isPrivateRoot: entity.isPrivateRoot,
   }

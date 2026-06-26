@@ -26,7 +26,7 @@ export const Avatar = ({ variant = "default", className, ...props }: AvatarProps
       <div className="text-foreground flex items-center justify-center rounded-full text-lg">
         <User size={20} />
       </div>
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <div className="text-primary text-md font-bold">{name}</div>
         <div className="text-muted-foreground text-xs">{email}</div>
       </div>

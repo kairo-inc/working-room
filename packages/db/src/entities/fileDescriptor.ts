@@ -14,7 +14,6 @@ export class EntityFileDescriptor implements _EntityFileDescriptor {
   isModifying: boolean
   isDirectory: boolean
   isRoot: boolean
-  isSharedRoot: boolean
   parentId: string | null
   pathIds: string
   blobHash: string
@@ -32,7 +31,6 @@ export class EntityFileDescriptor implements _EntityFileDescriptor {
     isModifying: true,
     isDirectory: true,
     isRoot: true,
-    isSharedRoot: true,
     parentId: true,
     pathIds: true,
     blobHash: true,

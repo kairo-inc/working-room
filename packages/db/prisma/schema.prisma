@@ -251,8 +251,6 @@ model FileDescriptor {
   // 2. Private root directories that are created for each user and can be used to store the user's private files.
   //   - Private root folder must have a user relation.
   isRoot        Boolean @default(false)
-  // There is only one shared root directory in a tenant.
-  isSharedRoot  Boolean @default(false)
   // User relation. The root Private directory must have this relation.
   privateRootOf User?   @relation("privateDir")
 

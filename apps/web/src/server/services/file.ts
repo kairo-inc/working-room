@@ -9,7 +9,6 @@ import {
   ImageMimeType,
   InvalidChatDirAccessError,
   InvalidPrivateDirAccessError,
-  InvalidSharedDirAccessError,
   MimeType,
   PageResult,
 } from "@wr/shared"
@@ -63,8 +62,6 @@ export class FileServiceImpl extends FileService {
         throw new InvalidChatDirAccessError("Chat directories cannot be accessed")
       } else if (ancestor.isPrivateRoot && isUnderPrivateDir) {
         throw new InvalidPrivateDirAccessError("Private directories cannot be accessed")
-      } else if (ancestor.isSharedRoot && isUnderSharedDir) {
-        throw new InvalidSharedDirAccessError("Shared directories cannot be accessed")
       }
     }
   }
@@ -126,6 +123,7 @@ export class FileServiceImpl extends FileService {
       }
       return []
     }
+    // NOTE: Include itself.
     return [...(await getParent(desc)), mapFileDescriptorDomainToApp(desc)]
   }
 
@@ -358,9 +356,6 @@ export class FileServiceImpl extends FileService {
 
   async ensureRootDir(): Promise<DomainFileDescriptor> {
     return await this.fileAccessService.createRootDir()
-  }
-  async ensureSharedRootDir(): Promise<DomainFileDescriptor> {
-    return await this.fileAccessService.createSharedRootDir()
   }
   async ensurePrivateDir(): Promise<DomainFileDescriptor> {
     return await this.fileAccessService.createPrivateDir()

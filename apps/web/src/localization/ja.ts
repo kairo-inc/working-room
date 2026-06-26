@@ -158,6 +158,7 @@ export default {
     changeRoleFailed: "ロールの変更に失敗しました。",
   },
   file: {
+    download: "ダウンロード",
     backToDirectory: "ディレクトリに戻る",
     createdAt: "{0} 作成",
     noPdfPlugin: "このブラウザにはPDFプラグインがありません。",

@@ -135,7 +135,6 @@ export abstract class FileAccessService {
 
   abstract upload(arg: FileAccessServiceUploadArg): Promise<DomainFileDescriptor>
   abstract createRootDir(): Promise<DomainFileDescriptor>
-  abstract createSharedRootDir(): Promise<DomainFileDescriptor>
   abstract createPrivateDir(): Promise<DomainFileDescriptor>
   abstract createChatFile(arg: FileAccessServiceCreateChatFileArg): Promise<DomainFileDescriptor>
 

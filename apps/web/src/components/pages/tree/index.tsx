@@ -20,7 +20,7 @@ export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
   const notify = useNotification()
   const [queryArgs, setQueryArgs] = useState<Parameters<typeof useFileGetList>[0]>({ parentId: parent.id })
 
-  const { data, isPending } = useFileGetList(queryArgs)
+  const { data, isPending, refetch } = useFileGetList(queryArgs)
   const { mutateAsync: upload } = useFileUploadFiles()
 
   const fileList = data?.pages.flatMap((page) => page.data) ?? []
@@ -49,7 +49,7 @@ export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
   return (
     <PageLayout key={parent.id}>
       <BodyLayout title={folderPath} description={L.tree.description} className="context-menu max-w-5xl">
-        <FileList data={fileList} parent={parent} isPending={isPending} />
+        <FileList data={fileList} parent={parent} isPending={isPending} refetchFiles={refetch} />
       </BodyLayout>
       <FileUploadPane onFileUpload={onFileUpload} />
     </PageLayout>

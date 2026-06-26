@@ -8,7 +8,6 @@ export type AppFileDescriptor = {
   blobHash: string
   mimeType: MimeType
   isDirectory: boolean
-  isSharedRoot: boolean
   isPrivateRoot: boolean
   isChatDir: boolean
   parentId?: string

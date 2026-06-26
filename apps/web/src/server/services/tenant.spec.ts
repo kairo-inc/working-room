@@ -1,16 +1,11 @@
 import { PrismaClient } from "@prisma/client"
+import { afterEach } from "node:test"
 import { beforeEach, describe, expect, it } from "vitest"
 
 import { CoreConfig } from "@wr/core"
 import { BadRequestError, NoContextError, PermissionDeniedError } from "@wr/shared"
-import { encodeJwt, runWithDiContainer, runWithPrivateContext } from "@wr/shared-node"
-import {
-  createTestConfigWithTmpFolder,
-  createTestPrismaClient,
-  testNotExistUserEmail,
-  testUserEmail,
-  testUserIdTokenAdmin,
-} from "@wr/testing"
+import { runWithDiContainer, runWithPrivateContext } from "@wr/shared-node"
+import { fixtureFactory } from "@wr/testing"
 
 import { getWebAppDiContainer } from "../container"
 import { TenantService } from "./tenantType"
@@ -18,31 +13,40 @@ import { TenantService } from "./tenantType"
 describe("[Success] TenantService", async () => {
   let testContainer: ReturnType<typeof getWebAppDiContainer>
   let prismaClient: PrismaClient
+  let config: CoreConfig
 
   beforeEach(async () => {
     testContainer = getWebAppDiContainer()
-    const config = createTestConfigWithTmpFolder()
-    prismaClient = await createTestPrismaClient()
+    config = fixtureFactory.createTestConfigWithTmpFolder()
+    prismaClient = await fixtureFactory.createDbClient()
     testContainer.registerInstance<PrismaClient>("PrismaClient", prismaClient)
     testContainer.registerInstance<CoreConfig>("CoreConfig", config)
   })
 
+  afterEach(async () => {
+    await fixtureFactory.resetDatabase()
+    await fixtureFactory.removeTestFolder(config)
+  })
+
   it("User invitation with local auth", async () => {
+    const { user: ownerUser } = await fixtureFactory.createTenantWithOwner()
+    const newUserEmail = `new-${Date.now()}@workingroom.io`
+
     await runWithDiContainer(testContainer, async () => {
       const tenantService = testContainer.resolve<TenantService>("TenantService")
-      const result = await runWithPrivateContext({ idToken: testUserIdTokenAdmin }, async () => {
+      const result = await runWithPrivateContext({ idToken: ownerUser.idToken }, async () => {
         return await tenantService.invite({
-          email: testNotExistUserEmail,
+          email: newUserEmail,
           role: "member",
         })
       })
 
       expect(result.localAuthResult).not.toBeUndefined()
 
-      const user = await prismaClient.user.findFirst({ where: { email: testNotExistUserEmail } })
+      const user = await prismaClient.user.findFirst({ where: { email: newUserEmail } })
       expect(user).not.toBeNull()
       expect(user?.role).toBe("member")
-      expect(user?.email).toBe(testNotExistUserEmail)
+      expect(user?.email).toBe(newUserEmail)
 
       // Check folder existance created by temporary user.
       const file = await prismaClient.fileDescriptor.findFirst({ where: { ownerId: user!.id } })
@@ -63,21 +67,30 @@ describe("[Success] TenantService", async () => {
 describe("[Failure] TenantService", () => {
   let testContainer: ReturnType<typeof getWebAppDiContainer>
   let prismaClient: PrismaClient
+  let config: CoreConfig
+
   beforeEach(async () => {
     testContainer = getWebAppDiContainer().createChildContainer()
-    const config = createTestConfigWithTmpFolder()
-    prismaClient = await createTestPrismaClient({ withoutFixtures: true })
+    config = fixtureFactory.createTestConfigWithTmpFolder()
+    prismaClient = await fixtureFactory.createDbClient()
 
     testContainer.registerInstance<CoreConfig>("CoreConfig", config)
     testContainer.registerInstance<PrismaClient>("PrismaClient", prismaClient)
   })
 
+  afterEach(async () => {
+    await fixtureFactory.resetDatabase()
+    await fixtureFactory.removeTestFolder(config)
+  })
+
   it("Can't invite user with owner role", async () => {
+    const { user: ownerUser } = await fixtureFactory.createTenantWithOwner()
+    const newUserEmail = `new-${Date.now()}@workingroom.io`
     await runWithDiContainer(testContainer, async () => {
       const tenantService = testContainer.resolve<TenantService>("TenantService")
-      const result = runWithPrivateContext({ idToken: testUserIdTokenAdmin }, async () => {
+      const result = runWithPrivateContext({ idToken: ownerUser.idToken }, async () => {
         return await tenantService.invite({
-          email: testNotExistUserEmail,
+          email: newUserEmail,
           role: "owner",
         })
       })
@@ -86,27 +99,20 @@ describe("[Failure] TenantService", () => {
   })
 
   it("Can't invite user with member role", async () => {
+    const { memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    const newUserEmail = `new-${Date.now()}@workingroom.io`
+
     await runWithDiContainer(testContainer, async () => {
       const tenantService = testContainer.resolve<TenantService>("TenantService")
-      const memberIdToken = encodeJwt(
-        {
-          email: testUserEmail,
-          role: "member",
-          userId: "test-member-user-id",
-          tenantId: "test-tenant-id",
-        },
-        "test-secret"
-      )
-      const notPermitted = runWithPrivateContext({ idToken: memberIdToken }, async () => {
+      const notPermitted = runWithPrivateContext({ idToken: memberUser.idToken }, async () => {
         return await tenantService.invite({
-          email: testNotExistUserEmail,
+          email: newUserEmail,
           role: "admin",
         })
       })
       await expect(notPermitted).rejects.toThrow(PermissionDeniedError)
-
       const noContext = tenantService.invite({
-        email: testNotExistUserEmail,
+        email: newUserEmail,
         role: "admin",
       })
       await expect(noContext).rejects.toThrow(NoContextError)

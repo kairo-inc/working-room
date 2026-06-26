@@ -61,11 +61,6 @@ export class InvalidPrivateDirAccessError extends BaseError {
   public errorCode = "INVALID_PRIVATE_DIR_ACCESS"
 }
 
-export class InvalidSharedDirAccessError extends BaseError {
-  public statusCode = 400
-  public errorCode = "INVALID_SHARED_DIR_ACCESS"
-}
-
 export class InternalServerError extends BaseError {
   public statusCode = 500
   public errorCode = "INTERNAL_SERVER_ERROR"
