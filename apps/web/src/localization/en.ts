@@ -156,6 +156,7 @@ export default {
     changeRoleFailed: "Failed to change role.",
   },
   file: {
+    download: "Download",
     backToDirectory: "Back to directory",
     createdAt: "Created at {0}",
     noPdfPlugin: "It appears you don't have a PDF plugin for this browser. You can",

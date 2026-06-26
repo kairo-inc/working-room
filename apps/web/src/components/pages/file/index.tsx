@@ -94,7 +94,7 @@ export const PageFile = ({ data }: PageFileProps) => {
         title={name}
         tail={
           <RectangleButton onClick={() => open(Route.fileContentDownload(data.id), "_blank", "noopener,noreferrer")}>
-            Download
+            {L.file.download}
           </RectangleButton>
         }
         description={
