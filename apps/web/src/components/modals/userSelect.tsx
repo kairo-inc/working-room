@@ -81,8 +81,13 @@ export const UserSelectModal = ({ show, onClose, onUserSelected }: UserSelectMod
   const userList = data?.pages.flatMap((page) => page.data) ?? []
 
   return (
-    <Modal show={show} onClose={onClose} title={L.modal.userSelect.title} containerClassName="w-[clamp(30vw,600px,80vw)] h-1/2">
-      <div className="mt-4 flex-1 text-sm">
+    <Modal
+      show={show}
+      onClose={onClose}
+      title={L.modal.userSelect.title}
+      containerClassName="w-[clamp(30vw,600px,80vw)] min-h-1/2 max-h-[80vh]"
+    >
+      <div className="my-4 flex-1 overflow-y-auto text-sm">
         <Form<FormData>
           onSubmit={() => {}}
           render={() => (

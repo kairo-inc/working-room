@@ -35,7 +35,7 @@ const FileList = ({
   isLoading?: boolean
 }) => {
   const hasFiles = files.length > 0
-  const headerClassName = "text-sm font-normal text-muted-foreground p-2"
+  const headerClassName = "text-sm font-normal text-muted-foreground p-2 sticky top-0 bg-popover-foreground"
   const rowClassName = "text-sm cursor-pointer p-2 hover:bg-muted border-t border-border first:border-t-0"
   const selectedRowClassName = "!bg-link/20 !text-link "
   const notDirectoryRowClassName = "cursor-not-allowed text-sm text-muted-foreground p-2 border-t border-border first:border-t-0"
@@ -97,8 +97,13 @@ export const FileSelectModal = ({ show, onClose, onFileSelected, initialParentFo
   }, [isError])
 
   return (
-    <Modal show={show} onClose={onClose} title={L.modal.fileSelect.title} containerClassName="w-[clamp(30vw,600px,80vw)] h-1/2">
-      <div className="mt-4 flex-1 text-sm">
+    <Modal
+      show={show}
+      onClose={onClose}
+      title={L.modal.fileSelect.title}
+      containerClassName="w-[clamp(30vw,600px,80vw)] min-h-1/2 max-h-[80vh]"
+    >
+      <div className="my-4 flex-1 overflow-y-auto text-sm">
         <FileList
           isLoading={isPending}
           files={files}
