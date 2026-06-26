@@ -24,9 +24,10 @@ type FileListProps = ComponentPropsWithoutRef<"table"> & {
   parent: AppFileDescriptor
   data: AppFileDescriptor[]
   isPending?: boolean
+  refetchFiles?: () => void
 }
 
-export const FileList = ({ data, parent, isPending, className, ...props }: FileListProps) => {
+export const FileList = ({ data, parent, isPending, className, refetchFiles, ...props }: FileListProps) => {
   const router = useRouter()
   const isAdminOrOwner = useIsAdminOrOwner()
   const gridHeaderClassName = "grid border-b py-1 grid-cols-[minmax(0,1fr)_minmax(80px,160px)_minmax(100px,180px)] text-sm"
@@ -121,23 +122,24 @@ export const FileList = ({ data, parent, isPending, className, ...props }: FileL
               switch (action) {
                 case "delete": {
                   const descList = data.filter((file) => handlingFileIds.includes(file.id))
-                  showDeleteModal({ data: descList })
+                  showDeleteModal({ data: descList, onResolve: refetchFiles })
                   break
                 }
                 case "newFolder": {
-                  showCreateDirectoryModal({ data: { id: parent.id } })
+                  showCreateDirectoryModal({ data: { id: parent.id }, onResolve: refetchFiles })
                   break
                 }
                 case "rename": {
                   if (!multipleSelection) {
                     const desc = data.find((file) => file.id === descId)!
-                    showRenameModal({ data: desc })
+                    showRenameModal({ data: desc, onResolve: refetchFiles })
                   }
                   break
                 }
                 case "copy": {
                   try {
                     await copyFile({ descId })
+                    refetchFiles?.()
                     notify.info(L.file.list.copyTitle, L.file.list.copySuccess)
                     router.replace(router.asPath)
                   } catch (e) {
@@ -166,7 +168,7 @@ export const FileList = ({ data, parent, isPending, className, ...props }: FileL
           ],
           onItemClick: (action) => {
             if (action === "newFolder") {
-              showCreateDirectoryModal({ data: { id: parent.id } })
+              showCreateDirectoryModal({ data: { id: parent.id }, onResolve: refetchFiles })
               return
             }
           },

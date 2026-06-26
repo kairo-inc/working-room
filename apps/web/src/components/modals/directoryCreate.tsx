@@ -11,11 +11,11 @@ import { formStringRequired } from "../formSchema"
 import { TextForm } from "../forms/textForm"
 import { Modal, ModalBaseArgs, ModalProps, useModal } from "./modal"
 
-type FormType = ModalBaseArgs & {
+type FormType = {
   name: string
 }
 
-type Args = {
+type Args = ModalBaseArgs & {
   data: Pick<DomainFileDescriptor, "id">
 }
 
