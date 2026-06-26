@@ -31,8 +31,7 @@ type PagerProps = ComponentPropsWithoutRef<"div"> & Omit<PageResult<any>, "data"
 export const Pager = ({ nextPage, maxPage, className, ...props }: PagerProps) => {
   const { pathname, query } = useRouter()
 
-  const current = nextPage ? nextPage - 1 : 0
-
+  const current = query.page ? parseInt(query.page as string, 10) : 0
   const hasNext = nextPage !== undefined && current < maxPage - 1
   const hasPrev = current > 0
 
