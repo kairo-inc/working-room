@@ -10,6 +10,7 @@ import { useFileGetContent } from "../../../hooks/trpc/file"
 import { L } from "../../../localization"
 import { Route } from "../../../route"
 import { AppFileDescriptor } from "../../../types/file"
+import { RectangleButton } from "../../buttons/rectangleButton"
 import { FileHistoryPanel } from "./history"
 
 export interface PageFileProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -91,6 +92,11 @@ export const PageFile = ({ data }: PageFileProps) => {
       <BodyLayout
         className="max-w-5xl"
         title={name}
+        tail={
+          <RectangleButton onClick={() => open(Route.fileContentDownload(data.id), "_blank", "noopener,noreferrer")}>
+            Download
+          </RectangleButton>
+        }
         description={
           <div className="flex items-center justify-between border-b pt-2 pb-2">
             {data.parentId && (

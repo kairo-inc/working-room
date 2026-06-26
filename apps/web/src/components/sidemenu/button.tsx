@@ -20,7 +20,7 @@ export const SideMenuButton = ({ href, label, icon, variant = "default", classNa
   return (
     <a href={href} className={clsx(variants({ variant: variant }), className)} {...props}>
       {icon}
-      <div className="hidden md:block">{label}</div>
+      <div className="hidden lg:block">{label}</div>
     </a>
   )
 }

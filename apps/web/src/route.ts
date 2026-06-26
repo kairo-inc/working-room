@@ -43,8 +43,13 @@ export class Route {
     }
     return `/file/${descId}?historyId=${historyId}`
   }
+
   static fileContent(descId: string) {
     return `/api/file/${descId}`
+  }
+
+  static fileContentDownload(descId: string) {
+    return `/api/file/${descId}?download=true`
   }
 
   static tree(parentId?: string) {

@@ -15,11 +15,14 @@ function sanitizeMimeType(mimeType: string): string {
 export default apiHander({
   method: "GET",
   fn: async (req, res) => {
+    const download = req.query.download === "true"
     const descId = ensureQuery(req, "descId")
     const service = await getWebAppDiContainer().resolve<Resolver>("Resolver").resolveFileService()
     const fileDescriptor = await service.get({ id: descId })
     const stream = await service.getBinaryFileContentStream({ id: fileDescriptor.id })
-    res.setHeader("Content-Disposition", `inline; filename=*=UTF-8''${encodeURIComponent(fileDescriptor.name)}`)
+    if (download) res.setHeader("Content-Disposition", `attachment; filename*=UTF-8''${encodeURIComponent(fileDescriptor.name)}`)
+    else res.setHeader("Content-Disposition", `inline; filename*=UTF-8''${encodeURIComponent(fileDescriptor.name)}`)
+
     res.setHeader("Content-Type", sanitizeMimeType(fileDescriptor.mimeType))
     stream.pipe(res)
     stream.on("end", () => {
