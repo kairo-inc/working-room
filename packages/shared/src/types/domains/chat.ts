@@ -46,6 +46,10 @@ export type DomainChat = {
   updatedAt: Date
   requireApproval: boolean
   lastUserMessage?: DomainUserMessage
+  workingFolder?: {
+    id: string
+    name: string
+  }
 }
 
 export type DomainChatStatus = {

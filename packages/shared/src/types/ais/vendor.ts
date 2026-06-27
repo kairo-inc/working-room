@@ -1,4 +1,4 @@
-import { AiModelOpenAI, AiModelTierMappingAnthropic, AiModelTierMapppingOpenAI as AiModelTierMappingOpenAI } from "./ai"
+import { AiModelName, AiModelTierMappingAnthropic, AiModelTierMapppingOpenAI as AiModelTierMappingOpenAI } from "./ai"
 
 export type AiVendorName = "openai" | "anthropic"
 
@@ -36,7 +36,7 @@ type Price = {
 
 export const aiVendorModelPrice: {
   [key in AiVendorName]?: {
-    [model in AiModelOpenAI]?: Price
+    [model in AiModelName]?: Price
   }
 } = {
   openai: {
@@ -98,6 +98,48 @@ export const aiVendorModelPrice: {
     "gpt-4.1-mini": {
       outputTokens: 1.6,
       inputTokens: 0.4,
+      cacheInputTokens: 0.1,
+    },
+  },
+  anthropic: {
+    "claude-fable-5": {
+      outputTokens: 50.0,
+      inputTokens: 10.0,
+      cacheInputTokens: 1.0,
+    },
+    "claude-opus-4-8": {
+      outputTokens: 25.0,
+      inputTokens: 5.0,
+      cacheInputTokens: 0.5,
+    },
+    "claude-opus-4-7": {
+      outputTokens: 25.0,
+      inputTokens: 5.0,
+      cacheInputTokens: 0.5,
+    },
+    "claude-opus-4-6": {
+      outputTokens: 25.0,
+      inputTokens: 5.0,
+      cacheInputTokens: 0.5,
+    },
+    "claude-opus-4-5": {
+      outputTokens: 25.0,
+      inputTokens: 5.0,
+      cacheInputTokens: 0.5,
+    },
+    "claude-sonnet-4-6": {
+      outputTokens: 15.0,
+      inputTokens: 3.0,
+      cacheInputTokens: 0.3,
+    },
+    "claude-sonnet-4-5": {
+      outputTokens: 15.0,
+      inputTokens: 3.0,
+      cacheInputTokens: 0.3,
+    },
+    "claude-haiku-4-5": {
+      outputTokens: 5.0,
+      inputTokens: 1.0,
       cacheInputTokens: 0.1,
     },
   },

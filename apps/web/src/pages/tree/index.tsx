@@ -6,7 +6,7 @@ import { Resolver } from "../../server/resolver"
 export default function Tree(props: PageTreeProps) {
   return (
     <>
-      <title>/</title>
+      <title>{`/`}</title>
       <PageTree {...props} />
     </>
   )

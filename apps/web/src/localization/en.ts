@@ -44,6 +44,7 @@ export default {
       model: "Model",
       inputCached: "Input token (Cached)",
       output: "Output token",
+      cost: "Cost",
     },
   },
   account: {

@@ -49,7 +49,7 @@ export const ChatInputForm = ({ onSubmit, isDisabled, chat }: ChatInputFormProps
         onSubmit={onSubmit}
         validate={validate}
         render={({ handleSubmit, submitting, hasValidationErrors }) => (
-          <form onSubmit={handleSubmit} className="bg-background sticky bottom-0 mx-auto w-full pb-8">
+          <form onSubmit={handleSubmit} className="bg-background sticky bottom-0 mx-auto w-full pb-4">
             <ChatTextArea chatId={chatId} isDisabled={submitting || isDisabled || hasValidationErrors} />
             <FolderChangeButton chat={chat} />
           </form>
