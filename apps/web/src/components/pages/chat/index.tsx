@@ -251,7 +251,6 @@ export const PageChat = ({ data }: PageChatProps) => {
 
   const onSubmit: ChatInputFormSubmitFn = async (values, form) => {
     const chatId = data.id
-
     const fileMeta =
       values?.fileUpload
         ?.map((f) => f.meta)
@@ -341,7 +340,7 @@ export const PageChat = ({ data }: PageChatProps) => {
             />
           )}
         </div>
-        {needApprovals.length === 0 && <ChatInputForm onSubmit={onSubmit} chat={data} />}
+        {needApprovals.length === 0 && <ChatInputForm onSubmit={onSubmit} chat={data} isDisabled={isPending} />}
       </BodyLayout>
     </PageLayout>
   )
