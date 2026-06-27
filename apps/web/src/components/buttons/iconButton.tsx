@@ -9,7 +9,7 @@ const variants = cva("cursor-pointer inline-flex items-center justify-center", {
     size: {
       sm: "h-4 w-4",
       default: "h-8 w-8",
-      lg: "h-12 w-12",
+      lg: "h-10 w-10",
     },
   },
   defaultVariants: {
@@ -24,7 +24,7 @@ type IconButtonProps = ComponentPropsWithoutRef<"button"> & {
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(({ icon, variant, size, className, ...rest }, ref) => {
   return (
-    <button className={variants({ variant, size, className })} ref={ref} {...rest}>
+    <button type="button" className={variants({ variant, size, className })} ref={ref} {...rest}>
       {icon}
     </button>
   )
