@@ -57,6 +57,7 @@ export const mapChatEntityToDomain = (entity: EntityChat): DomainChat => {
     updatedAt: entity.updatedAt,
     requireApproval: entity.requireApproval,
     lastUserMessage: lastMessage ? mapUserMessageEntityToDomain(lastMessage) : undefined,
+    workingFolder: entity.workingFolder ?? undefined,
   }
 }
 

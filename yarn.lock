@@ -5,62 +5,62 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@ai-sdk/anthropic@npm:3.0.86":
-  version: 3.0.86
-  resolution: "@ai-sdk/anthropic@npm:3.0.86"
+"@ai-sdk/anthropic@npm:3.0.88":
+  version: 3.0.88
+  resolution: "@ai-sdk/anthropic@npm:3.0.88"
   dependencies:
-    "@ai-sdk/provider": "npm:3.0.10"
-    "@ai-sdk/provider-utils": "npm:4.0.30"
+    "@ai-sdk/provider": "npm:3.0.12"
+    "@ai-sdk/provider-utils": "npm:4.0.32"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/426ffe7264fe0764fdc666850246abfa64861d1ae43ba8bcb849f16c1ec96840daa988806eac24004293adad4a630ad2c6f44a93f5d7f7adb8306fc164a978fd
+  checksum: 10c0/d91fd2da9c96c28056174ad4f7d41f95b46beeb942f4912943265b70aa89babbabd3df2cf5a99d27e436ea3307af2434b9e7da7838534a83299b81db7635345b
   languageName: node
   linkType: hard
 
-"@ai-sdk/gateway@npm:3.0.134":
-  version: 3.0.134
-  resolution: "@ai-sdk/gateway@npm:3.0.134"
+"@ai-sdk/gateway@npm:3.0.138":
+  version: 3.0.138
+  resolution: "@ai-sdk/gateway@npm:3.0.138"
   dependencies:
-    "@ai-sdk/provider": "npm:3.0.10"
-    "@ai-sdk/provider-utils": "npm:4.0.30"
+    "@ai-sdk/provider": "npm:3.0.12"
+    "@ai-sdk/provider-utils": "npm:4.0.32"
     "@vercel/oidc": "npm:3.2.0"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/9f4ef4d43aab397c96a10d02ccc94a527f5f3b476e05a9f9de8b963d57cd052eb54c1acef2329c4812f8534ac73f5700f5eef73b0725ff67dfae42b0d01272dc
+  checksum: 10c0/c8fc2f3eded6bd8cc6509577357bfa4bdcd2b45594aad45085cff9c6435381c1105185dbec94bcf4682d454f82dfef259b203713e3e2714fd81fd4358f4e4e97
   languageName: node
   linkType: hard
 
-"@ai-sdk/openai@npm:3.0.74":
-  version: 3.0.74
-  resolution: "@ai-sdk/openai@npm:3.0.74"
+"@ai-sdk/openai@npm:3.0.76":
+  version: 3.0.76
+  resolution: "@ai-sdk/openai@npm:3.0.76"
   dependencies:
-    "@ai-sdk/provider": "npm:3.0.10"
-    "@ai-sdk/provider-utils": "npm:4.0.30"
+    "@ai-sdk/provider": "npm:3.0.12"
+    "@ai-sdk/provider-utils": "npm:4.0.32"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/13cafa359160899a3abab7eba3a1bb0f4f158b68ba369ba2d0a58a109025fe9505a4613eaaf62f3ab6b2816ce5e83f3205261cf84a91f01bee49d6528d289152
+  checksum: 10c0/67b5cf2aa96f644bdec300882ca7bc6d4ea1f91ecb6f2d5259cff95a1246cf3fdb9db0bfe200669cada96abff7a8e0a851c067d5cec82f89f33f7bfbd1e7d293
   languageName: node
   linkType: hard
 
-"@ai-sdk/provider-utils@npm:4.0.30":
-  version: 4.0.30
-  resolution: "@ai-sdk/provider-utils@npm:4.0.30"
+"@ai-sdk/provider-utils@npm:4.0.32":
+  version: 4.0.32
+  resolution: "@ai-sdk/provider-utils@npm:4.0.32"
   dependencies:
-    "@ai-sdk/provider": "npm:3.0.10"
+    "@ai-sdk/provider": "npm:3.0.12"
     "@standard-schema/spec": "npm:^1.1.0"
     eventsource-parser: "npm:^3.0.8"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/4195612c0da1a634ca11043cbfed8e328c9177fc7289b533653529458163e944398539e53f1a689c6ffdf0f728e25b6cc9c927cfc2fe95e80ed22ae008a8053d
+  checksum: 10c0/3af98ffbe7c0139b95d40c0e6267e75655fa018078f08d166462553104266d191738e0f59610f896967257bc9e9ea6e2fec93f649cccde87ab636fdb71bfa77d
   languageName: node
   linkType: hard
 
-"@ai-sdk/provider@npm:3.0.10":
-  version: 3.0.10
-  resolution: "@ai-sdk/provider@npm:3.0.10"
+"@ai-sdk/provider@npm:3.0.12":
+  version: 3.0.12
+  resolution: "@ai-sdk/provider@npm:3.0.12"
   dependencies:
     json-schema: "npm:^0.4.0"
-  checksum: 10c0/c9b162165c3fd4684e4f7a1c041db3ad75785c841d904bac577006b7b2299d1b465557b1d32e3f59b6d8536a0ef5741b195aad86fc3e0e1d2a39f077062a83c4
+  checksum: 10c0/6826ff91b64786eaec6b0bb847a59cc289ab6fccc1c76c81454403bbafc445251629d0e6fbb0b55c95e61e8be77b1441116b824dfcae1cb08716c56fe309ee28
   languageName: node
   linkType: hard
 
@@ -9426,8 +9426,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/web@workspace:apps/web"
   dependencies:
-    "@ai-sdk/anthropic": "npm:3.0.86"
-    "@ai-sdk/openai": "npm:3.0.74"
+    "@ai-sdk/anthropic": "npm:3.0.88"
+    "@ai-sdk/openai": "npm:3.0.76"
     "@aws-sdk/client-s3": "npm:3.1075.0"
     "@tanstack/react-query": "npm:5.101.1"
     "@tiptap/pm": "npm:3.27.1"
@@ -9447,7 +9447,7 @@ __metadata:
     "@wr/db": "workspace:*"
     "@wr/shared": "workspace:*"
     "@wr/shared-node": "workspace:*"
-    ai: "npm:6.0.209"
+    ai: "npm:6.0.213"
     bcryptjs: "npm:3.0.3"
     chardet: "npm:2.2.0"
     class-variance-authority: "npm:0.7.1"
@@ -9570,17 +9570,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ai@npm:6.0.209":
-  version: 6.0.209
-  resolution: "ai@npm:6.0.209"
+"ai@npm:6.0.213":
+  version: 6.0.213
+  resolution: "ai@npm:6.0.213"
   dependencies:
-    "@ai-sdk/gateway": "npm:3.0.134"
-    "@ai-sdk/provider": "npm:3.0.10"
-    "@ai-sdk/provider-utils": "npm:4.0.30"
+    "@ai-sdk/gateway": "npm:3.0.138"
+    "@ai-sdk/provider": "npm:3.0.12"
+    "@ai-sdk/provider-utils": "npm:4.0.32"
     "@opentelemetry/api": "npm:^1.9.0"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/b3ed9a57a84ff5d6f2a8177382637cd788f74be61bfc6419d56345a5943b98c5e98c4e1348e2be7cb054292b7b09888e18b813ec407af56e4df2000caecb2ce2
+  checksum: 10c0/aa36296285ab4e587cf66383d0d36c257fe776ab32a3d69690bdb5639cc1815bac2f5b0dddf3138107dd6cfe74b40a88b1f00a674311ade22530d0df06719d30
   languageName: node
   linkType: hard
 
@@ -18759,12 +18759,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.8.4":
-  version: 3.8.4
-  resolution: "prettier@npm:3.8.4"
+"prettier@npm:3.8.5":
+  version: 3.8.5
+  resolution: "prettier@npm:3.8.5"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/b90a0cbe75b88ac0af9c13fe0f359bd19926fabccd88483227b21f71f0c1cc42da056fc1ac3a361e665577c568371d5ccfb2c62c31c8a1186f8d1bd531a063e9
+  checksum: 10c0/57ba3cd8ddc0cebcb31038f09081da5c8633ff1823ff5e5cf3496918b3b839f76a21e06050fd1a2c41547f44fedea2c28d7a4a26f0b2ed40eb60428c54c297ea
   languageName: node
   linkType: hard
 
@@ -22440,7 +22440,7 @@ __metadata:
     eslint: "npm:9.39.4"
     eslint-config-next: "npm:16.2.9"
     memfs: "npm:4.57.8"
-    prettier: "npm:3.8.4"
+    prettier: "npm:3.8.5"
     prettier-plugin-tailwindcss: "npm:0.8.0"
     tsx: "npm:4.22.4"
     typescript: "npm:6.0.3"

@@ -46,6 +46,7 @@ export default {
       model: "モデル",
       inputCached: "入力トークン (キャッシュ)",
       output: "出力トークン",
+      cost: "コスト",
     },
   },
   account: {

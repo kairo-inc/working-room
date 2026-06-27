@@ -9,6 +9,7 @@ import { useNotification } from "../../../contexts/notification"
 import { useFileGetList, useFileUploadFiles } from "../../../hooks/trpc/file"
 import { L } from "../../../localization"
 import { AppFileDescriptor } from "../../../types/file"
+import { RectangleButton } from "../../buttons/rectangleButton"
 
 export interface PageTreeProps extends React.HTMLAttributes<HTMLDivElement> {
   parent: AppFileDescriptor
@@ -21,7 +22,7 @@ export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
   const [queryArgs, setQueryArgs] = useState<Parameters<typeof useFileGetList>[0]>({ parentId: parent.id })
 
   const { data, isPending, refetch } = useFileGetList(queryArgs)
-  const { mutateAsync: upload } = useFileUploadFiles()
+  const { mutateAsync: upload, isPending: isUploading } = useFileUploadFiles()
 
   const fileList = data?.pages.flatMap((page) => page.data) ?? []
 
@@ -46,9 +47,32 @@ export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
     }
   }
 
+  const uploadDialog = () => {
+    const input = document.createElement("input")
+    input.type = "file"
+    input.multiple = true
+    input.onchange = async (e) => {
+      const target = e.target as HTMLInputElement
+      if (target.files) {
+        await onFileUpload(Array.from(target.files))
+        refetch()
+      }
+    }
+    input.click()
+  }
+
   return (
     <PageLayout key={parent.id}>
-      <BodyLayout title={folderPath} description={L.tree.description} className="context-menu max-w-5xl">
+      <BodyLayout
+        title={folderPath}
+        description={L.tree.description}
+        className="context-menu max-w-5xl"
+        tail={
+          <RectangleButton onClick={uploadDialog} loading={isUploading}>
+            {L.tree.uploadTitle}
+          </RectangleButton>
+        }
+      >
         <FileList data={fileList} parent={parent} isPending={isPending} refetchFiles={refetch} />
       </BodyLayout>
       <FileUploadPane onFileUpload={onFileUpload} />

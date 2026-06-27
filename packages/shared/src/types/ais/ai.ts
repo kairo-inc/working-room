@@ -51,6 +51,7 @@ export type AiModelAnthropic = Extract<
   | "claude-opus-4-6"
   | "claude-opus-4-7"
   | "claude-opus-4-8"
+  | "claude-fable-5"
 >
 
 export const anthropicDefaultTierMapping: Record<AiModelTier, AiModelAnthropic> = {
@@ -63,6 +64,8 @@ export type AiModelTierMappingAnthropic = typeof anthropicDefaultTierMapping
 export type AiModelTierMapping = AiModelTierMapppingOpenAI | AiModelTierMappingAnthropic
 
 export type AiModel = `openai:${AiModelOpenAI}` | `anthropic:${AiModelAnthropic}`
+
+export type AiModelName = AiModelOpenAI | AiModelAnthropic
 
 export type AiWorkingFolder = {
   id: string

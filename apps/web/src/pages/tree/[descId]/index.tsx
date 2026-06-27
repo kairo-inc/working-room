@@ -7,7 +7,7 @@ import { ensureQuery } from "../../../utils/queryParser"
 export default function Tree(props: PageTreeProps) {
   return (
     <>
-      <title>/{props.parent.name}</title>
+      <title>{`${props.parent.name}`}</title>
       <PageTree key={props.parent.id} {...props} />
     </>
   )

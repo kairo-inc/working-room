@@ -38,18 +38,17 @@ export class TenantServiceImpl extends TenantService {
   }
 
   async tokenUsage(arg: TenantServiceTokenUsageArg): Promise<AppTokenUsageOnTenant[]> {
-    const { endDate, startDate } = arg
+    const {} = arg
     const { tenantId } = getPrivateContext()
-    const token = await this.tokenUsageOnTenantSource.findAll("EntityTokenUsageOnTenant", {
+    const token = await this.tokenUsageOnTenantSource.findMany("EntityTokenUsageOnTenant", {
       where: {
         tenantId,
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
       },
+      sortBy: "createdAt",
+      sortDirection: "desc",
+      take: 200,
     })
-    return token.map(mapTokenUsageEntityToApp)
+    return token.data.map(mapTokenUsageEntityToApp)
   }
 
   @guard({ onlyAccept: ["owner", "admin"] })
