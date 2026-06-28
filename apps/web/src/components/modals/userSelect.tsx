@@ -90,7 +90,6 @@ export const UserSelectModal = ({ show, onClose, onUserSelected }: UserSelectMod
           placeholder={L.modal.userSelect.searchPlaceholder}
           onChange={(e) => {
             const value = e.target.value
-            console.log(value)
             setQueryArgs((prev) => ({ ...prev, charContains: value }))
           }}
         />
