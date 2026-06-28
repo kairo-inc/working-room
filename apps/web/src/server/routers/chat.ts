@@ -27,6 +27,7 @@ export const chatGetMessages = privateProcedure
 export const chatGetList = privateProcedure
   .input(
     z.object({
+      searchText: z.string().max(255).optional(),
       cursor: z.number().min(0).optional(),
       sortBy: z.enum(ChatSortByList).optional(),
       sortDirection: z.enum(SortDirectionList).optional(),

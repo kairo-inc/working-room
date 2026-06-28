@@ -80,7 +80,7 @@ export const Markdown = ({ markdown, disabled }: { markdown: string; disabled?: 
         ol: ({ node: _, ...props }) => <OrderedList {...props} />,
         ul: ({ node: _, ...props }) => <UnorderedList {...props} />,
         li: ({ node: _, ...props }) => <ListItem {...props} />,
-        code: ({ node: _, ...props }) => <CodeBlock {...props} />,
+        code: ({ node: _, ...props }) => <CodeBlock {...props} className="whitespace-pre-line" />,
         p: ({ node: _, ...props }) => <P {...props} />,
         hr: ({ node: _, ...props }) => <Hr {...props} />,
         blockquote: ({ node: _, ...props }) => <BlockQuote {...props} />,

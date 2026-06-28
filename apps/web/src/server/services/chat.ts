@@ -89,18 +89,26 @@ export class ChatServiceImpl extends ChatService {
   }
 
   async getList(args: ChatServiceGetListArg): Promise<PageResult<AppChat>> {
-    const pages = args
+    const { searchText, ...pages } = args
     const { userId } = getPrivateContext()
 
     // NOTE: Remove empty chats here.
-    const thresholdDate = new Date(Date.now() - 10 * 60 * 1000) // 10 min threshold
+    const thresholdDate = new Date(Date.now() - 15 * 60 * 1000) // 15 min threshold
 
     await this.chatSource
       .deleteMany({ where: { userId, messages: { none: {} }, createdAt: { lt: thresholdDate } }, physically: true })
       .catch((e) => console.error("Error deleting empty chats:", e))
 
     // Only shows chats with messages to simplify the UI, as empty chats are usually created by accident and not useful.
-    const { data, ...rest } = await this.chatSource.findMany("EntityChat", { where: { userId, messages: { some: {} } }, ...pages })
+    const chatWhere: Parameters<typeof this.chatSource.findMany>[1]["where"] = {
+      userId,
+    }
+    if (searchText) {
+      chatWhere.messages = { some: { content: { contains: searchText } } }
+    } else {
+      chatWhere.messages = { some: {} }
+    }
+    const { data, ...rest } = await this.chatSource.findMany("EntityChat", { where: chatWhere, ...pages })
     const appData = data.map(mapChatEntityToDomain).map(mapChatDomainToApp)
     return { data: appData, ...rest }
   }

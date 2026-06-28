@@ -90,7 +90,7 @@ export const PageFile = ({ data }: PageFileProps) => {
   return (
     <PageLayout>
       <BodyLayout
-        className="max-w-5xl"
+        className="max-w-6xl"
         title={name}
         tail={
           <RectangleButton onClick={() => open(Route.fileContentDownload(data.id), "_blank", "noopener,noreferrer")}>

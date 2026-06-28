@@ -115,6 +115,8 @@ export default {
     description: "新しいチャットを開始するか、既存のチャットを続けてください",
     startFirstChat: "最初のチャットを始める",
     newChat: "新しいチャット",
+    searchChatPlaceholder: "チャットを検索",
+    chatNotFound: "チャットが見つかりません",
   },
   chat: {
     placeholder: "Chat with your assistant",

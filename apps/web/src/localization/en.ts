@@ -113,6 +113,8 @@ export default {
     description: "Start a new chat or continue with your existing chats.",
     startFirstChat: "Start your first chat",
     newChat: "New Chat",
+    searchChatPlaceholder: "Search chat",
+    chatNotFound: "Chat not found",
   },
   chat: {
     placeholder: "Chat with your assistant",

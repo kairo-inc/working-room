@@ -35,7 +35,7 @@ type ChatInputFormProps = {
 
 const validate = (values: ChatInputFormType) => {
   const errors: Partial<ChatInputFormType> = {}
-  if (!values.chatMessage && (!values.fileUpload || values.fileUpload.length === 0)) {
+  if (!values.chatMessage) {
     errors.chatMessage = "Please enter a message or upload a file."
   }
   return errors
