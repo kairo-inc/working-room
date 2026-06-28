@@ -39,7 +39,7 @@ export const PageSignup = (_: PageSignupProps) => {
   const notify = useNotification()
   const { mutateAsync: signup } = useAuthSignup()
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-4">
+    <div className="flex h-dvh flex-col items-center justify-center gap-4">
       <div className="mb-4 flex items-center gap-2 text-3xl font-bold">
         <LogoIcon size={32} /> {L.signup.appName}
       </div>
