@@ -81,7 +81,7 @@ export const UserSelectModal = ({ show, onClose, onUserSelected }: UserSelectMod
       show={show}
       onClose={onClose}
       title={L.modal.userSelect.title}
-      containerClassName="w-[clamp(30vw,600px,80vw)] min-h-1/2 max-h-[80vh]"
+      containerClassName="w-[clamp(30vw,600px,80vw)] min-h-1/2 max-h-[80dvh]"
     >
       <div className="my-4 flex flex-1 flex-col gap-2 overflow-y-auto text-sm">
         <TextForm
