@@ -29,6 +29,7 @@ import {
   ToolReadPdfFile,
   ToolReadTextFile,
   ToolRegistry,
+  ToolTraverseDir,
   ToolWebSearch,
   ToolWriteAppend,
   ToolWriteNewFile,
@@ -125,6 +126,7 @@ container.register<Tool>("Tool", { useClass: ToolMakeDir })
 container.register<Tool>("Tool", { useClass: ToolDeleteDir })
 container.register<Tool>("Tool", { useClass: ToolFindFileByText })
 container.register<Tool>("Tool", { useClass: ToolFindFileByName })
+container.register<Tool>("Tool", { useClass: ToolTraverseDir })
 
 // Externally Defined Tools.
 container.register<Tool[]>("AdditionalTools", { useValue: [] })

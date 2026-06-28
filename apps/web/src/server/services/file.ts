@@ -55,7 +55,7 @@ export class FileServiceImpl extends FileService {
   }
 
   async checkIsUnderSpecialDirAndThrow(arg: FileServiceCheckAncestorOrThrowArg): Promise<void> {
-    const { id, isUnderChatDir, isUnderPrivateDir, isUnderSharedDir } = arg
+    const { id, isUnderChatDir, isUnderPrivateDir } = arg
     const ancestors = await this.getAncestors({ id })
     for (const ancestor of ancestors.reverse()) {
       if (ancestor.isChatDir && isUnderChatDir) {
@@ -139,7 +139,7 @@ export class FileServiceImpl extends FileService {
 
   async getFilesInFolder(arg: FileServiceGetFilesInFolderArg): Promise<PageResult<AppFileDescriptor>> {
     const { id, ...pages } = arg
-    const { data, ...rest } = await this.fileAccessService.list({ descId: id, ...pages })
+    const { data, ...rest } = await this.fileAccessService.list({ descId: id, ...pages, take: 30 })
     return { data: data.map(mapFileDescriptorDomainToApp), ...rest }
   }
 

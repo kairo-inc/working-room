@@ -8,7 +8,6 @@ export type FileServiceCheckAncestorOrThrowArg = {
   id: string
   isUnderChatDir?: boolean
   isUnderPrivateDir?: boolean
-  isUnderSharedDir?: boolean
 }
 
 export type FileServiceGetBinaryFileContentArg = {
