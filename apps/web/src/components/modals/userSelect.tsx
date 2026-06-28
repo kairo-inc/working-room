@@ -1,5 +1,5 @@
+import { SearchIcon } from "lucide-react"
 import { useState } from "react"
-import { Form } from "react-final-form"
 
 import { useUserGetList } from "../../hooks/trpc/user"
 import { L } from "../../localization"
@@ -8,10 +8,6 @@ import { RectangleButton } from "../buttons/rectangleButton"
 import { TextForm } from "../forms/textForm"
 import { LoadingIndicator } from "../indicator"
 import { Modal, ModalProps, useModal } from "./modal"
-
-type FormData = {
-  search: string
-}
 
 type Args = {
   onUserSelected?: (user: AppUser) => void
@@ -87,21 +83,15 @@ export const UserSelectModal = ({ show, onClose, onUserSelected }: UserSelectMod
       title={L.modal.userSelect.title}
       containerClassName="w-[clamp(30vw,600px,80vw)] min-h-1/2 max-h-[80vh]"
     >
-      <div className="my-4 flex-1 overflow-y-auto text-sm">
-        <Form<FormData>
-          onSubmit={() => {}}
-          render={() => (
-            <form>
-              <TextForm
-                formName="search"
-                placeholder={L.modal.userSelect.searchPlaceholder}
-                onChange={(e) => {
-                  const value = e.target.value
-                  setQueryArgs((prev) => ({ ...prev, charContains: value }))
-                }}
-              />
-            </form>
-          )}
+      <div className="my-4 flex flex-1 flex-col gap-2 overflow-y-auto text-sm">
+        <TextForm
+          noError
+          icon={<SearchIcon size={20} />}
+          placeholder={L.modal.userSelect.searchPlaceholder}
+          onChange={(e) => {
+            const value = e.target.value
+            setQueryArgs((prev) => ({ ...prev, charContains: value }))
+          }}
         />
         <UserList userList={userList} onUserSelected={setSelectedUser} selectedUserId={selectedUser?.id} isLoading={isPending} />
       </div>

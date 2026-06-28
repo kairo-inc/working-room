@@ -5,9 +5,17 @@ import { handleError } from "../../middleware/trpc"
 import { AppStreamEvent } from "../../types/stream"
 import { trpc } from "../../utils/trpc"
 
-export const useChatGetList = ({ sortBy, sortDirection }: { sortBy?: ChatSortBy; sortDirection?: SortDirection }) => {
+export const useChatGetList = ({
+  sortBy,
+  sortDirection,
+  searchText,
+}: {
+  sortBy?: ChatSortBy
+  sortDirection?: SortDirection
+  searchText?: string
+}) => {
   return trpc.chatGetList.useInfiniteQuery(
-    { sortBy, sortDirection },
+    { sortBy, sortDirection, searchText },
     {
       getPreviousPageParam: (firstPage) => {
         if (!firstPage.nextPage || firstPage.nextPage <= 1) return undefined

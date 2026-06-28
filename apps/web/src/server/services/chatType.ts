@@ -19,7 +19,9 @@ export type ChatServiceEditArg = {
   workingFolderId?: string
 }
 
-export type ChatServiceGetListArg = PageArg<ChatSortBy> & {}
+export type ChatServiceGetListArg = PageArg<ChatSortBy> & {
+  searchText?: string
+}
 
 export type ChatServiceRunSingleLoopArg = {
   id: string

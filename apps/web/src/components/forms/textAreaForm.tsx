@@ -19,30 +19,48 @@ type Variants = VariantProps<typeof variants>
 
 export interface TextAreaFormProps extends ComponentPropsWithoutRef<"textarea">, Variants {
   // This is for react-final-form to identify the form field, and it should be unique within the form.
+  formName?: string
   label?: string
-  formName: string
+  noError?: boolean
+  errorText?: string
 }
 
-export const TextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps>(
-  ({ className, variant = "default", formName, label, disabled, ...props }, ref) => {
+export const TextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps>((props, ref) => {
+  if (props.formName) {
+    return <FinalTextAreaForm {...props} formName={props.formName} ref={ref} />
+  } else {
+    return <BaseTextAreaForm {...props} ref={ref} />
+  }
+})
+
+const FinalTextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps & { formName: string }>(
+  ({ formName, disabled, onChange: _, ...props }, ref) => {
     const { input, meta } = useField(formName)
     const isDisabled = meta.submitting || disabled
-    const showError = meta.touched && meta.error
+    return <BaseTextAreaForm {...input} {...props} ref={ref} disabled={isDisabled} errorText={meta.touched && meta.error} />
+  }
+)
+
+const BaseTextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps>(
+  ({ className, variant = "default", formName, label, disabled, noError, errorText, ...props }, ref) => {
+    const isDisabled = disabled
+    const showError = !!errorText
 
     if (showError) {
       variant = "error"
     } else if (isDisabled) {
       variant = "disabled"
     }
+
     return (
-      <div className="inline-flex w-full flex-col gap-1">
+      <div className="relative inline-flex w-full flex-col gap-1">
         {label && (
-          <label htmlFor={formName} className="text-sm">
+          <label htmlFor={props.id ?? formName} className="text-sm">
             {label}
           </label>
         )}
-        <textarea id={formName} className={variants({ className, variant })} {...input} {...props} disabled={isDisabled} ref={ref} />
-        <span className="text-destructive h-4 text-xs">{showError ? meta.error : ""}</span>
+        <textarea {...props} id={props.id ?? formName} className={variants({ className, variant })} disabled={isDisabled} ref={ref} />
+        {!noError && <span className="text-destructive h-4 text-xs">{errorText}</span>}
       </div>
     )
   }

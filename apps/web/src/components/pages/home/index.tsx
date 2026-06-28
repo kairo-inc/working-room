@@ -1,6 +1,6 @@
-import { Plus } from "lucide-react"
+import { Plus, SearchIcon } from "lucide-react"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 import { RectangleButton } from "../../../components/buttons/rectangleButton"
 import { BodyLayout } from "../../../components/layout/body"
@@ -9,9 +9,14 @@ import { useChatDeleteModal } from "../../../components/modals/chatDelete"
 import { useChatGetList } from "../../../hooks/trpc/chat"
 import { L } from "../../../localization"
 import { Route } from "../../../route"
+import { TextForm } from "../../forms/textForm"
 import { ChatItem } from "./chatItem"
 
 const Placeholder = () => {
+  return <div className="text-muted-foreground/80 flex h-14 items-end justify-center text-lg font-bold">{L.home.chatNotFound}</div>
+}
+
+const FirstPlaceholder = () => {
   const router = useRouter()
   return (
     <div>
@@ -32,11 +37,17 @@ const StartChatButton = () => {
 export interface PageHomeProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const PageHome = ({}: PageHomeProps) => {
-  const { data, fetchNextPage, isPending, refetch, hasNextPage } = useChatGetList({ sortBy: "updatedAt", sortDirection: "desc" })
+  const [chatSearchText, setChatSearchText] = useState<string | undefined>()
+  const { data, fetchNextPage, isPending, refetch, hasNextPage } = useChatGetList({
+    sortBy: "updatedAt",
+    sortDirection: "desc",
+    searchText: chatSearchText,
+  })
   const { show: showDeleteModal, modal: DeleteModal } = useChatDeleteModal()
 
   const chatList = data?.pages.flatMap((page) => page.data) || []
-  const showPlaceholder = chatList.length === 0 && !isPending
+  const showFirstPlaceholder = chatList.length === 0 && !isPending && !chatSearchText?.trim()
+  const showPlaceholder = chatList.length === 0 && !isPending && !!chatSearchText?.trim()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,8 +69,17 @@ export const PageHome = ({}: PageHomeProps) => {
 
   return (
     <PageLayout>
-      <BodyLayout title={L.home.title} description={L.home.description} tail={!showPlaceholder ? <StartChatButton /> : undefined}>
-        <div className="flex min-h-0 w-full flex-col gap-4 py-4">
+      <BodyLayout title={L.home.title} description={L.home.description} tail={!showFirstPlaceholder ? <StartChatButton /> : undefined}>
+        <div className="flex min-h-0 w-full flex-col gap-4 pb-4">
+          {showFirstPlaceholder ? <FirstPlaceholder /> : null}
+          {!showFirstPlaceholder && (
+            <TextForm
+              noError
+              placeholder={L.home.searchChatPlaceholder}
+              icon={<SearchIcon size={20} />}
+              onChange={(e) => setChatSearchText(e.target.value)}
+            />
+          )}
           {showPlaceholder ? <Placeholder /> : null}
           {chatList.map((chat) => (
             <ChatItem
