@@ -31,7 +31,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
   const router = useRouter()
   const isAdminOrOwner = useIsAdminOrOwner()
   const gridHeaderClassName = "grid border-b py-1 grid-cols-[minmax(0,1fr)_minmax(80px,160px)_minmax(100px,180px)] text-sm"
-  const gridRowClassName = `${gridHeaderClassName} py-1.5 bg-card hover:bg-muted cursor-pointer text-sm`
+  const gridRowClassName = `${gridHeaderClassName} py-2 bg-card hover:bg-muted cursor-pointer text-sm`
   const selectedRowClassName = "!bg-link/20 !text-link text-sm"
   const sortedFiles = [...data].sort((a, b) => {
     if (a.isDirectory === b.isDirectory) {

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { FileList } from "../../../components/file/list"
 import { FileUploadPane } from "../../../components/file/upload"
@@ -21,7 +21,7 @@ export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
   const notify = useNotification()
   const [queryArgs, setQueryArgs] = useState<Parameters<typeof useFileGetList>[0]>({ parentId: parent.id })
 
-  const { data, isPending, refetch } = useFileGetList(queryArgs)
+  const { data, isPending, refetch, fetchNextPage, hasNextPage } = useFileGetList(queryArgs)
   const { mutateAsync: upload, isPending: isUploading } = useFileUploadFiles()
 
   const fileList = data?.pages.flatMap((page) => page.data) ?? []
@@ -60,6 +60,25 @@ export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
     }
     input.click()
   }
+
+  useEffect(() => {
+    const dom = document.getElementById("scrollable-container")
+    const handleNextPage = () => {
+      if (!dom) return
+      const { scrollTop, scrollHeight, clientHeight } = dom
+      if (scrollTop + clientHeight >= scrollHeight - 10) {
+        if (hasNextPage) {
+          fetchNextPage()
+        }
+      }
+    }
+    if (dom) {
+      dom.addEventListener("scroll", handleNextPage)
+      return () => {
+        dom.removeEventListener("scroll", handleNextPage)
+      }
+    }
+  }, [parent.id, hasNextPage, fetchNextPage])
 
   return (
     <PageLayout key={parent.id}>

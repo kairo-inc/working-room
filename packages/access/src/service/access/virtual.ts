@@ -2,7 +2,7 @@ import { createPatch } from "diff"
 import { inject, injectable } from "tsyringe"
 
 import { CoreConfig } from "@wr/core"
-import { AccessGroupSource, FileDescriptorSortBy, FileDescriptorSource, FileHistorySource, mapFileDescriptorEntityToDomain } from "@wr/db"
+import { AccessGroupSource, FileDescriptorSource, FileHistorySource, mapFileDescriptorEntityToDomain } from "@wr/db"
 import {
   BadRequestError,
   DomainFileDescriptor,
@@ -11,7 +11,6 @@ import {
   InvalidPrivateDirAccessError,
   InvalidRootDirAccessError,
   MimeType,
-  PageArg,
   PageResult,
   PermissionDeniedError,
 } from "@wr/shared"
@@ -35,6 +34,7 @@ import {
   FileAccessServiceReadBlobArg,
   FileAccessServiceReadFileArg,
   FileAccessServiceRenameArg,
+  FileAccessServiceTraverseArg,
   FileAccessServiceUploadArg,
   FileAccessServiceWriteBlobAppendArg,
   FileAccessServiceWriteBlobNewArg,
@@ -215,6 +215,7 @@ export class FileAccessServiceImpl extends FileAccessService {
           pathIds: `${userPrivateDir.pathIds}/${chatDirId}/${id}`,
           parent: { connect: { id: chatDirId } },
           owner: { connect: { id: userId } },
+          chats: { connect: { id: chatId } },
         },
       })
       thisChatDirId = newChatDir.id
@@ -567,14 +568,12 @@ export class FileAccessServiceImpl extends FileAccessService {
       content,
       mimeType,
     })
-
     await this.recordHistory(desc.id, "create", desc.blobHash)
-
     return desc
   }
 
   async list(arg: FileAccessServiceListArg): Promise<PageResult<DomainFileDescriptor>> {
-    const { descId, maxDepth = 0, maxItems = 100, sortBy, sortDirection, page } = arg
+    const { descId, sortBy, sortDirection, page, take } = arg
     const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
 
     const dir = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
@@ -586,26 +585,7 @@ export class FileAccessServiceImpl extends FileAccessService {
       throw new PermissionDeniedError("You don't have access to this folder")
     }
 
-    const collected: DomainFileDescriptor[] = []
-    await this.collectItems(descId, 0, maxDepth, maxItems, { sortBy, sortDirection, page }, collected)
-
-    return { data: collected, count: collected.length, nextPage: null, maxPage: 1 }
-  }
-
-  private async collectItems(
-    descId: string,
-    currentDepth: number,
-    maxDepth: number,
-    maxItems: number,
-    sort: PageArg<FileDescriptorSortBy>,
-    collected: DomainFileDescriptor[]
-  ): Promise<void> {
-    if (collected.length >= maxItems) return
-
     const { userId } = this.fileAccessContext
-    const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
-    const remaining = maxItems - collected.length
-    let children: DomainFileDescriptor[]
     const otherUserPrivateDirIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
       where: {
         privateRootOf: { id: { not: userId } },
@@ -613,7 +593,7 @@ export class FileAccessServiceImpl extends FileAccessService {
     })
 
     if (hasAllowedPolicy) {
-      const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
+      const { data, ...rest } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
         where: {
           parentId: descId,
           // Filter out files that are under other user's private directories
@@ -622,10 +602,12 @@ export class FileAccessServiceImpl extends FileAccessService {
               ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
               : undefined,
         },
-        take: remaining,
-        ...sort,
+        sortBy,
+        sortDirection,
+        page,
+        take,
       })
-      children = data.map(mapFileDescriptorEntityToDomain)
+      return { data: data.map(mapFileDescriptorEntityToDomain), ...rest }
     } else if (isAncestorOfAllowedFolder) {
       // visibleFolderIds can be visible even if they are not under the folder A,
       // because if a user has access to the folder A, the user can also see all the ancestors of the folder A.
@@ -640,7 +622,7 @@ export class FileAccessServiceImpl extends FileAccessService {
       const visibleFolderIds = visiblePolicies
         .flatMap((policy) => policy.resources.map((res) => res.pathIds.split("/").filter(Boolean)))
         .flat()
-      const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
+      const { data, ...rest } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
         where: {
           parentId: descId,
           id: { in: visibleFolderIds },
@@ -650,24 +632,97 @@ export class FileAccessServiceImpl extends FileAccessService {
               ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
               : undefined,
         },
-        take: remaining,
-        ...sort,
+        sortBy,
+        sortDirection,
+        page,
+        take,
       })
-      children = data.map(mapFileDescriptorEntityToDomain)
+      return { data: data.map(mapFileDescriptorEntityToDomain), ...rest }
+    }
+    return { data: [], count: 0, nextPage: null, maxPage: 1 }
+  }
+
+  async traverse(arg: FileAccessServiceTraverseArg): Promise<DomainFileDescriptor[]> {
+    const { descId, maxDepth = 0, maxItems = 100 } = arg
+    const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
+
+    const dir = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
+    if (!dir.isDirectory) {
+      throw new BadRequestError(`Not a directory: ${descId}`)
+    } else if (!hasAllowedPolicy && !isAncestorOfAllowedFolder) {
+      throw new PermissionDeniedError("You don't have access to this folder")
     } else if (isUnderOtherUserPrivate) {
-      // Nothing to show.
-      return
-    } else {
-      return
+      throw new PermissionDeniedError("You don't have access to this folder")
     }
 
-    for (const child of children) {
-      if (collected.length >= maxItems) break
-      collected.push(child)
-      if (child.isDirectory && currentDepth < maxDepth) {
-        await this.collectItems(child.id, currentDepth + 1, maxDepth, maxItems, sort, collected)
+    const collected: DomainFileDescriptor[] = []
+    const collectItems = async (descId: string, currentDepth: number, maxDepth: number, maxItems: number): Promise<void> => {
+      if (collected.length >= maxItems) return
+      const { userId } = this.fileAccessContext
+      const { isAncestorOfAllowedFolder, hasAllowedPolicy } = await this.checkAccessPolicy(descId, "read")
+      const remaining = maxItems - collected.length
+      let children: DomainFileDescriptor[]
+      const otherUserPrivateDirIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
+        where: {
+          privateRootOf: { id: { not: userId } },
+        },
+      })
+
+      if (hasAllowedPolicy) {
+        const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
+          where: {
+            parentId: descId,
+            // Filter out files that are under other user's private directories
+            AND:
+              otherUserPrivateDirIds.length > 0
+                ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
+                : undefined,
+          },
+          take: remaining,
+        })
+        children = data.map(mapFileDescriptorEntityToDomain)
+      } else if (isAncestorOfAllowedFolder) {
+        // visibleFolderIds can be visible even if they are not under the folder A,
+        // because if a user has access to the folder A, the user can also see all the ancestors of the folder A.
+        const visiblePolicies = await this.accessGroupSource.findAll("EntityAccessGroup", {
+          where: {
+            users: { some: { id: userId } },
+            resources: {
+              some: { pathIds: { contains: descId }, isDirectory: true },
+            },
+          },
+        })
+        const visibleFolderIds = visiblePolicies
+          .flatMap((policy) => policy.resources.map((res) => res.pathIds.split("/").filter(Boolean)))
+          .flat()
+        const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
+          where: {
+            parentId: descId,
+            id: { in: visibleFolderIds },
+            // Filter out files that are under other user's private directories
+            AND:
+              otherUserPrivateDirIds.length > 0
+                ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
+                : undefined,
+          },
+          take: remaining,
+        })
+        children = data.map(mapFileDescriptorEntityToDomain)
+      } else {
+        // Nothing to show.
+        return
+      }
+
+      for (const child of children) {
+        if (collected.length >= maxItems) break
+        collected.push(child)
+        if (child.isDirectory && currentDepth < maxDepth) {
+          await collectItems(child.id, currentDepth + 1, maxDepth, maxItems)
+        }
       }
     }
+    await collectItems(descId, 0, maxDepth, maxItems)
+    return collected
   }
 
   async readFile(arg: FileAccessServiceReadFileArg): Promise<ArrayBuffer> {
