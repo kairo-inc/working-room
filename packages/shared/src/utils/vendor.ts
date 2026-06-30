@@ -5,6 +5,7 @@ export const aiVendorOpenAI: AiVendor = { name: "openai", requiredKeys: ["apiKey
 export const aiVendorAnthropic: AiVendor = { name: "anthropic", requiredKeys: ["apiKey"] }
 
 export const aiVendors: AiVendor[] = [aiVendorOpenAI, aiVendorAnthropic]
+export const aiVendorNames = ["openai", "anthropic"] as const satisfies AiVendorName[]
 
 export const isAiVendorConfigured = (vendor: AiVendor, configs: AiVendorConfigs): boolean => {
   const config = configs[vendor.name]

@@ -16,6 +16,7 @@ import {
   TenantService,
   TenantServiceChangeRoleArg,
   TenantServiceDeleteArg,
+  TenantServiceEditAiVendorArg,
   TenantServiceEditArg,
   TenantServiceInviteArg,
   TenantServiceInviteResult,
@@ -63,6 +64,19 @@ export class TenantServiceImpl extends TenantService {
     const { tenantId } = getPrivateContext()
     const { name } = arg
     await this.tenantSource.update({ where: { id: tenantId }, data: { name } })
+  }
+
+  @guard({ onlyAccept: ["owner"] })
+  async editAiVendor(arg: TenantServiceEditAiVendorArg): Promise<void> {
+    const { tenantId } = getPrivateContext()
+    const { aiVendor } = arg
+    if (aiVendor === "openai" && !process.env.OPENAI_API_KEY) {
+      throw new BadRequestError("OpenAI API key is not configured")
+    }
+    if (aiVendor === "anthropic" && !process.env.ANTHROPIC_API_KEY) {
+      throw new BadRequestError("Anthropic API key is not configured")
+    }
+    await this.tenantSource.update({ where: { id: tenantId }, data: { aiVendor } })
   }
 
   @guard({ onlyAccept: ["owner", "admin"] })

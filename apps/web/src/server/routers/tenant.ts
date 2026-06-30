@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { userRoles } from "@wr/shared"
+import { aiVendorNames, userRoles } from "@wr/shared"
 
 import { getWebAppDiContainer } from "../container"
 import { TenantService } from "../services/tenantType"
@@ -44,4 +44,11 @@ export const tenantChangeUserRole = privateProcedure
   .mutation(async ({ input }: { input: { userId: string; newRole: (typeof userRoles)[number] } }) => {
     const service = getWebAppDiContainer().resolve<TenantService>("TenantService")
     await service.changeRole({ userId: input.userId, newRole: input.newRole })
+  })
+
+export const tenantEditAiVendor = privateProcedure
+  .input(z.object({ aiVendor: z.enum(aiVendorNames).nullable() }))
+  .mutation(async ({ input }: { input: { aiVendor: (typeof aiVendorNames)[number] | null } }) => {
+    const service = getWebAppDiContainer().resolve<TenantService>("TenantService")
+    await service.editAiVendor({ aiVendor: input.aiVendor })
   })

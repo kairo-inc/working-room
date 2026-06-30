@@ -1,4 +1,5 @@
 import { UserRole } from "@wr/db"
+import { AiVendorName } from "@wr/shared"
 
 import { AppTenant } from "../../types/tenant"
 import { AppTokenUsageOnTenant } from "../../types/tokenUsage"
@@ -26,6 +27,10 @@ export type TenantServiceEditArg = {
   name?: string
 }
 
+export type TenantServiceEditAiVendorArg = {
+  aiVendor: AiVendorName | null
+}
+
 export type TenantDeleteUserArg = {
   userId: string
 }
@@ -50,6 +55,7 @@ export abstract class TenantService {
   abstract tokenUsage(arg: TenantServiceTokenUsageArg): Promise<AppTokenUsageOnTenant[]>
   abstract get(): Promise<AppTenant>
   abstract edit(arg: TenantServiceEditArg): Promise<void>
+  abstract editAiVendor(arg: TenantServiceEditAiVendorArg): Promise<void>
   abstract invite(arg: TenantServiceInviteArg): Promise<TenantServiceInviteResult>
   abstract deleteUser(arg: TenantDeleteUserArg): Promise<void>
   abstract delete(arg: TenantServiceDeleteArg): Promise<void>
