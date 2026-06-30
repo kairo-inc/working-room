@@ -4,6 +4,27 @@ All notable changes to WorkingRoom will be documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.4] - 2026-06-30
+
+### Added
+
+#### File Management
+
+- Added rubber-band selection to the file list: drag over an empty area to draw a selection rectangle and select multiple files and folders at once.
+
+### Changed
+
+#### Platform
+
+- Improved layout reliability on mobile browsers by replacing fixed viewport height units (`vh`) with dynamic viewport height units (`dvh`).
+
+### Fixed
+
+#### Chat Experience
+
+- Fixed inconsistent spacing above headings in Markdown-rendered messages.
+- Fixed the horizontal rule rendering in Markdown content, which previously used an incorrect border style.
+
 ## [0.2.3] - 2026-06-26
 
 ### Added

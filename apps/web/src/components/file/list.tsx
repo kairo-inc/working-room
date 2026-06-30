@@ -2,7 +2,7 @@ import clsx from "clsx"
 import dayjs from "dayjs"
 import { ArrowLeftIcon } from "lucide-react"
 import { useRouter } from "next/router"
-import { ComponentPropsWithoutRef, DragEvent, useEffect, useState } from "react"
+import { ComponentPropsWithoutRef, DragEvent, useEffect, useRef, useState } from "react"
 
 import { useNotification } from "../../contexts/notification"
 import { useIsAdminOrOwner } from "../../contexts/setting"
@@ -10,6 +10,7 @@ import { useFileCopy, useFileMove } from "../../hooks/trpc/file"
 import { L } from "../../localization"
 import { Route } from "../../route"
 import { AppFileDescriptor } from "../../types/file"
+import { elementIds } from "../elementId"
 import { useHoverMenu } from "../hoverMenu"
 import { LoadingIndicator } from "../indicator"
 import { useAccessGroupCreateModal } from "../modals/accessGroupCreate"
@@ -31,7 +32,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
   const router = useRouter()
   const isAdminOrOwner = useIsAdminOrOwner()
   const gridHeaderClassName = "grid border-b py-1 grid-cols-[minmax(0,1fr)_minmax(80px,160px)_minmax(100px,180px)] text-sm"
-  const gridRowClassName = `${gridHeaderClassName} py-1.5 bg-card hover:bg-muted cursor-pointer text-sm`
+  const gridRowClassName = `${gridHeaderClassName} py-2 bg-card hover:bg-muted cursor-pointer text-sm`
   const selectedRowClassName = "!bg-link/20 !text-link text-sm"
   const sortedFiles = [...data].sort((a, b) => {
     if (a.isDirectory === b.isDirectory) {
@@ -48,6 +49,9 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
   )
 
   const [selectedFileIds, setSelectedFileIds] = useState<string[]>([])
+  const rubberBandStart = useRef<{ x: number; y: number } | null>(null)
+  const [rubberBandRect, setRubberBandRect] = useState<{ left: number; top: number; width: number; height: number } | null>(null)
+  const wasRubberBandSelection = useRef(false)
   const notify = useNotification()
   const { mutateAsync: copyFile } = useFileCopy()
   const { mutateAsync: moveFile } = useFileMove()
@@ -59,10 +63,13 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
 
   useEffect(() => {
     const clickOutsideHandler = (e: MouseEvent) => {
+      if (wasRubberBandSelection.current) {
+        wasRubberBandSelection.current = false
+        return
+      }
       const target = e.target as HTMLElement
       const contextMenuArea = target.closest(".file-item") as HTMLElement | null
       if (!contextMenuArea) {
-        // Reset selected file when clicking outside of file items.
         setSelectedFileIds([])
       }
     }
@@ -183,6 +190,56 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
     }
   }, [selectedFileIds])
 
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button !== 0) return
+      const target = e.target as HTMLElement | null
+      if (target?.closest?.(".file-item")) return
+      if (!target?.closest?.(`#${elementIds.scrollableContainer}`) || target?.closest(`#${elementIds.bodyTitle}`)) return
+      e.preventDefault()
+      rubberBandStart.current = { x: e.clientX, y: e.clientY }
+      setRubberBandRect({ left: e.clientX, top: e.clientY, width: 0, height: 0 })
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!rubberBandStart.current) return
+      const { x: startX, y: startY } = rubberBandStart.current
+      const left = Math.min(startX, e.clientX)
+      const top = Math.min(startY, e.clientY)
+      const right = Math.max(startX, e.clientX)
+      const bottom = Math.max(startY, e.clientY)
+      setRubberBandRect({ left, top, width: right - left, height: bottom - top })
+      const newSelection: string[] = []
+      document.querySelectorAll(".file-item").forEach((item) => {
+        const rect = item.getBoundingClientRect()
+        if (rect.left < right && rect.right > left && rect.top < bottom && rect.bottom > top) {
+          const id = item.getAttribute("data-file-id")
+          if (id) newSelection.push(id)
+        }
+      })
+      setSelectedFileIds(newSelection)
+    }
+
+    const handleMouseUp = (e: MouseEvent) => {
+      if (!rubberBandStart.current) return
+      const hasDragged = Math.abs(e.clientX - rubberBandStart.current.x) > 4 || Math.abs(e.clientY - rubberBandStart.current.y) > 4
+      if (hasDragged) {
+        wasRubberBandSelection.current = true
+      }
+      rubberBandStart.current = null
+      setRubberBandRect(null)
+    }
+
+    document.addEventListener("mousedown", handleMouseDown)
+    document.addEventListener("mousemove", handleMouseMove)
+    document.addEventListener("mouseup", handleMouseUp)
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown)
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("mouseup", handleMouseUp)
+    }
+  }, [])
+
   const handleOnDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
@@ -224,6 +281,22 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
 
   return (
     <>
+      {rubberBandRect && rubberBandRect.width > 0 && rubberBandRect.height > 0 && (
+        <div
+          style={{
+            position: "fixed",
+            left: rubberBandRect.left,
+            top: rubberBandRect.top,
+            width: rubberBandRect.width,
+            height: rubberBandRect.height,
+            // NOTE: Color fallback to blue if --color-link is not defined
+            border: "1.5px solid var(--color-link, #60a5fa)",
+            backgroundColor: "color-mix(in srgb, var(--color-link, #60a5fa) 10%, transparent)",
+            pointerEvents: "none",
+            zIndex: 50,
+          }}
+        />
+      )}
       <div className={clsx("w-full text-base", className)} {...props}>
         <div className={gridHeaderClassName}>
           <div className={`text-muted-foreground pl-8 font-medium`}>{L.file.list.name}</div>

@@ -1,19 +1,23 @@
-import dayjs from "dayjs"
-import { Plus, Trash2 } from "lucide-react"
+import { Plus, SearchIcon } from "lucide-react"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
-import { IconButton } from "../../../components/buttons/iconButton"
 import { RectangleButton } from "../../../components/buttons/rectangleButton"
 import { BodyLayout } from "../../../components/layout/body"
-import { PageLayout, ScrollableContainerId } from "../../../components/layout/page"
+import { PageLayout } from "../../../components/layout/page"
 import { useChatDeleteModal } from "../../../components/modals/chatDelete"
 import { useChatGetList } from "../../../hooks/trpc/chat"
 import { L } from "../../../localization"
 import { Route } from "../../../route"
-import { AppMessageContentText } from "../../../types/message"
+import { elementIds } from "../../elementId"
+import { TextForm } from "../../forms/textForm"
+import { ChatItem } from "./chatItem"
 
 const Placeholder = () => {
+  return <div className="text-muted-foreground/80 flex h-14 items-end justify-center text-lg font-bold">{L.home.chatNotFound}</div>
+}
+
+const FirstPlaceholder = () => {
   const router = useRouter()
   return (
     <div>
@@ -34,15 +38,21 @@ const StartChatButton = () => {
 export interface PageHomeProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const PageHome = ({}: PageHomeProps) => {
-  const { data, fetchNextPage, isPending, refetch, hasNextPage } = useChatGetList({ sortBy: "updatedAt", sortDirection: "desc" })
+  const [chatSearchText, setChatSearchText] = useState<string | undefined>()
+  const { data, fetchNextPage, isPending, refetch, hasNextPage } = useChatGetList({
+    sortBy: "updatedAt",
+    sortDirection: "desc",
+    searchText: chatSearchText,
+  })
   const { show: showDeleteModal, modal: DeleteModal } = useChatDeleteModal()
 
   const chatList = data?.pages.flatMap((page) => page.data) || []
-  const showPlaceholder = chatList.length === 0 && !isPending
+  const showFirstPlaceholder = chatList.length === 0 && !isPending && !chatSearchText?.trim()
+  const showPlaceholder = chatList.length === 0 && !isPending && !!chatSearchText?.trim()
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollElement = document.getElementById(ScrollableContainerId)
+      const scrollElement = document.getElementById(elementIds.scrollableContainer)
       if (!scrollElement) return
       const { scrollTop, scrollHeight, clientHeight } = scrollElement
       if (scrollTop + clientHeight >= scrollHeight - 10) {
@@ -53,7 +63,6 @@ export const PageHome = ({}: PageHomeProps) => {
     }
 
     document.addEventListener("scroll", handleScroll, true)
-
     return () => {
       document.removeEventListener("scroll", handleScroll, true)
     }
@@ -61,35 +70,25 @@ export const PageHome = ({}: PageHomeProps) => {
 
   return (
     <PageLayout>
-      <BodyLayout title={L.home.title} description={L.home.description} tail={!showPlaceholder ? <StartChatButton /> : undefined}>
-        <div className="flex min-h-0 w-full flex-col gap-4 py-4">
+      <BodyLayout title={L.home.title} description={L.home.description} tail={!showFirstPlaceholder ? <StartChatButton /> : undefined}>
+        <div className="flex min-h-0 w-full flex-col gap-4 pb-4">
+          {showFirstPlaceholder ? <FirstPlaceholder /> : null}
+          {!showFirstPlaceholder && (
+            <TextForm
+              noError
+              placeholder={L.home.searchChatPlaceholder}
+              icon={<SearchIcon size={20} />}
+              onChange={(e) => setChatSearchText(e.target.value)}
+            />
+          )}
           {showPlaceholder ? <Placeholder /> : null}
-          {chatList.map((chat) => {
-            const { lastUserMessage, updatedAt } = chat
-            const contents = lastUserMessage?.content || []
-            const content = contents.filter((c): c is AppMessageContentText => c.type === "text" && c.text.trim() !== "")[0]?.text
-            const updatedAtString = dayjs(updatedAt).format("YYYY-MM-DD HH:mm")
-            return (
-              <a href={Route.chat(chat.id)} key={chat.id} className="hover:bg-muted bg-card cursor-pointer rounded-md border px-4 py-2">
-                <div className="flex flex-col gap-1 truncate">
-                  <div className="flex items-center justify-between">
-                    <div className="text-muted-foreground text-xs">{updatedAtString}</div>
-                    <div>
-                      <IconButton
-                        icon={<Trash2 size={16} />}
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          showDeleteModal({ data: { id: chat.id }, onResolve: () => refetch() })
-                        }}
-                      />
-                    </div>
-                  </div>
-                  {content && <div>{content}</div>}
-                </div>
-              </a>
-            )
-          })}
+          {chatList.map((chat) => (
+            <ChatItem
+              key={chat.id}
+              item={chat}
+              onRemoveClick={(chatId) => showDeleteModal({ data: { id: chatId }, onResolve: () => refetch() })}
+            />
+          ))}
         </div>
       </BodyLayout>
       {DeleteModal}

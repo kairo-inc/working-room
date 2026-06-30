@@ -23,6 +23,10 @@ export type AppChat = {
   updatedAt: Date
   requireApproval: boolean
   lastUserMessage?: AppUserMessage
+  workingFolder?: {
+    id: string
+    name: string
+  }
 }
 
 export type AppChatStatus = {

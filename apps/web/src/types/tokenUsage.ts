@@ -1,7 +1,9 @@
+import { AiModelName, AiVendorName } from "@wr/shared"
+
 export type AppTokenUsageOnTenant = {
   createdAt: Date
-  provider: string
-  model: string
+  provider: AiVendorName
+  model: AiModelName
   cachedInputTokens: number
   noCacheInputTokens: number
   inputTokens: number

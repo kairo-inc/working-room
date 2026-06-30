@@ -11,6 +11,10 @@ export type FileAccessContext = {
 
 export type FileAccessServiceListArg = PageArg<FileDescriptorSortBy> & {
   descId: string
+}
+
+export type FileAccessServiceTraverseArg = {
+  descId: string
   maxDepth?: number
   maxItems?: number
 }
@@ -139,6 +143,7 @@ export abstract class FileAccessService {
   abstract createChatFile(arg: FileAccessServiceCreateChatFileArg): Promise<DomainFileDescriptor>
 
   abstract list(arg: FileAccessServiceListArg): Promise<PageResult<DomainFileDescriptor>>
+  abstract traverse(arg: FileAccessServiceTraverseArg): Promise<DomainFileDescriptor[]>
 
   abstract readFile(arg: FileAccessServiceReadFileArg): Promise<ArrayBuffer>
   abstract readBlob(arg: FileAccessServiceReadBlobArg): Promise<ArrayBuffer>

@@ -372,13 +372,46 @@ describe("[Success] FileAccessService", () => {
         expect(listRootDir.find((desc) => desc.id === memberUser.privateDir.id)).toBeDefined()
         expect(listRootDir.find((desc) => desc.id === user.privateDir.id)).toBeUndefined()
 
-        const sharedFolderDeleteResult = fileAccessProvider.deleteMany({ ids: [sharedDirId] })
-        const commonFolderDeleteResult = fileAccessProvider.deleteMany({ ids: [commonDirId] })
-        const targetFolderDeleteResult = fileAccessProvider.deleteMany({ ids: [targetDirId] })
-        await expect(sharedFolderDeleteResult).rejects.toThrow(PermissionDeniedError)
-        await expect(commonFolderDeleteResult).rejects.toThrow(PermissionDeniedError)
-        await expect(targetFolderDeleteResult).resolves.not.toThrow()
+        await expect(fileAccessProvider.deleteMany({ ids: [sharedDirId] })).rejects.toThrow(PermissionDeniedError)
+        await expect(fileAccessProvider.deleteMany({ ids: [commonDirId] })).rejects.toThrow(PermissionDeniedError)
+        await expect(fileAccessProvider.deleteMany({ ids: [targetDirId] })).resolves.not.toThrow()
       })
+    })
+  })
+
+  it("Traverse a directory", async () => {
+    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
+    await runWithDiContainer(testContainer, async () => {
+      const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
+      const parentDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
+        return await fileAccessProvider.makeDirectory({ dirName: "traverse-parent", parentDescId: dirs.sharedRoot.id })
+      })
+      const childDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
+        return await fileAccessProvider.makeDirectory({ dirName: "traverse-child", parentDescId: parentDir.id })
+      })
+      const childFileText = "Traverse me"
+      const childFile = await runWithPrivateContext({ idToken: user.idToken }, async () => {
+        const content = new Uint8Array(new TextEncoder().encode(childFileText)).buffer
+        return await fileAccessProvider.writeFileNew({
+          content,
+          fileName: "traverse-nested.txt",
+          parentDescId: childDir.id,
+          mimeType: "text/plain",
+        })
+      })
+
+      const traversedFiles = await runWithPrivateContext({ idToken: user.idToken }, async () => {
+        return await fileAccessProvider.traverse({ descId: parentDir.id, maxDepth: 1 })
+      })
+      expect(traversedFiles.find((desc) => desc.id === childDir.id)).toBeDefined()
+      expect(traversedFiles.find((desc) => desc.id === childFile.id)).toBeDefined()
+
+      const traversedSubDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
+        return await fileAccessProvider.traverse({ descId: parentDir.id, maxDepth: 0 })
+      })
+      expect(traversedSubDir.find((desc) => desc.id === childDir.id)).toBeDefined()
+      expect(traversedSubDir.find((desc) => desc.id === childFile.id)).toBeUndefined()
     })
   })
 })
@@ -547,6 +580,30 @@ describe("[Failure] FileAccessService", () => {
 
       const otherUserPrivateDir = dirList.data.find((desc) => desc.id === memberUser.privateDir.id)
       expect(otherUserPrivateDir).toBeUndefined()
+    })
+  })
+
+  it("Can not traverse other user's private directory", async () => {
+    const { user, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
+    await runWithDiContainer(testContainer, async () => {
+      const fileAccessService = testContainer.resolve<FileAccessService>("FileAccessService")
+      const traverseResult = runWithPrivateContext({ idToken: user.idToken }, async () => {
+        return await fileAccessService.traverse({ descId: memberUser.privateDir.id, maxDepth: 1 })
+      })
+      expect(traverseResult).rejects.toThrow(PermissionDeniedError)
+    })
+  })
+
+  it("Can not see other user's private file when traversing directories", async () => {
+    const { user, memberUser, dirs } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
+    await runWithDiContainer(testContainer, async () => {
+      const fileAccessService = testContainer.resolve<FileAccessService>("FileAccessService")
+      const result = await runWithPrivateContext({ idToken: user.idToken }, async () => {
+        return await fileAccessService.traverse({ descId: dirs.root.id, maxDepth: 1 })
+      })
+      expect(result.find((desc) => desc.id === memberUser.privateDir.id)).toBeUndefined()
     })
   })
 })

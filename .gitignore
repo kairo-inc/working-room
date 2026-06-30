@@ -8,6 +8,7 @@ db-data/
 .claude
 *.tfvars
 build/
+.playwright*
 
 # dependencies
 node_modules/

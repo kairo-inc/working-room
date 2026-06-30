@@ -5,33 +5,35 @@ import { FileAccessService } from "@wr/access"
 import { DomainFileDescriptor, DomainMessageContentProceededFile, DomainToolType, NotFoundError } from "@wr/shared"
 import { randomId } from "@wr/shared-node"
 
-import { FileDescriptorSortByList } from "../../../db/src/entities"
 import { fileDescriptorToMessageContent } from "../prompt/file"
 import { Tool, ToolRunArgs, ToolRunResult } from "./base"
 
-const MAX_TAKE = 100
-const DEFAULT_TAKE = 30
+const MAX_ITEMS = 100
+const DEFAULT_ITEMS = 30
 
 const inputSchema = z.object({
   targetDescId: z
     .string()
     .optional()
-    .describe(`The ID of the directory to list. If you need to access the root directory, do not provide this field.`),
-  page: z.number().optional().describe("The page number to retrieve. Defaults to 0 because the first page is 0."),
-  sortBy: z.enum(FileDescriptorSortByList).optional().describe("The field to sort the results by. Defaults to 'name'."),
-  sortDirection: z.enum(["asc", "desc"]).optional().describe("The direction to sort the results. Defaults to 'asc'."),
-  take: z
+    .describe(`The ID of the directory to traverse. If you need to access the root directory, do not provide this field.`),
+  maxDepth: z
     .number()
     .optional()
     .describe(
-      `The maximum number of items to retrieve. Defaults to ${DEFAULT_TAKE}. The maximum allowed value is ${MAX_TAKE} to prevent overwhelming the response.`
+      "The maximum depth to traverse. Defaults to 0, which means only the specified directory will be listed. A value of 1 will include the contents of subdirectories, and so on."
+    ),
+  maxItems: z
+    .number()
+    .optional()
+    .describe(
+      `The maximum number of items to retrieve. Defaults to ${DEFAULT_ITEMS}. The maximum allowed value is ${MAX_ITEMS} to prevent overwhelming the response.`
     ),
 })
 
 @injectable()
-export class ToolListDir extends Tool {
-  name = "ToolListDir"
-  description = "List the contents of a directory. Use this when you need to explore the file system."
+export class ToolTraverseDir extends Tool {
+  name = "ToolTraverseDir"
+  description = "Traverse the contents of a directory. Use this when you need to explore the file system recursively."
   needApproval = false
   inputSchema = inputSchema
   toolType: DomainToolType = "read"
@@ -55,24 +57,17 @@ export class ToolListDir extends Tool {
         desc = await this.fileAccessService.rootDescriptor()
       }
 
-      const take = input.data.take ?? DEFAULT_TAKE
-      const page = input.data.page ?? 0
-      const sortBy = input.data.sortBy ?? "name"
-      const sortDirection = input.data.sortDirection ?? "asc"
-      const maxItemsInPage = Math.min(take, MAX_TAKE) // Limit to MAX_TAKE items to prevent overwhelming the response
-      const files = await this.fileAccessService.list({ descId: desc.id, take: maxItemsInPage, page, sortBy, sortDirection })
+      const maxDepth = input.data.maxDepth ?? 0
+      const maxItems = input.data.maxItems ?? DEFAULT_ITEMS
+      const maxItemsInPage = Math.min(maxItems, MAX_ITEMS) // Limit to MAX_ITEMS items to prevent overwhelming the response
+      const files = await this.fileAccessService.traverse({ descId: desc.id, maxDepth, maxItems: maxItemsInPage })
 
       // Construct the result message and file content
       let fileContent = ""
-      let resultMessage = `Found ${files.count} items in the directory '${desc.name}' (ID: ${desc.id}). Showing page ${page} with up to ${maxItemsInPage} items per page.`
-      if (files.nextPage) {
-        resultMessage += `\nThere are more items available. The next page is ${files.nextPage}. You can specify the 'page' parameter to retrieve the next set of items.`
-      } else {
-        resultMessage += `\nThis is the last page of results.`
-      }
+      let resultMessage = `Found ${files.length} items under the directory '${desc.name}' (ID: ${desc.id}) up to a depth of ${maxDepth}. Showing up to ${maxItemsInPage} items.`
 
       const proceededFiles: DomainMessageContentProceededFile[] = []
-      for (const file of files.data) {
+      for (const file of files) {
         fileContent += fileDescriptorToMessageContent(file) + "\n"
         if (depth === 0) {
           proceededFiles.push({
@@ -99,7 +94,7 @@ export class ToolListDir extends Tool {
       if (e instanceof NotFoundError) {
         return { message: this.buildError(toolCall, `Directory not found: ${input.data.targetDescId || "root"}`) }
       }
-      return { message: this.buildError(toolCall, `Failed to list directory: ${e instanceof Error ? e.message : String(e)}`) }
+      return { message: this.buildError(toolCall, `Failed to traverse directory: ${e instanceof Error ? e.message : String(e)}`) }
     }
   }
 }

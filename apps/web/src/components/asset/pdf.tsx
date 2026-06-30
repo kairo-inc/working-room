@@ -57,7 +57,7 @@ export const PdfThumbnail = ({ descId, className, ...rest }: PdfThumbnailProps) 
       return (
         <>
           <embed src={pdf.url} type="application/pdf" className="h-full w-full" />
-          <a href={pdf.url} target="_blank" rel="noopener noreferrer" className="absolute inset-0" />
+          <a href={Route.file(descId)} target="_blank" rel="noopener noreferrer" className="absolute inset-0" />
         </>
       )
     }

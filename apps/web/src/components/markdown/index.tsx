@@ -12,13 +12,13 @@ const formatText = (text: string) => {
 }
 
 const Heading1 = ({ children, className }: React.ComponentProps<"h1">) => {
-  return <h1 className={`pb-4 text-xl font-bold ${className ?? ""}`}>{children}</h1>
+  return <h1 className={`pt-4 pb-4 text-xl font-bold ${className ?? ""}`}>{children}</h1>
 }
 const Heading2 = ({ children, className }: React.ComponentProps<"h2">) => {
   return <h2 className={`pt-4 pb-4 text-base font-bold ${className ?? ""}`}>{children}</h2>
 }
 const Heading3 = ({ children, className }: React.ComponentProps<"h3">) => {
-  return <h3 className={`pb-4 text-base font-bold ${className ?? ""}`}>{children}</h3>
+  return <h3 className={`pt-4 pb-4 text-base font-bold ${className ?? ""}`}>{children}</h3>
 }
 const P = ({ children, className }: React.ComponentProps<"p">) => {
   return <p className={`mb-4 text-sm ${className ?? ""}`}>{children}</p>
@@ -47,7 +47,7 @@ const CodeBlock = ({ children, className }: React.ComponentProps<"code">) => {
 }
 
 const Hr = ({ className }: React.ComponentProps<"hr">) => {
-  return <hr className={`border-t-0.5 my-4 text-sm ${className ?? ""}`} />
+  return <hr className={`my-4 border-t ${className ?? ""}`} />
 }
 
 const BlockQuote = ({ children, className }: React.ComponentProps<"blockquote">) => {
@@ -80,7 +80,7 @@ export const Markdown = ({ markdown, disabled }: { markdown: string; disabled?: 
         ol: ({ node: _, ...props }) => <OrderedList {...props} />,
         ul: ({ node: _, ...props }) => <UnorderedList {...props} />,
         li: ({ node: _, ...props }) => <ListItem {...props} />,
-        code: ({ node: _, ...props }) => <CodeBlock {...props} />,
+        code: ({ node: _, className, ...props }) => <CodeBlock {...props} className={`${className ?? ""} whitespace-pre-line`.trim()} />,
         p: ({ node: _, ...props }) => <P {...props} />,
         hr: ({ node: _, ...props }) => <Hr {...props} />,
         blockquote: ({ node: _, ...props }) => <BlockQuote {...props} />,
