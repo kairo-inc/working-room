@@ -23,6 +23,7 @@ export default {
       auto: "Auto (use available vendor)",
       openai: "OpenAI",
       anthropic: "Anthropic",
+      google: "Google",
     },
     userManagement: {
       title: "User Management",
@@ -274,6 +275,7 @@ export default {
       auto: "Auto (use available vendor)",
       openai: "OpenAI",
       anthropic: "Anthropic",
+      google: "Google",
       failed: "Failed",
     },
     directoryCreate: {

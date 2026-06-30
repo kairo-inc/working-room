@@ -76,6 +76,9 @@ export class TenantServiceImpl extends TenantService {
     if (aiVendor === "anthropic" && !process.env.ANTHROPIC_API_KEY) {
       throw new BadRequestError("Anthropic API key is not configured")
     }
+    if (aiVendor === "google" && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+      throw new BadRequestError("Google Generative AI API key is not configured")
+    }
     await this.tenantSource.update({ where: { id: tenantId }, data: { aiVendor } })
   }
 

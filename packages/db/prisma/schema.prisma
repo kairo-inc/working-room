@@ -47,6 +47,7 @@ enum FileOperation {
 enum AiVendor {
   openai
   anthropic
+  google
 }
 
 model Tenant {

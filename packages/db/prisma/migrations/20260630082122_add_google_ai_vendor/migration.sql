@@ -1,0 +1,1 @@
+-- Add google to AiVendor enum (SQLite stores enums as TEXT; no SQL change needed)

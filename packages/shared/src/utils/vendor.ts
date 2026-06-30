@@ -3,9 +3,10 @@ import { AiVendor, AiVendorConfigs, AiVendorName, aiVendorModelPrice } from "../
 
 export const aiVendorOpenAI: AiVendor = { name: "openai", requiredKeys: ["apiKey"] }
 export const aiVendorAnthropic: AiVendor = { name: "anthropic", requiredKeys: ["apiKey"] }
+export const aiVendorGoogle: AiVendor = { name: "google", requiredKeys: ["apiKey"] }
 
-export const aiVendors: AiVendor[] = [aiVendorOpenAI, aiVendorAnthropic]
-export const aiVendorNames = ["openai", "anthropic"] as const satisfies AiVendorName[]
+export const aiVendors: AiVendor[] = [aiVendorOpenAI, aiVendorAnthropic, aiVendorGoogle]
+export const aiVendorNames = ["openai", "anthropic", "google"] as const satisfies AiVendorName[]
 
 export const isAiVendorConfigured = (vendor: AiVendor, configs: AiVendorConfigs): boolean => {
   const config = configs[vendor.name]
