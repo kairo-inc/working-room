@@ -10,6 +10,7 @@ import { useFileCopy, useFileMove } from "../../hooks/trpc/file"
 import { L } from "../../localization"
 import { Route } from "../../route"
 import { AppFileDescriptor } from "../../types/file"
+import { elementIds } from "../elementId"
 import { useHoverMenu } from "../hoverMenu"
 import { LoadingIndicator } from "../indicator"
 import { useAccessGroupCreateModal } from "../modals/accessGroupCreate"
@@ -194,6 +195,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
       if (e.button !== 0) return
       const target = e.target as HTMLElement | null
       if (target?.closest?.(".file-item")) return
+      if (!target?.closest?.(`#${elementIds.scrollableContainer}`) || target?.closest(`#${elementIds.bodyTitle}`)) return
       e.preventDefault()
       rubberBandStart.current = { x: e.clientX, y: e.clientY }
       setRubberBandRect({ left: e.clientX, top: e.clientY, width: 0, height: 0 })
@@ -287,6 +289,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
             top: rubberBandRect.top,
             width: rubberBandRect.width,
             height: rubberBandRect.height,
+            // NOTE: Color fallback to blue if --color-link is not defined
             border: "1.5px solid var(--color-link, #60a5fa)",
             backgroundColor: "color-mix(in srgb, var(--color-link, #60a5fa) 10%, transparent)",
             pointerEvents: "none",

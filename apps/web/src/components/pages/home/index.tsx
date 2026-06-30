@@ -4,11 +4,12 @@ import { useEffect, useState } from "react"
 
 import { RectangleButton } from "../../../components/buttons/rectangleButton"
 import { BodyLayout } from "../../../components/layout/body"
-import { PageLayout, ScrollableContainerId } from "../../../components/layout/page"
+import { PageLayout } from "../../../components/layout/page"
 import { useChatDeleteModal } from "../../../components/modals/chatDelete"
 import { useChatGetList } from "../../../hooks/trpc/chat"
 import { L } from "../../../localization"
 import { Route } from "../../../route"
+import { elementIds } from "../../elementId"
 import { TextForm } from "../../forms/textForm"
 import { ChatItem } from "./chatItem"
 
@@ -51,7 +52,7 @@ export const PageHome = ({}: PageHomeProps) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollElement = document.getElementById(ScrollableContainerId)
+      const scrollElement = document.getElementById(elementIds.scrollableContainer)
       if (!scrollElement) return
       const { scrollTop, scrollHeight, clientHeight } = scrollElement
       if (scrollTop + clientHeight >= scrollHeight - 10) {

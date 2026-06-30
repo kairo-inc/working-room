@@ -18,6 +18,7 @@ import {
   AppUserMessage,
 } from "../../../types/message"
 import { AppStreamEvent } from "../../../types/stream"
+import { elementIds } from "../../elementId"
 import { ApprovalMessage, ChatInputApprovalSubmitFn, ChatInputApprovalType } from "./approvalInput"
 import { ChatInputForm, ChatInputFormSubmitFn, FileUploadItemMeta } from "./formInput"
 import { ChatMessage } from "./message"
@@ -153,7 +154,7 @@ export const PageChat = ({ data }: PageChatProps) => {
   }
 
   const scrollToBottom = (behavior: ScrollBehavior = "smooth", force?: boolean) => {
-    const scrollableContainer = document.getElementById("scrollable-container")
+    const scrollableContainer = document.getElementById(elementIds.scrollableContainer)
     if (scrollableContainer && (force || shouldScrollToBottom)) {
       scrollableContainer.scrollTo({ top: scrollableContainer.scrollHeight, behavior })
     }
@@ -165,13 +166,13 @@ export const PageChat = ({ data }: PageChatProps) => {
       setTimeout(() => {
         scrollToBottom()
       }, 300)
-      setCurrentHeight(document.getElementById("scrollable-container")?.scrollHeight || 0)
+      setCurrentHeight(document.getElementById(elementIds.scrollableContainer)?.scrollHeight || 0)
     }
     focusOnChatInput()
   }, [chatMessages.length === 0])
 
   useEffect(() => {
-    const dom = document.getElementById("scrollable-container")
+    const dom = document.getElementById(elementIds.scrollableContainer)
     const handleScroll = async () => {
       // Scroll to fetch more messages when scrolled to top.
       const isAtTop = dom?.scrollTop === 0
@@ -183,7 +184,7 @@ export const PageChat = ({ data }: PageChatProps) => {
         requestAnimationFrame(() => {
           dom.style.overflowY = "auto"
         })
-        setCurrentHeight(document.getElementById("scrollable-container")?.scrollHeight || 0)
+        setCurrentHeight(document.getElementById(elementIds.scrollableContainer)?.scrollHeight || 0)
         await fetchNextPage()
       }
 
@@ -200,7 +201,7 @@ export const PageChat = ({ data }: PageChatProps) => {
   // Check scroll position when new messages are loaded. If the user is at the top, keep them at the top. Otherwise, scroll to bottom.
   useEffect(() => {
     if (messages?.pages.length && currentHeight) {
-      const dom = document.getElementById("scrollable-container")
+      const dom = document.getElementById(elementIds.scrollableContainer)
       if (dom) {
         const newHeight = dom.scrollHeight
         const newPosition = newHeight - currentHeight

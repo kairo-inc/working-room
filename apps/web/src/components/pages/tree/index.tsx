@@ -10,6 +10,7 @@ import { useFileGetList, useFileUploadFiles } from "../../../hooks/trpc/file"
 import { L } from "../../../localization"
 import { AppFileDescriptor } from "../../../types/file"
 import { RectangleButton } from "../../buttons/rectangleButton"
+import { elementIds } from "../../elementId"
 
 export interface PageTreeProps extends React.HTMLAttributes<HTMLDivElement> {
   parent: AppFileDescriptor
@@ -62,7 +63,7 @@ export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
   }
 
   useEffect(() => {
-    const dom = document.getElementById("scrollable-container")
+    const dom = document.getElementById(elementIds.scrollableContainer)
     const handleNextPage = () => {
       if (!dom) return
       const { scrollTop, scrollHeight, clientHeight } = dom
