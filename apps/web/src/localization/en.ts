@@ -17,6 +17,13 @@ export default {
       title: "Organization",
       name: "Name",
     },
+    aiVendor: {
+      title: "AI Vendor",
+      currentVendor: "Current Vendor",
+      auto: "Auto (use available vendor)",
+      openai: "OpenAI",
+      anthropic: "Anthropic",
+    },
     userManagement: {
       title: "User Management",
       goToList: "Go to user list",
@@ -151,6 +158,9 @@ export default {
     inviteUserFailed: "Failed to invite user.",
     cannotEditTenant: "Cannot edit tenant.",
     editTenantFailed: "Failed to edit tenant.",
+    cannotEditAiVendor: "Cannot edit AI vendor.",
+    editAiVendorFailed: "Failed to edit AI vendor.",
+    aiVendorNotConfigured: "The selected AI vendor is not configured. Please set the required API key.",
     cannotDeleteUser: "Cannot delete user.",
     deleteUserFailed: "Failed to delete user.",
     cannotResetPassword: "Cannot reset password.",
@@ -256,6 +266,14 @@ export default {
       tenantName: "Tenant Name",
       tenantNamePlaceholder: "Enter tenant name",
       nameUnchanged: "Name is unchanged",
+      failed: "Failed",
+    },
+    tenantAiVendorEdit: {
+      title: "Edit AI Vendor",
+      vendor: "AI Vendor",
+      auto: "Auto (use available vendor)",
+      openai: "OpenAI",
+      anthropic: "Anthropic",
       failed: "Failed",
     },
     directoryCreate: {

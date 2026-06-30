@@ -41,25 +41,23 @@ export class Resolver {
       runtimeContainer.registerInstance<AgentProps[]>("AdditionalAgents", agents)
     }
 
+    const { tenantId } = getPrivateContext()
+    const tenant = await this.tenantSource.find("EntityTenant", { where: { id: tenantId } })
+    const preferredVendor = tenant.aiVendor
+
+    const openaiPriority = preferredVendor === "openai" ? 1 : preferredVendor === "anthropic" ? null : process.env.OPENAI_API_KEY ? 1 : null
+    const anthropicPriority =
+      preferredVendor === "anthropic" ? 1 : preferredVendor === "openai" ? null : process.env.ANTHROPIC_API_KEY ? 2 : null
+
     runtimeContainer.registerInstance<AiVendorConfigs>("AiVendorConfigs", {
       openai: {
         apiKey: process.env.OPENAI_API_KEY ?? "",
-        // Lower number means higher priority.
-        // This is used when the system needs to choose a default vendor for a model that is supported by multiple vendors.
-        priority: process.env.OPENAI_API_KEY ? 1 : null,
-        // You can update the tier mapping as needed. This is just an example of how to provide it.
-        // Otherwise, the system will use the default tier mapping.
-        tierMapping: {
-          ...openAiDefaultTierMapping,
-          // You can override specific model tiers here.
-          // light: "gpt-4o-mini",
-        },
+        priority: openaiPriority,
+        tierMapping: { ...openAiDefaultTierMapping },
       },
       anthropic: {
         apiKey: process.env.ANTHROPIC_API_KEY ?? "",
-        // If both OpenAI and Anthropic are available, we will prioritize OpenAI by default since it generally has a wider range of model options.
-        // You can adjust the priority as needed.
-        priority: process.env.ANTHROPIC_API_KEY ? 2 : null,
+        priority: anthropicPriority,
         tierMapping: { ...anthropicDefaultTierMapping },
       },
     })

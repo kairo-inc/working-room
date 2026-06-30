@@ -1,4 +1,4 @@
-import { PermissionDeniedError, ValidationError } from "@wr/shared"
+import { BadRequestError, PermissionDeniedError, ValidationError } from "@wr/shared"
 
 import { L } from "../../localization"
 import { handleError } from "../../middleware/trpc"
@@ -83,6 +83,28 @@ export const useTenantChangeUserRole = () => {
         return await mutateAsync(...args)
       } catch (e) {
         return handleError(e, [{ error: PermissionDeniedError, message: L.tenant.cannotChangeRole }], L.tenant.changeRoleFailed)
+      }
+    },
+  }
+}
+
+export const useTenantEditAiVendor = () => {
+  const { mutateAsync, mutate: _, ...rest } = trpc.tenantEditAiVendor.useMutation()
+  return {
+    ...rest,
+    mutateAsync: async (...args: Parameters<typeof mutateAsync>) => {
+      try {
+        return await mutateAsync(...args)
+      } catch (e) {
+        return handleError(
+          e,
+          [
+            { error: ValidationError, message: L.common.invalidInput },
+            { error: PermissionDeniedError, message: L.tenant.cannotEditAiVendor },
+            { error: BadRequestError, message: L.tenant.aiVendorNotConfigured },
+          ],
+          L.tenant.editAiVendorFailed
+        )
       }
     },
   }

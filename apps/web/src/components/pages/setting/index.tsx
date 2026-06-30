@@ -4,6 +4,7 @@ import { IconButton } from "../../../components/buttons/iconButton"
 import { RectangleButton } from "../../../components/buttons/rectangleButton"
 import { BodyLayout } from "../../../components/layout/body"
 import { PageLayout } from "../../../components/layout/page"
+import { useTenantAiVendorEditModal } from "../../../components/modals/tenantAiVendorEdit"
 import { useTenantEditModal } from "../../../components/modals/tenantEdit"
 import { Section } from "../../../components/section"
 import { L } from "../../../localization"
@@ -21,15 +22,25 @@ export interface PageSettingProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const PageSetting = ({ data, tokenUsage }: PageSettingProps) => {
   const { show: showTenantEditModal, modal: TenantEditModal } = useTenantEditModal()
+  const { show: showAiVendorEditModal, modal: TenantAiVendorEditModal } = useTenantAiVendorEditModal()
+
   const editButton = (
     <IconButton size="default" icon={<Edit />} onClick={() => showTenantEditModal({ data: { id: data.id, name: data.name } })} />
   )
+  const aiVendorEditButton = (
+    <IconButton size="default" icon={<Edit />} onClick={() => showAiVendorEditModal({ data: { id: data.id, aiVendor: data.aiVendor } })} />
+  )
+
+  const aiVendorLabel = data.aiVendor ? L.setting.aiVendor[data.aiVendor] : L.setting.aiVendor.auto
 
   return (
     <PageLayout>
       <BodyLayout title={L.setting.title} description={L.setting.description} containerClassName="gap-10">
         <Section title={L.setting.organization.title} tail={editButton}>
           <VerticalAlignedItems items={[{ label: L.setting.organization.name, value: data.name }]} />
+        </Section>
+        <Section title={L.setting.aiVendor.title} tail={aiVendorEditButton}>
+          <VerticalAlignedItems items={[{ label: L.setting.aiVendor.currentVendor, value: aiVendorLabel }]} />
         </Section>
         <Section title={L.setting.userManagement.title}>
           <RectangleButton href={Route.settingUserList()}>{L.setting.userManagement.goToList}</RectangleButton>
@@ -51,6 +62,7 @@ export const PageSetting = ({ data, tokenUsage }: PageSettingProps) => {
         </Section>
       </BodyLayout>
       {TenantEditModal}
+      {TenantAiVendorEditModal}
     </PageLayout>
   )
 }

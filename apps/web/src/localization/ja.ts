@@ -19,6 +19,13 @@ export default {
       title: "組織",
       name: "名前",
     },
+    aiVendor: {
+      title: "AIベンダー",
+      currentVendor: "現在のベンダー",
+      auto: "自動 (利用可能なベンダーを使用)",
+      openai: "OpenAI",
+      anthropic: "Anthropic",
+    },
     userManagement: {
       title: "ユーザー管理",
       goToList: "ユーザー一覧へ",
@@ -153,6 +160,9 @@ export default {
     inviteUserFailed: "ユーザーの招待に失敗しました。",
     cannotEditTenant: "テナントを編集できません。",
     editTenantFailed: "テナントの編集に失敗しました。",
+    cannotEditAiVendor: "AIベンダーを変更できません。",
+    editAiVendorFailed: "AIベンダーの変更に失敗しました。",
+    aiVendorNotConfigured: "選択したAIベンダーが設定されていません。必要なAPIキーを設定してください。",
     cannotDeleteUser: "ユーザーを削除できません。",
     deleteUserFailed: "ユーザーの削除に失敗しました。",
     cannotResetPassword: "パスワードをリセットできません。",
@@ -258,6 +268,14 @@ export default {
       tenantName: "テナント名",
       tenantNamePlaceholder: "テナント名を入力",
       nameUnchanged: "名前が変更されていません",
+      failed: "失敗",
+    },
+    tenantAiVendorEdit: {
+      title: "AIベンダー編集",
+      vendor: "AIベンダー",
+      auto: "自動 (利用可能なベンダーを使用)",
+      openai: "OpenAI",
+      anthropic: "Anthropic",
       failed: "失敗",
     },
     directoryCreate: {
