@@ -25,6 +25,7 @@ export default {
       auto: "自動 (利用可能なベンダーを使用)",
       openai: "OpenAI",
       anthropic: "Anthropic",
+      google: "Google",
     },
     userManagement: {
       title: "ユーザー管理",
@@ -276,6 +277,7 @@ export default {
       auto: "自動 (利用可能なベンダーを使用)",
       openai: "OpenAI",
       anthropic: "Anthropic",
+      google: "Google",
       failed: "失敗",
     },
     directoryCreate: {

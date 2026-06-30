@@ -3,7 +3,14 @@ import { inject, injectable } from "tsyringe"
 import { FileAccessContext } from "@wr/access"
 import { AgentProps, ChatEngine, ChatEngineConfig, EventBus } from "@wr/core"
 import { TenantSource, UserSource } from "@wr/db"
-import { AiModelTier, AiVendorConfigs, AiWorkingFolder, anthropicDefaultTierMapping, openAiDefaultTierMapping } from "@wr/shared"
+import {
+  AiModelTier,
+  AiVendorConfigs,
+  AiWorkingFolder,
+  anthropicDefaultTierMapping,
+  googleDefaultTierMapping,
+  openAiDefaultTierMapping,
+} from "@wr/shared"
 import { DiContainerContext, getPrivateContext } from "@wr/shared-node"
 
 import { getWebAppDiContainer } from "../container"
@@ -45,9 +52,11 @@ export class Resolver {
     const tenant = await this.tenantSource.find("EntityTenant", { where: { id: tenantId } })
     const preferredVendor = tenant.aiVendor
 
-    const openaiPriority = preferredVendor === "openai" ? 1 : preferredVendor === "anthropic" ? null : process.env.OPENAI_API_KEY ? 1 : null
+    const openaiPriority = preferredVendor === "openai" ? 1 : preferredVendor != null ? null : process.env.OPENAI_API_KEY ? 1 : null
     const anthropicPriority =
-      preferredVendor === "anthropic" ? 1 : preferredVendor === "openai" ? null : process.env.ANTHROPIC_API_KEY ? 2 : null
+      preferredVendor === "anthropic" ? 1 : preferredVendor != null ? null : process.env.ANTHROPIC_API_KEY ? 2 : null
+    const googlePriority =
+      preferredVendor === "google" ? 1 : preferredVendor != null ? null : process.env.GOOGLE_GENERATIVE_AI_API_KEY ? 3 : null
 
     runtimeContainer.registerInstance<AiVendorConfigs>("AiVendorConfigs", {
       openai: {
@@ -59,6 +68,11 @@ export class Resolver {
         apiKey: process.env.ANTHROPIC_API_KEY ?? "",
         priority: anthropicPriority,
         tierMapping: { ...anthropicDefaultTierMapping },
+      },
+      google: {
+        apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? "",
+        priority: googlePriority,
+        tierMapping: { ...googleDefaultTierMapping },
       },
     })
 

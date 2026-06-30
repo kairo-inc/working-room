@@ -1,4 +1,5 @@
 import { AnthropicMessagesModelId } from "@ai-sdk/anthropic/internal"
+import { GoogleGenerativeAIModelId } from "@ai-sdk/google/internal"
 import { OpenAIChatModelId } from "@ai-sdk/openai/internal"
 
 import { MimeType } from "../common"
@@ -61,11 +62,21 @@ export const anthropicDefaultTierMapping: Record<AiModelTier, AiModelAnthropic> 
 }
 export type AiModelTierMappingAnthropic = typeof anthropicDefaultTierMapping
 
-export type AiModelTierMapping = AiModelTierMapppingOpenAI | AiModelTierMappingAnthropic
+// Ref: https://ai.google.dev/gemini-api/docs/models
+export type AiModelGoogle = Extract<GoogleGenerativeAIModelId, "gemini-2.5-pro" | "gemini-2.5-flash" | "gemini-2.5-flash-lite">
 
-export type AiModel = `openai:${AiModelOpenAI}` | `anthropic:${AiModelAnthropic}`
+export const googleDefaultTierMapping: Record<AiModelTier, AiModelGoogle> = {
+  heavy: "gemini-2.5-pro",
+  medium: "gemini-2.5-flash",
+  light: "gemini-2.5-flash-lite",
+}
+export type AiModelTierMappingGoogle = typeof googleDefaultTierMapping
 
-export type AiModelName = AiModelOpenAI | AiModelAnthropic
+export type AiModelTierMapping = AiModelTierMapppingOpenAI | AiModelTierMappingAnthropic | AiModelTierMappingGoogle
+
+export type AiModel = `openai:${AiModelOpenAI}` | `anthropic:${AiModelAnthropic}` | `google:${AiModelGoogle}`
+
+export type AiModelName = AiModelOpenAI | AiModelAnthropic | AiModelGoogle
 
 export type AiWorkingFolder = {
   id: string

@@ -30,6 +30,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ai-sdk/google@npm:3.0.86":
+  version: 3.0.86
+  resolution: "@ai-sdk/google@npm:3.0.86"
+  dependencies:
+    "@ai-sdk/provider": "npm:3.0.12"
+    "@ai-sdk/provider-utils": "npm:4.0.33"
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 10c0/73484e56ad128418f7d45871cf7152aba30ffb2b18a89b820d3191f9c7ff78f89bcc4db62f3baf12b2b80613ac9f14ed4caec01fa5a53bebf5fb2088d52718c2
+  languageName: node
+  linkType: hard
+
 "@ai-sdk/openai@npm:3.0.78":
   version: 3.0.78
   resolution: "@ai-sdk/openai@npm:3.0.78"
@@ -9326,6 +9338,7 @@ __metadata:
   resolution: "@wr/core@workspace:packages/core"
   peerDependencies:
     "@ai-sdk/anthropic": 3.0.0
+    "@ai-sdk/google": 3.0.86
     "@ai-sdk/openai": 3.0.0
     "@wr/access": "workspace:*"
     "@wr/shared": "workspace:*"
@@ -9426,6 +9439,7 @@ __metadata:
   resolution: "@wr/web@workspace:apps/web"
   dependencies:
     "@ai-sdk/anthropic": "npm:3.0.90"
+    "@ai-sdk/google": "npm:3.0.86"
     "@ai-sdk/openai": "npm:3.0.78"
     "@aws-sdk/client-s3": "npm:3.1076.0"
     "@tanstack/react-query": "npm:5.101.2"
