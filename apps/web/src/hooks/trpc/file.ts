@@ -252,6 +252,56 @@ export const useFileGetListHistory = (descId?: string, options?: { sortBy?: File
   )
 }
 
+export const useFileCreateEmpty = () => {
+  const { mutateAsync, mutate: _, ...rest } = trpc.fileCreateEmpty.useMutation()
+  return {
+    ...rest,
+    mutateAsync: async (...args: Parameters<typeof mutateAsync>) => {
+      try {
+        return await mutateAsync(...args)
+      } catch (e) {
+        return handleError(
+          e,
+          [
+            {
+              error: PermissionDeniedError,
+              message: L.file.errors.createFileFailed,
+            },
+          ],
+          L.file.errors.createFileFailed
+        )
+      }
+    },
+  }
+}
+
+export const useFileUpdateTextContent = () => {
+  const { mutateAsync, mutate: _, ...rest } = trpc.fileUpdateTextContent.useMutation()
+  return {
+    ...rest,
+    mutateAsync: async (...args: Parameters<typeof mutateAsync>) => {
+      try {
+        return await mutateAsync(...args)
+      } catch (e) {
+        return handleError(
+          e,
+          [
+            {
+              error: PermissionDeniedError,
+              message: L.file.errors.updateContentPermissionDenied,
+            },
+            {
+              error: BadRequestError,
+              message: L.file.errors.contentNotFound,
+            },
+          ],
+          L.file.errors.updateContentFailed
+        )
+      }
+    },
+  }
+}
+
 export const useFileRestoreHistory = () => {
   const { mutateAsync, mutate: _, ...rest } = trpc.fileHistoryRestore.useMutation()
   return {

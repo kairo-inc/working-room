@@ -15,11 +15,12 @@ import { useHoverMenu } from "../hoverMenu"
 import { LoadingIndicator } from "../indicator"
 import { useAccessGroupCreateModal } from "../modals/accessGroupCreate"
 import { useDirectoryCreateModal } from "../modals/directoryCreate"
+import { useFileCreateModal } from "../modals/fileCreate"
 import { useFileRenameModal } from "../modals/fileRename"
 import { useFileDeleteModal } from "../modals/filesDelete"
 import { FileIconSm } from "./item"
 
-type HoverMenuAction = "delete" | "rename" | "copy" | "newFolder" | "accessGroup"
+type HoverMenuAction = "delete" | "rename" | "copy" | "newFolder" | "newFile" | "accessGroup"
 
 type FileListProps = ComponentPropsWithoutRef<"table"> & {
   parent: AppFileDescriptor
@@ -59,6 +60,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
   const { show: showDeleteModal, modal: DeleteModal } = useFileDeleteModal()
   const { show: showAccessGroupCreateModal, modal: AccessGroupCreateModal } = useAccessGroupCreateModal()
   const { show: showCreateDirectoryModal, modal: CreateDirectoryModal } = useDirectoryCreateModal()
+  const { show: showFileCreateModal, modal: FileCreateModal } = useFileCreateModal()
   const { show: showHoverMenu, menu: HoverMenu } = useHoverMenu<HoverMenuAction>()
 
   useEffect(() => {
@@ -105,6 +107,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
           showHoverMenu(e, {
             items: [
               { action: "newFolder", label: L.file.list.newFolder, variant: "default" },
+              { action: "newFile", label: L.file.list.newFile, variant: "default" },
               {
                 action: "rename",
                 label: L.file.list.rename,
@@ -134,6 +137,10 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                 }
                 case "newFolder": {
                   showCreateDirectoryModal({ data: { id: parent.id }, onResolve: refetchFiles })
+                  break
+                }
+                case "newFile": {
+                  showFileCreateModal({ data: { id: parent.id }, onResolve: refetchFiles })
                   break
                 }
                 case "rename": {
@@ -170,12 +177,17 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
         showHoverMenu(e, {
           items: [
             { action: "newFolder", label: L.file.list.newFolder, variant: "default" },
+            { action: "newFile", label: L.file.list.newFile, variant: "default" },
             { action: "rename", label: L.file.list.rename, variant: "disabled", disabled: true },
             { action: "delete", label: L.file.list.delete, variant: "disabled", disabled: true },
           ],
           onItemClick: (action) => {
             if (action === "newFolder") {
               showCreateDirectoryModal({ data: { id: parent.id }, onResolve: refetchFiles })
+              return
+            }
+            if (action === "newFile") {
+              showFileCreateModal({ data: { id: parent.id }, onResolve: refetchFiles })
               return
             }
           },
@@ -412,6 +424,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
       </div>
       {HoverMenu}
       {CreateDirectoryModal}
+      {FileCreateModal}
       {DeleteModal}
       {RenameModal}
       {AccessGroupCreateModal}
