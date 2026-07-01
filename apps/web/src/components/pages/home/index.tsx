@@ -30,7 +30,7 @@ const StartChatButton = () => {
   const router = useRouter()
   return (
     <RectangleButton icon={<Plus size={20} />} onClick={() => router.push(Route.chat())}>
-      {L.home.newChat}
+      <span className="hidden sm:inline">{L.home.newChat}</span>
     </RectangleButton>
   )
 }

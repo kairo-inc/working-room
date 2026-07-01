@@ -20,7 +20,11 @@ export const ChatItem = ({ item, onRemoveClick, ...rest }: ChatItemProps) => {
   const content = contents.filter((c): c is AppMessageContentText => c.type === "text" && c.text.trim() !== "")[0]?.text
   const updatedAtString = dayjs(updatedAt).format("YYYY-MM-DD HH:mm")
   return (
-    <a href={Route.chat(item.id)} key={item.id} className="hover:bg-muted bg-card cursor-pointer rounded-md border pt-0 pr-1 pb-2 pl-4">
+    <a
+      href={Route.chat(item.id)}
+      key={item.id}
+      className="hover:bg-muted bg-card w-full cursor-pointer rounded-md border pt-0 pr-1 pb-2 pl-4"
+    >
       <div className="flex flex-col">
         <div className="flex items-center justify-between">
           <div className="text-muted-foreground text-xs">{updatedAtString}</div>

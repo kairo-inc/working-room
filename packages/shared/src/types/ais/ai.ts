@@ -1,5 +1,5 @@
 import { AnthropicMessagesModelId } from "@ai-sdk/anthropic/internal"
-import { GoogleGenerativeAIModelId } from "@ai-sdk/google/internal"
+import { GoogleLanguageModel } from "@ai-sdk/google/internal"
 import { OpenAIChatModelId } from "@ai-sdk/openai/internal"
 
 import { MimeType } from "../common"
@@ -63,7 +63,24 @@ export const anthropicDefaultTierMapping: Record<AiModelTier, AiModelAnthropic> 
 export type AiModelTierMappingAnthropic = typeof anthropicDefaultTierMapping
 
 // Ref: https://ai.google.dev/gemini-api/docs/models
-export type AiModelGoogle = Extract<GoogleGenerativeAIModelId, "gemini-2.5-pro" | "gemini-2.5-flash" | "gemini-2.5-flash-lite">
+export type AiModelGoogle = Extract<
+  GoogleLanguageModel["modelId"],
+  | "gemini-2.5-pro"
+  | "gemini-2.5-flash"
+  | "gemini-2.5-flash-lite"
+  | "gemini-2.5-mini"
+  | "gemini-3.5-flash"
+  | "gemini-pro-latest"
+  | "gemini-flash-latest"
+  | "gemini-flash-lite-latest"
+  | "gemini-robotics-er-1.5-preview"
+  | "gemma-3-1b-it"
+  | "gemma-3-4b-it"
+  | "gemma-3n-e4b-it"
+  | "gemma-3n-e2b-it"
+  | "gemma-3-12b-it"
+  | "gemma-3-27b-it"
+>
 
 export const googleDefaultTierMapping: Record<AiModelTier, AiModelGoogle> = {
   heavy: "gemini-2.5-pro",

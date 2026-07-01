@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Download } from "lucide-react"
 import { useState } from "react"
 
 import { LoadingIndicator } from "../../../components/indicator"
@@ -93,8 +93,11 @@ export const PageFile = ({ data }: PageFileProps) => {
         className="max-w-6xl"
         title={name}
         tail={
-          <RectangleButton onClick={() => open(Route.fileContentDownload(data.id), "_blank", "noopener,noreferrer")}>
-            {L.file.download}
+          <RectangleButton
+            icon={<Download size={18} />}
+            onClick={() => open(Route.fileContentDownload(data.id), "_blank", "noopener,noreferrer")}
+          >
+            <span className="hidden sm:inline">{L.file.download}</span>
           </RectangleButton>
         }
         description={

@@ -63,7 +63,7 @@ export const PageAgentList = ({ data }: PageAgentListProps) => {
         containerClassName="gap-10"
         tail={
           <RectangleButton icon={<Plus />} onClick={() => router.push(Route.agentCreation())}>
-            {L.agent.list.create}
+            <span className="hidden sm:inline">{L.agent.list.create}</span>
           </RectangleButton>
         }
       >
