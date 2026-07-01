@@ -1,12 +1,13 @@
 import dayjs from "dayjs"
-import { ArrowLeft, Download } from "lucide-react"
-import { useState } from "react"
+import { ArrowLeft, Download, Pencil, X } from "lucide-react"
+import { useRef, useState } from "react"
 
+import { TextEditor } from "../../../components/editor"
 import { LoadingIndicator } from "../../../components/indicator"
 import { BodyLayout } from "../../../components/layout/body"
 import { PageLayout } from "../../../components/layout/page"
 import { Markdown } from "../../../components/markdown"
-import { useFileGetContent } from "../../../hooks/trpc/file"
+import { useFileGetContent, useFileUpdateTextContent } from "../../../hooks/trpc/file"
 import { L } from "../../../localization"
 import { Route } from "../../../route"
 import { AppFileDescriptor } from "../../../types/file"
@@ -17,10 +18,41 @@ export interface PageFileProps extends React.HTMLAttributes<HTMLDivElement> {
   data: AppFileDescriptor
 }
 
+const EDITABLE_MIME_TYPES = ["text/markdown", "text/plain"] as const
+
 export const PageFile = ({ data }: PageFileProps) => {
   const { name, birthtime } = data
   const [historyId, setHistoryId] = useState<string | undefined>(undefined)
-  const { data: content, isPending } = useFileGetContent({ id: data.id, historyId })
+  const [isEditing, setIsEditing] = useState(false)
+  const { data: content, isPending, refetch } = useFileGetContent({ id: data.id, historyId })
+  const { mutateAsync: updateContent, isPending: isSaving } = useFileUpdateTextContent()
+
+  const currentText = content ? new TextDecoder().decode(new Uint8Array(content)) : ""
+  const originalContentRef = useRef<string>("")
+  const editorContentRef = useRef<string>("")
+
+  const isEditable = EDITABLE_MIME_TYPES.includes(data.mimeType as (typeof EDITABLE_MIME_TYPES)[number])
+
+  const handleStartEdit = () => {
+    originalContentRef.current = currentText
+    editorContentRef.current = currentText
+    setIsEditing(true)
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditing(false)
+  }
+
+  const handleSave = async () => {
+    await updateContent({
+      id: data.id,
+      oldContent: originalContentRef.current,
+      newContent: editorContentRef.current,
+    })
+    originalContentRef.current = editorContentRef.current
+    setIsEditing(false)
+    await refetch()
+  }
 
   const renderContent = () => {
     if (isPending || !content) {
@@ -31,11 +63,22 @@ export const PageFile = ({ data }: PageFileProps) => {
       case "text/markdown":
       case "text/plain": {
         const text = new TextDecoder().decode(uint8Array)
-        return <Markdown markdown={text} />
-      }
-      case "text/plain": {
-        const text = new TextDecoder().decode(uint8Array)
-        return <div className="whitespace-pre-wrap">{text}</div>
+        if (isEditing) {
+          return (
+            <TextEditor
+              initialContent={text}
+              mimeType={data.mimeType}
+              onChange={(content) => {
+                editorContentRef.current = content
+              }}
+            />
+          )
+        }
+        return data.mimeType === "text/markdown" ? (
+          <Markdown markdown={text} />
+        ) : (
+          <div className="whitespace-pre-wrap">{text || <span className="text-muted-foreground select-none">{L.file.emptyFile}</span>}</div>
+        )
       }
       case "text/csv": {
         // NOTE: Currently expect commas as separators.
@@ -87,19 +130,38 @@ export const PageFile = ({ data }: PageFileProps) => {
   }
 
   const createdAt = dayjs(birthtime).fromNow()
+
+  const tailButtons = isEditing ? (
+    <div className="flex gap-2">
+      <RectangleButton variant="defaultOutline" icon={<X size={18} />} onClick={handleCancelEdit} disabled={isSaving}>
+        <span className="hidden sm:inline">{L.file.cancelEdit}</span>
+      </RectangleButton>
+      <RectangleButton onClick={handleSave} loading={isSaving}>
+        {L.file.save}
+      </RectangleButton>
+    </div>
+  ) : (
+    <div className="flex gap-2">
+      {isEditable && (
+        <RectangleButton variant="defaultOutline" icon={<Pencil size={18} />} onClick={handleStartEdit}>
+          <span className="hidden sm:inline">{L.file.edit}</span>
+        </RectangleButton>
+      )}
+      <RectangleButton
+        icon={<Download size={18} />}
+        onClick={() => open(Route.fileContentDownload(data.id), "_blank", "noopener,noreferrer")}
+      >
+        <span className="hidden sm:inline">{L.file.download}</span>
+      </RectangleButton>
+    </div>
+  )
+
   return (
     <PageLayout>
       <BodyLayout
         className="max-w-6xl"
         title={name}
-        tail={
-          <RectangleButton
-            icon={<Download size={18} />}
-            onClick={() => open(Route.fileContentDownload(data.id), "_blank", "noopener,noreferrer")}
-          >
-            <span className="hidden sm:inline">{L.file.download}</span>
-          </RectangleButton>
-        }
+        tail={tailButtons}
         description={
           <div className="flex items-center justify-between border-b pt-2 pb-2">
             {data.parentId && (
@@ -112,15 +174,17 @@ export const PageFile = ({ data }: PageFileProps) => {
           </div>
         }
       >
-        <div className="flex h-full w-full flex-1 gap-8">
-          <div className="flex min-h-full flex-1 flex-col wrap-break-word">{renderContent()}</div>
-          <FileHistoryPanel
-            descId={data.id}
-            currentHash={data.blobHash}
-            onClickHistory={setHistoryId}
-            selectedHistoryId={historyId}
-            className="align-self-start sticky top-8"
-          />
+        <div className={`flex w-full gap-8 ${isEditing ? "flex-col" : "flex-1"}`}>
+          <div className={`bg-card flex flex-col wrap-break-word ${isEditing ? "w-full" : "flex-1 rounded-md p-4"}`}>{renderContent()}</div>
+          {!isEditing && (
+            <FileHistoryPanel
+              descId={data.id}
+              currentHash={data.blobHash}
+              onClickHistory={setHistoryId}
+              selectedHistoryId={historyId}
+              className="align-self-start sticky top-8"
+            />
+          )}
         </div>
       </BodyLayout>
     </PageLayout>

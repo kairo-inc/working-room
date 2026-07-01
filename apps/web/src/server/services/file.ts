@@ -27,6 +27,7 @@ import {
   FileServiceContentToReferenceResult,
   FileServiceCopyFileArg,
   FileServiceCreateDirectoryArg,
+  FileServiceCreateEmptyFileArg,
   FileServiceDeleteManyArg,
   FileServiceGetAncestorsArg,
   FileServiceGetArg,
@@ -36,6 +37,7 @@ import {
   FileServiceGetParentOrRootArg,
   FileServiceMoveFileArg,
   FileServiceRenameArg,
+  FileServiceUpdateTextContentArg,
   FileServiceUploadFileArg,
   FileServiceUploadFileToChatArg,
 } from "./fileType"
@@ -184,6 +186,19 @@ export class FileServiceImpl extends FileService {
     return mapFileDescriptorDomainToApp(desc)
   }
 
+  async createEmptyFile(arg: FileServiceCreateEmptyFileArg): Promise<AppFileDescriptor> {
+    const { parentId, mimeType } = arg
+    const extensionByMimeType: Record<FileServiceCreateEmptyFileArg["mimeType"], string> = {
+      "text/markdown": ".md",
+      "text/plain": ".txt",
+    }
+    const ext = extensionByMimeType[mimeType]
+    const name = arg.name.endsWith(ext) ? arg.name : `${arg.name}${ext}`
+    const emptyFile = new File([], name, { type: mimeType })
+    const desc = await this.fileAccessService.upload({ file: emptyFile, parentDescId: parentId })
+    return mapFileDescriptorDomainToApp(desc)
+  }
+
   async createDirectory(arg: FileServiceCreateDirectoryArg): Promise<AppFileDescriptor> {
     const { parentId, name } = arg
     const desc = await this.fileAccessService.makeDirectory({
@@ -199,6 +214,12 @@ export class FileServiceImpl extends FileService {
       descId,
       newName,
     })
+    return mapFileDescriptorDomainToApp(desc)
+  }
+
+  async updateTextContent(arg: FileServiceUpdateTextContentArg): Promise<AppFileDescriptor> {
+    const { id, oldContent, newContent } = arg
+    const desc = await this.fileAccessService.writeFileReplace({ id, oldContent, newContent })
     return mapFileDescriptorDomainToApp(desc)
   }
 
