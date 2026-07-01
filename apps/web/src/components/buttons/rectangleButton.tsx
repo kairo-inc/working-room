@@ -45,8 +45,8 @@ export const RectangleButton = forwardRef<HTMLButtonElement, RectangleButtonProp
     const resolvedVariant = isDisabled ? "disabled" : variant
 
     const content = (
-      <div className="flex min-w-12 items-center justify-center whitespace-nowrap">
-        {icon && <div className="-translate-x-1">{icon}</div>}
+      <div className="flex min-w-12 items-center justify-center gap-1 whitespace-nowrap">
+        {icon && <div>{icon}</div>}
         {children}
       </div>
     )

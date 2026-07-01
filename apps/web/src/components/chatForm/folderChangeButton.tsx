@@ -1,4 +1,6 @@
+import clsx from "clsx"
 import { useRouter } from "next/router"
+import { ComponentPropsWithoutRef } from "react"
 
 import { useNotification } from "../../contexts/notification"
 import { useSetting } from "../../contexts/setting"
@@ -11,11 +13,11 @@ import { FileIconSm } from "../file/item"
 import { Link } from "../link"
 import { useFileSelectModal } from "../modals/fileSelect"
 
-export type ChatInputFormProps = {
+type ChatInputFormProps = ComponentPropsWithoutRef<"div"> & {
   chat: AppChatStatus
 }
 
-export const FolderChangeButton = ({ chat }: ChatInputFormProps) => {
+export const FolderChangeButton = ({ chat, className, ...props }: ChatInputFormProps) => {
   const chatId = chat.id
   const router = useRouter()
   const notify = useNotification()
@@ -29,8 +31,8 @@ export const FolderChangeButton = ({ chat }: ChatInputFormProps) => {
 
   return (
     <>
-      <div className="text-muted-foreground mt-0.5 inline-flex w-full items-center justify-end gap-1 text-xs">
-        {L.chat.currentDirectory}:{" "}
+      <div className={clsx("text-muted-foreground mt-0.5 flex w-full items-center justify-end gap-1 text-xs", className)} {...props}>
+        <span className="hidden sm:inline">{L.chat.currentDirectory}: </span>
         <Link href={Route.tree(workingFolder.id)} target="_blank" className="text-primary">
           <FileIconSm type="inode/directory" />
           {workingFolder.name}

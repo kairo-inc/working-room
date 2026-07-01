@@ -1,3 +1,4 @@
+import { Upload } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
@@ -88,8 +89,8 @@ export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
         description={L.tree.description}
         className="context-menu max-w-5xl"
         tail={
-          <RectangleButton onClick={uploadDialog} loading={isUploading}>
-            {L.tree.uploadTitle}
+          <RectangleButton icon={<Upload size={18} />} onClick={uploadDialog} loading={isUploading}>
+            <span className="hidden sm:inline">{L.tree.uploadTitle}</span>
           </RectangleButton>
         }
       >

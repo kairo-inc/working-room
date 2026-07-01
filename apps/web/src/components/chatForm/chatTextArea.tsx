@@ -13,7 +13,7 @@ import { FileItem } from "./fileItem"
 const MAX_ROWS = 10
 
 const variants = cva(
-  "resize-none rounded-md border-none outline outline-border bg-input-background flex-1 text-base focus:outline-transparent focus:ring-2 py-4 ml-10 pl-4 pr-14",
+  "resize-none rounded-md border-none outline outline-border bg-input-background flex-1 text-sm focus:outline-transparent focus:ring-2 py-4 ml-10 pl-3 pr-14",
   {
     variants: {
       variant: {
@@ -155,7 +155,7 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
           size="lg"
           icon={<FilePlus />}
           tabIndex={-1}
-          className="absolute bottom-2.25 -left-0.5"
+          className="absolute bottom-2.25 -left-1"
           onClick={() => document.getElementById("fileUploadInput")?.click()}
         />
         <div ref={fileSpaceRef} className="absolute top-6 ml-12 flex flex-wrap gap-2">

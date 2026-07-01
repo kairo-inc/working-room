@@ -1,3 +1,4 @@
+import { Pencil } from "lucide-react"
 import { useRouter } from "next/router"
 
 import { L } from "../../../localization"
@@ -25,7 +26,11 @@ export const PageAgent = ({ data }: PageAgentProps) => {
         title={L.agent.detail.title}
         description={data.description ?? L.agent.detail.defaultDescription}
         containerClassName="gap-10"
-        tail={<RectangleButton onClick={() => router.push(Route.agentEdit(data.id))}>{L.agent.detail.edit}</RectangleButton>}
+        tail={
+          <RectangleButton icon={<Pencil size={18} />} onClick={() => router.push(Route.agentEdit(data.id))}>
+            <span className="hidden sm:inline">{L.agent.detail.edit}</span>
+          </RectangleButton>
+        }
       >
         <div className="flex w-full flex-col gap-6">
           <Section title={L.agent.detail.sectionDescriptions} containerClassName="flex flex-col items-start gap-2">
@@ -57,10 +62,10 @@ export const PageAgent = ({ data }: PageAgentProps) => {
               ]}
             />
           </Section>
-          <Section title={L.agent.detail.sectionDescriptionForAgent} containerClassName="flex flex-col gap-8">
+          <Section title={L.agent.detail.sectionDescriptionForAgent}>
             <Markdown markdown={data.descriptionForAgent} />
           </Section>
-          <Section title={L.agent.detail.sectionPrompt} containerClassName="flex flex-col gap-8">
+          <Section title={L.agent.detail.sectionPrompt}>
             <Markdown markdown={data.prompt} />
           </Section>
         </div>
