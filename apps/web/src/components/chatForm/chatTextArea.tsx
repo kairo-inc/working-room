@@ -150,7 +150,7 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
 
   return (
     <>
-      <div className={clsx("relative flex w-full gap-2 pt-4")}>
+      <div className={clsx("relative flex w-full gap-2")}>
         <IconButton
           size="lg"
           icon={<FilePlus />}

@@ -62,7 +62,7 @@ const MarkdownEditor = ({ initialContent, onChange }: { initialContent: string; 
   const iconSize = 14
 
   return (
-    <div className="border-border bg-card flex min-h-[calc(100dvh-12rem)] flex-col rounded-md border">
+    <div className="flex min-h-[calc(100dvh-12rem)] flex-col rounded-md">
       <div className="border-border flex flex-wrap gap-0.5 border-b p-1">
         <ToolbarButton title="Bold" onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")}>
           <Bold size={iconSize} />
@@ -117,7 +117,8 @@ const MarkdownEditor = ({ initialContent, onChange }: { initialContent: string; 
       <EditorContent
         editor={editor}
         className={[
-          "cursor-text p-4",
+          "min-h-0 flex-1 cursor-text p-4",
+          "[&_.ProseMirror]:min-h-full",
           "[&_.ProseMirror]:outline-none",
           "[&_.ProseMirror_p]:mb-4 [&_.ProseMirror_p]:text-sm",
           "[&_.ProseMirror_h1]:pt-4 [&_.ProseMirror_h1]:pb-4 [&_.ProseMirror_h1]:text-xl [&_.ProseMirror_h1]:font-bold",
