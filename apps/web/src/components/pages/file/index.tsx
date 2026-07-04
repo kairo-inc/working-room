@@ -163,7 +163,7 @@ export const PageFile = ({ data }: PageFileProps) => {
         title={name}
         tail={tailButtons}
         description={
-          <div className="flex items-center justify-between border-b pt-2 pb-2">
+          <div className="flex items-center justify-between border-b pt-2">
             {data.parentId && (
               <a href={Route.tree(data.parentId)} className="text-primary inline-flex items-center gap-1 hover:underline">
                 <ArrowLeft className="size-4" />
@@ -174,8 +174,8 @@ export const PageFile = ({ data }: PageFileProps) => {
           </div>
         }
       >
-        <div className={`flex w-full gap-8 ${isEditing ? "flex-col" : "flex-1"}`}>
-          <div className={`bg-card flex flex-col wrap-break-word ${isEditing ? "w-full" : "flex-1 rounded-md p-4"}`}>{renderContent()}</div>
+        <div className={`flex w-full flex-1 gap-4 lg:gap-6`}>
+          <div className={`bg-card flex flex-1 flex-col rounded-md wrap-break-word ${isEditing ? "" : "p-4"}`}>{renderContent()}</div>
           {!isEditing && (
             <FileHistoryPanel
               descId={data.id}
