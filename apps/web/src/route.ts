@@ -11,9 +11,12 @@ export class Route {
     return "/signup"
   }
 
-  static chat(chatId?: string) {
+  static chat(chatId?: string, workingFolderId?: string) {
     if (!chatId) {
-      return "/chat"
+      if (!workingFolderId) {
+        return "/chat"
+      }
+      return `/chat?workingFolderId=${workingFolderId}`
     }
     return `/chat/${chatId}`
   }

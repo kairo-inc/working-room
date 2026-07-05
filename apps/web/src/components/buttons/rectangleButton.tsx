@@ -20,9 +20,9 @@ const variants = cva("rounded-md border transition-colors duration-200 inline-fl
       notReject: "cursor-pointer border-transparent bg-muted text-muted-foreground hover:bg-muted/80 line-through",
     },
     size: {
-      default: "px-4 h-10",
-      sm: "px-3 h-8",
-      lg: "px-5 h-12",
+      default: "px-2 h-10 sm:px-4",
+      sm: "px-2 h-8 sm:px-3",
+      lg: "px-2 h-12 sm:px-5",
     },
   },
   defaultVariants: {

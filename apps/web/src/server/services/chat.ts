@@ -67,11 +67,12 @@ export class ChatServiceImpl extends ChatService {
   }
 
   async create(args: ChatServiceCreateArg): Promise<AppChat> {
-    const {} = args
+    const { workingFolderId } = args
     const { userId } = getPrivateContext()
     const chat = await this.chatSource.create({
       data: {
         user: { connect: { id: userId } },
+        ...(workingFolderId ? { workingFolder: { connect: { id: workingFolderId } } } : {}),
       },
     })
     const domainChat = mapChatEntityToDomain(chat)

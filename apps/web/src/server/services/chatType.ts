@@ -5,7 +5,9 @@ import { AppChat, AppChatStatus } from "../../types/chat"
 import { AppMessage } from "../../types/message"
 import { AppStreamEvent } from "../../types/stream"
 
-export type ChatServiceCreateArg = {}
+export type ChatServiceCreateArg = {
+  workingFolderId?: string
+}
 
 export type ChatServiceGetStatusArg = {
   id: string
