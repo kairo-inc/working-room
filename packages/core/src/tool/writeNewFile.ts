@@ -100,14 +100,13 @@ This tool will throw an error if a file already exists at the specified path, so
           id: randomId(),
           role: "tool",
           content: [
-            { type: "tool-result", toolCallId, toolName, output: { type: "text", value: "File created successfully." } },
             {
               type: "tool-result",
               toolCallId,
               toolName,
               output: {
                 type: "text",
-                value: fileDescriptorToMessageContent(resultFileDescriptor),
+                value: `File created successfully.\n${fileDescriptorToMessageContent(resultFileDescriptor)}`,
               },
             },
             {
