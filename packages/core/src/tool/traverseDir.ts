@@ -63,8 +63,7 @@ export class ToolTraverseDir extends Tool {
       const files = await this.fileAccessService.traverse({ descId: desc.id, maxDepth, maxItems: maxItemsInPage })
 
       // Construct the result message and file content
-      let fileContent = ""
-      let resultMessage = `Found ${files.length} items under the directory '${desc.name}' (ID: ${desc.id}) up to a depth of ${maxDepth}. Showing up to ${maxItemsInPage} items.`
+      let fileContent = `Found ${files.length} items under the directory '${desc.name}' (ID: ${desc.id}) up to a depth of ${maxDepth}. Showing up to ${maxItemsInPage} items.\n\n`
 
       const proceededFiles: DomainMessageContentProceededFile[] = []
       for (const file of files) {
@@ -83,11 +82,7 @@ export class ToolTraverseDir extends Tool {
         message: {
           id: randomId(),
           role: "tool",
-          content: [
-            { type: "tool-result", toolCallId, toolName, output: { type: "text", value: resultMessage } },
-            { type: "tool-result", toolCallId, toolName, output: { type: "text", value: fileContent } },
-            ...proceededFiles,
-          ],
+          content: [{ type: "tool-result", toolCallId, toolName, output: { type: "text", value: fileContent } }, ...proceededFiles],
         },
       }
     } catch (e) {

@@ -63,7 +63,6 @@ export class ToolListDir extends Tool {
       const files = await this.fileAccessService.list({ descId: desc.id, take: maxItemsInPage, page, sortBy, sortDirection })
 
       // Construct the result message and file content
-      let fileContent = ""
       let resultMessage = `Found ${files.count} items in the directory '${desc.name}' (ID: ${desc.id}). Showing page ${page} with up to ${maxItemsInPage} items per page.`
       if (files.nextPage) {
         resultMessage += `\nThere are more items available. The next page is ${files.nextPage}. You can specify the 'page' parameter to retrieve the next set of items.`
@@ -72,8 +71,9 @@ export class ToolListDir extends Tool {
       }
 
       const proceededFiles: DomainMessageContentProceededFile[] = []
+      resultMessage += "\n\nList of items:\n"
       for (const file of files.data) {
-        fileContent += fileDescriptorToMessageContent(file) + "\n"
+        resultMessage += fileDescriptorToMessageContent(file) + "\n"
         if (depth === 0) {
           proceededFiles.push({
             type: "proceeded-file",
@@ -88,11 +88,7 @@ export class ToolListDir extends Tool {
         message: {
           id: randomId(),
           role: "tool",
-          content: [
-            { type: "tool-result", toolCallId, toolName, output: { type: "text", value: resultMessage } },
-            { type: "tool-result", toolCallId, toolName, output: { type: "text", value: fileContent } },
-            ...proceededFiles,
-          ],
+          content: [{ type: "tool-result", toolCallId, toolName, output: { type: "text", value: resultMessage } }, ...proceededFiles],
         },
       }
     } catch (e) {
