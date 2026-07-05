@@ -32,7 +32,8 @@ type FileListProps = ComponentPropsWithoutRef<"table"> & {
 export const FileList = ({ data, parent, isPending, className, refetchFiles, ...props }: FileListProps) => {
   const router = useRouter()
   const isAdminOrOwner = useIsAdminOrOwner()
-  const gridHeaderClassName = "grid border-b py-1 grid-cols-[minmax(0,1fr)_minmax(80px,160px)_minmax(100px,180px)] text-sm"
+  const gridHeaderClassName =
+    "grid border-b py-1 grid-cols-[minmax(0,1fr)_minmax(90px,120px)] sm:grid-cols-[minmax(0,1fr)_minmax(80px,160px)_minmax(100px,180px)] text-sm"
   const gridRowClassName = `${gridHeaderClassName} py-2 bg-card hover:bg-muted cursor-pointer text-sm`
   const selectedRowClassName = "!bg-link/20 !text-link text-sm"
   const sortedFiles = [...data].sort((a, b) => {
@@ -44,7 +45,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
   const placeholder = (
     <div className={gridRowClassName}>
       <div className={`flex cursor-pointer items-center gap-2 pl-8 text-ellipsis whitespace-nowrap`}>{L.file.list.noFiles}</div>
-      <div className={`text-muted-foreground pl-4 font-medium`}></div>
+      <div className={`text-muted-foreground hidden pl-4 font-medium sm:block`}></div>
       <div className={`text-muted-foreground pr-2 pl-4 font-medium`}></div>
     </div>
   )
@@ -312,7 +313,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
       <div className={clsx("w-full text-base", className)} {...props}>
         <div className={gridHeaderClassName}>
           <div className={`text-muted-foreground pl-8 font-medium`}>{L.file.list.name}</div>
-          <div className={`text-muted-foreground pl-4 font-medium`}>{L.file.list.type}</div>
+          <div className={`text-muted-foreground hidden pl-4 font-medium sm:block`}>{L.file.list.type}</div>
           <div className={`text-muted-foreground pr-2 pl-4 font-medium`}>{L.file.list.modified}</div>
         </div>
         {isPending ? (
@@ -339,7 +340,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                   <ArrowLeftIcon className="size-4" />
                   {L.file.list.back}
                 </div>
-                <div className={`text-muted-foreground pl-4 font-medium`}></div>
+                <div className={`text-muted-foreground hidden pl-4 font-medium sm:block`}></div>
                 <div className={`text-muted-foreground pr-2 pl-4 font-medium`}></div>
               </div>
             )}
@@ -413,8 +414,8 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                         <FileIconSm type={mimeType} className="shrink-0" />
                         <span className="min-w-0 truncate">{name}</span>
                       </div>
-                      <div className={`text-muted-foreground pl-4`}>{isDirectory ? "-" : mimeType.split("/").pop()}</div>
-                      <div className={`text-muted-foreground pr-2 pl-4`}>{dayjs(mtime).fromNow()}</div>
+                      <div className={`text-muted-foreground hidden pl-4 sm:block`}>{isDirectory ? "-" : mimeType.split("/").pop()}</div>
+                      <div className={`text-muted-foreground truncate pr-2 pl-4`}>{dayjs(mtime).fromNow()}</div>
                     </div>
                   )
                 })
