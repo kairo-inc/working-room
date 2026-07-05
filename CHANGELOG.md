@@ -4,6 +4,39 @@ All notable changes to WorkingRoom will be documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.5] - 2026-07-05
+
+### Added
+
+#### AI Agent System
+
+- Added Google (Gemini) as a supported AI vendor alongside OpenAI and Anthropic.
+- Added a tenant-level AI Vendor setting on the Settings page, allowing workspace owners to pin a preferred AI provider.
+
+#### File Management
+
+- Added an in-browser text editor for Markdown and plain text files, along with a "New File" action to create files directly from the file list.
+
+#### Chat Experience
+
+- Added a "Start Chat" button on the folder page to start a new chat with that folder pre-set as its working folder.
+
+### Changed
+
+#### Platform
+
+- Improved responsiveness on smartphone-sized screens: the sidebar collapses into a hamburger menu with a slide-in drawer, header buttons switch to icon-only, and several content overflow issues on narrow viewports were fixed.
+
+### Fixed
+
+#### AI Agent System
+
+- Fixed chat responses failing when using an Anthropic model together with file search, directory listing, or file writing tools.
+
+### Documentation
+
+- Synced the Roadmap and User Guide with recently shipped features, including AI Vendor selection, the text editor, and starting a chat from a folder.
+
 ## [0.2.4] - 2026-06-30
 
 ### Added
