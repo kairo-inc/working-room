@@ -135,6 +135,7 @@ export default {
   },
   tree: {
     description: "Browse your files and folders.",
+    startChatTitle: "Start Chat",
     uploadTitle: "Upload",
     uploadSuccess: "Files uploaded successfully.",
     uploadFailed: "Failed to upload files.",

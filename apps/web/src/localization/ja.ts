@@ -137,6 +137,7 @@ export default {
   },
   tree: {
     description: "ファイルとフォルダを参照します",
+    startChatTitle: "チャットを開始",
     uploadTitle: "アップロード",
     uploadSuccess: "ファイルをアップロードしました。",
     uploadFailed: "ファイルのアップロードに失敗しました。",
