@@ -1,6 +1,11 @@
-import { AiModelName, AiModelTierMappingAnthropic, AiModelTierMapppingOpenAI as AiModelTierMappingOpenAI } from "./ai"
+import {
+  AiModelName,
+  AiModelTierMappingAnthropic,
+  AiModelTierMappingGoogle,
+  AiModelTierMapppingOpenAI as AiModelTierMappingOpenAI,
+} from "./ai"
 
-export type AiVendorName = "openai" | "anthropic"
+export type AiVendorName = "openai" | "anthropic" | "google"
 
 export type AiVendor = {
   name: AiVendorName
@@ -22,10 +27,17 @@ export type AiVendorAnthropicConfig = {
   priority: number | null
   tierMapping: AiModelTierMappingAnthropic
 }
+// Google
+export type AiVendorGoogleConfig = {
+  apiKey: string
+  priority: number | null
+  tierMapping: AiModelTierMappingGoogle
+}
 
 export type AiVendorConfigs = {
   openai?: AiVendorOpenAIConfig
   anthropic?: AiVendorAnthropicConfig
+  google?: AiVendorGoogleConfig
 }
 
 type Price = {
@@ -99,6 +111,23 @@ export const aiVendorModelPrice: {
       outputTokens: 1.6,
       inputTokens: 0.4,
       cacheInputTokens: 0.1,
+    },
+  },
+  google: {
+    "gemini-2.5-pro": {
+      outputTokens: 10.0,
+      inputTokens: 1.25,
+      cacheInputTokens: 0.31,
+    },
+    "gemini-2.5-flash": {
+      outputTokens: 3.5,
+      inputTokens: 0.3,
+      cacheInputTokens: 0.075,
+    },
+    "gemini-2.5-flash-lite": {
+      outputTokens: 0.6,
+      inputTokens: 0.1,
+      cacheInputTokens: 0.025,
     },
   },
   anthropic: {

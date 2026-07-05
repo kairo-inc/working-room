@@ -44,6 +44,12 @@ enum FileOperation {
   move
 }
 
+enum AiVendor {
+  openai
+  anthropic
+  google
+}
+
 model Tenant {
   id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
@@ -53,6 +59,9 @@ model Tenant {
 
   // Name of the tenant.
   name String
+
+  // AI vendor preference. null means use priority-based selection from available vendors.
+  aiVendor AiVendor?
 
   // Relations
   users           User[]

@@ -19,7 +19,7 @@ export const PageSettingUserList = ({ data }: PageSettingUserListProps) => {
   const { show, modal } = useUserInviteModal()
   const addUserButton = (
     <RectangleButton icon={<PlusIcon />} onClick={() => show({})}>
-      {L.settingUser.addUser}
+      <span className="hidden sm:inline">{L.settingUser.addUser}</span>
     </RectangleButton>
   )
   return (

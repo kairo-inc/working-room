@@ -1,3 +1,4 @@
+import { MessageSquarePlus, Upload } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
@@ -8,6 +9,7 @@ import { PageLayout } from "../../../components/layout/page"
 import { useNotification } from "../../../contexts/notification"
 import { useFileGetList, useFileUploadFiles } from "../../../hooks/trpc/file"
 import { L } from "../../../localization"
+import { Route } from "../../../route"
 import { AppFileDescriptor } from "../../../types/file"
 import { RectangleButton } from "../../buttons/rectangleButton"
 import { elementIds } from "../../elementId"
@@ -88,9 +90,14 @@ export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
         description={L.tree.description}
         className="context-menu max-w-5xl"
         tail={
-          <RectangleButton onClick={uploadDialog} loading={isUploading}>
-            {L.tree.uploadTitle}
-          </RectangleButton>
+          <div className="flex shrink-0 gap-4">
+            <RectangleButton icon={<MessageSquarePlus size={18} />} onClick={() => router.push(Route.chat(undefined, parent.id))}>
+              <span className="hidden sm:inline">{L.tree.startChatTitle}</span>
+            </RectangleButton>
+            <RectangleButton icon={<Upload size={18} />} onClick={uploadDialog} loading={isUploading}>
+              <span className="hidden sm:inline">{L.tree.uploadTitle}</span>
+            </RectangleButton>
+          </div>
         }
       >
         <FileList data={fileList} parent={parent} isPending={isPending} refetchFiles={refetch} />

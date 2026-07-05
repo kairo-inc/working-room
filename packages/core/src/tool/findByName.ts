@@ -35,12 +35,10 @@ This tool will return a list of files but not the content of the files. `
     }
     try {
       const result = await this.fileAccessService.findByName(input.data.searchName)
-      const resultMessage = `Found ${result.files.length} items. Listing up to ${result.totalCount}.\n`
-      const fileMessage = result.files.map((file) => fileDescriptorToMessageContent(file)).join("\n")
+      const resultMessage = `Found ${result.files.length} items. Listing up to ${result.totalCount}.\n\n${result.files.map((file) => fileDescriptorToMessageContent(file)).join("\n")}`
 
       const resultContent: DomainToolMessage["content"] = []
       resultContent.push({ type: "tool-result", toolCallId, toolName, output: { type: "text", value: resultMessage } })
-      resultContent.push({ type: "tool-result", toolCallId, toolName, output: { type: "text", value: fileMessage } })
 
       if (depth === 0) {
         resultContent.push(

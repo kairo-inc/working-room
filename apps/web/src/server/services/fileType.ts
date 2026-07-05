@@ -80,6 +80,18 @@ export type FileServiceCheckAccessPolicyArg = {
   requiredPermission: "read" | "write"
 }
 
+export type FileServiceCreateEmptyFileArg = {
+  parentId: string
+  name: string
+  mimeType: "text/markdown" | "text/plain"
+}
+
+export type FileServiceUpdateTextContentArg = {
+  id: string
+  oldContent: string
+  newContent: string
+}
+
 export abstract class FileService {
   abstract checkAccessPolicyAndThrow(arg: FileServiceCheckAccessPolicyArg): Promise<void>
   abstract checkIsUnderSpecialDirAndThrow(arg: FileServiceCheckAncestorOrThrowArg): Promise<void>
@@ -97,6 +109,7 @@ export abstract class FileService {
   abstract uploadFileToChat(arg: FileServiceUploadFileToChatArg): Promise<AppFileDescriptor>
 
   abstract createDirectory(arg: FileServiceCreateDirectoryArg): Promise<AppFileDescriptor>
+  abstract createEmptyFile(arg: FileServiceCreateEmptyFileArg): Promise<AppFileDescriptor>
 
   abstract moveFile(arg: FileServiceMoveFileArg): Promise<AppFileDescriptor>
   abstract copyFile(arg: FileServiceCopyFileArg): Promise<AppFileDescriptor>
@@ -106,6 +119,8 @@ export abstract class FileService {
   abstract dataToReferenceContent(arg: FileServiceContentToReferenceArg): Promise<FileServiceContentToReferenceResult>
 
   abstract rename(arg: FileServiceRenameArg): Promise<AppFileDescriptor>
+
+  abstract updateTextContent(arg: FileServiceUpdateTextContentArg): Promise<AppFileDescriptor>
 
   abstract restoreHistory(historyId: string): Promise<void>
   abstract getHistoryList(arg: FileServiceGetHistoryListArg): Promise<PageResult<AppFileHistory>>

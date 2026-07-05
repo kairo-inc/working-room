@@ -1,6 +1,6 @@
 {
   "name": "working-room",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "license": "Apache-2.0",
   "author": "Yusuke Suwa",
   "homepage": "https://workingroom.io",
@@ -35,11 +35,11 @@
     "@vitest/coverage-v8": "4.1.9",
     "dotenv-cli": "11.0.0",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.2.9",
+    "eslint-config-next": "16.2.10",
     "memfs": "4.57.8",
     "prettier": "3.9.4",
     "prettier-plugin-tailwindcss": "0.8.0",
-    "tsx": "4.22.4",
+    "tsx": "4.23.0",
     "typescript": "6.0.3",
     "vitest": "4.1.9"
   },

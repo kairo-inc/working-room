@@ -1,4 +1,5 @@
 import { createAnthropic } from "@ai-sdk/anthropic"
+import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { createOpenAI } from "@ai-sdk/openai"
 import {
   APICallError,
@@ -29,6 +30,7 @@ import {
   NotFoundError,
   NotSupportedError,
   aiVendorAnthropic,
+  aiVendorGoogle,
   aiVendorOpenAI,
   isAiVendorConfigured,
   isDomainAssistantMessage,
@@ -52,12 +54,17 @@ function throwAsAiError(error: unknown): never {
 const vendorByPrefix: Record<string, AiVendor> = {
   openai: aiVendorOpenAI,
   anthropic: aiVendorAnthropic,
+  google: aiVendorGoogle,
 }
 
 const buildRegistry = (vendorConfigs: AiVendorConfigs) => {
-  const providers: Record<string, ReturnType<typeof createOpenAI> | ReturnType<typeof createAnthropic>> = {}
+  const providers: Record<
+    string,
+    ReturnType<typeof createOpenAI> | ReturnType<typeof createAnthropic> | ReturnType<typeof createGoogleGenerativeAI>
+  > = {}
   if (vendorConfigs.openai?.apiKey) providers.openai = createOpenAI({ apiKey: vendorConfigs.openai.apiKey })
   if (vendorConfigs.anthropic?.apiKey) providers.anthropic = createAnthropic({ apiKey: vendorConfigs.anthropic.apiKey })
+  if (vendorConfigs.google?.apiKey) providers.google = createGoogleGenerativeAI({ apiKey: vendorConfigs.google.apiKey })
   return {
     providers,
     registry: createProviderRegistry(providers),
@@ -88,7 +95,7 @@ export class Model {
   private model: AiModel
   private vendor: AiVendor
   private registry: ReturnType<typeof createProviderRegistry>
-  private provider: ReturnType<typeof createOpenAI> | ReturnType<typeof createAnthropic>
+  private provider: ReturnType<typeof createOpenAI> | ReturnType<typeof createAnthropic> | ReturnType<typeof createGoogleGenerativeAI>
 
   constructor(args: ModelConstructorArgs) {
     const { modelTier, vendorConfigs } = args
@@ -230,6 +237,20 @@ export class Model {
         model: this.registry.languageModel(this.model),
         toolChoice: "required",
         tools: { web_search: tools.webSearch_20260209({}) },
+        messages: [{ role: "user", content: [{ type: "text", text: query }] }],
+        maxOutputTokens,
+        maxRetries,
+      })
+      return {
+        text: result.text,
+        tokens: parseConsumedTokens(this.model, this.vendor.name, result.usage),
+      }
+    } else if (this.vendor.name === "google") {
+      const tools = (this.provider as ReturnType<typeof createGoogleGenerativeAI>).tools
+      const result = await aiGenerateText({
+        model: this.registry.languageModel(this.model),
+        toolChoice: "required",
+        tools: { web_search: tools.googleSearch({}) },
         messages: [{ role: "user", content: [{ type: "text", text: query }] }],
         maxOutputTokens,
         maxRetries,

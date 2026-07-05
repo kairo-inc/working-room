@@ -16,9 +16,10 @@ const variants = cva("text-md flex h-14 cursor-pointer items-center gap-3 pl-5 t
 interface AvatarProps extends React.HTMLAttributes<HTMLAnchorElement> {
   variant?: "default" | "selected"
   href?: string
+  showLabel?: boolean
 }
 
-export const Avatar = ({ variant = "default", className, ...props }: AvatarProps) => {
+export const Avatar = ({ variant = "default", showLabel, className, ...props }: AvatarProps) => {
   const { name, email } = useSetting()
 
   return (
@@ -26,7 +27,7 @@ export const Avatar = ({ variant = "default", className, ...props }: AvatarProps
       <div className="text-foreground flex items-center justify-center rounded-full text-lg">
         <User size={20} />
       </div>
-      <div className="hidden lg:block">
+      <div className={showLabel ? "block" : "hidden lg:block"}>
         <div className="text-primary text-md font-bold">{name}</div>
         <div className="text-muted-foreground text-xs">{email}</div>
       </div>

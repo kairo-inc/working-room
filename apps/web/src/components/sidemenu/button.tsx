@@ -14,13 +14,14 @@ export interface RectangleButtonProps extends React.AnchorHTMLAttributes<HTMLAnc
   label: string
   icon: React.ReactNode
   href?: string
+  showLabel?: boolean
 }
 
-export const SideMenuButton = ({ href, label, icon, variant = "default", className, ...props }: RectangleButtonProps) => {
+export const SideMenuButton = ({ href, label, icon, variant = "default", className, showLabel, ...props }: RectangleButtonProps) => {
   return (
     <a href={href} className={clsx(variants({ variant: variant }), className)} {...props}>
       {icon}
-      <div className="hidden lg:block">{label}</div>
+      <div className={showLabel ? "block" : "hidden lg:block"}>{label}</div>
     </a>
   )
 }

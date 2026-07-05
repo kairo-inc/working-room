@@ -156,3 +156,33 @@ export const fileHistoryRestore = privateProcedure.input(z.object({ historyId: z
   const service = await resolver.resolveFileService()
   await service.restoreHistory(input.historyId)
 })
+
+export const fileCreateEmpty = privateProcedure
+  .input(
+    z.object({
+      parentId: z.string().min(1).max(64),
+      name: z.string().min(1).max(128),
+      mimeType: z.enum(["text/markdown", "text/plain"]),
+    })
+  )
+  .mutation(async ({ input }) => {
+    const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
+    const service = await resolver.resolveFileService()
+    const { parentId, name, mimeType } = input
+    return await service.createEmptyFile({ parentId, name, mimeType })
+  })
+
+export const fileUpdateTextContent = privateProcedure
+  .input(
+    z.object({
+      id: z.string().min(1).max(64),
+      oldContent: z.string(),
+      newContent: z.string(),
+    })
+  )
+  .mutation(async ({ input }) => {
+    const resolver = getWebAppDiContainer().resolve<Resolver>("Resolver")
+    const service = await resolver.resolveFileService()
+    const { id, oldContent, newContent } = input
+    return await service.updateTextContent({ id, oldContent, newContent })
+  })

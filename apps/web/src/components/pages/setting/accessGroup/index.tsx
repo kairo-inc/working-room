@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from "lucide-react"
 import { useRouter } from "next/router"
 
 import { PageResult } from "@wr/shared"
@@ -38,11 +39,15 @@ export const PageSettingAccessGroup = ({ userList, resourceList, data }: PageSet
         containerClassName="gap-10"
         tail={
           <div className="flex gap-4">
-            <RectangleButton variant="defaultOutline" onClick={() => router.push(Route.settingAccessGroupEdit(data.id))}>
-              {L.settingAccessGroup.edit}
+            <RectangleButton
+              variant="defaultOutline"
+              icon={<Pencil size={18} />}
+              onClick={() => router.push(Route.settingAccessGroupEdit(data.id))}
+            >
+              <span className="hidden sm:inline">{L.settingAccessGroup.edit}</span>
             </RectangleButton>
-            <RectangleButton variant="destructive" onClick={() => showAccessGroupDeleteModal({ data })}>
-              {L.settingAccessGroup.delete}
+            <RectangleButton variant="destructive" icon={<Trash2 size={18} />} onClick={() => showAccessGroupDeleteModal({ data })}>
+              <span className="hidden sm:inline">{L.settingAccessGroup.delete}</span>
             </RectangleButton>
           </div>
         }
