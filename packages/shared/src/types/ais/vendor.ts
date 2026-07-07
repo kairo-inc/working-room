@@ -3,9 +3,10 @@ import {
   AiModelTierMappingAnthropic,
   AiModelTierMappingGoogle,
   AiModelTierMapppingOpenAI as AiModelTierMappingOpenAI,
+  AiModelTierMappingSelfHosted,
 } from "./ai"
 
-export type AiVendorName = "openai" | "anthropic" | "google"
+export type AiVendorName = "openai" | "anthropic" | "google" | "selfHosted"
 
 export type AiVendor = {
   name: AiVendorName
@@ -33,11 +34,19 @@ export type AiVendorGoogleConfig = {
   priority: number | null
   tierMapping: AiModelTierMappingGoogle
 }
+// Self-hosted
+export type AiVendorSelfHostedConfig = {
+  apiKey: string
+  priority: number | null
+  baseUrl: string
+  tierMapping: AiModelTierMappingSelfHosted
+}
 
 export type AiVendorConfigs = {
   openai?: AiVendorOpenAIConfig
   anthropic?: AiVendorAnthropicConfig
   google?: AiVendorGoogleConfig
+  selfHosted?: AiVendorSelfHostedConfig
 }
 
 type Price = {

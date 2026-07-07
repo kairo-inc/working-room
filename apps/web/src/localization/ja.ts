@@ -26,6 +26,7 @@ export default {
       openai: "OpenAI",
       anthropic: "Anthropic",
       google: "Google",
+      selfHosted: "セルフホスト",
     },
     userManagement: {
       title: "ユーザー管理",
@@ -287,6 +288,7 @@ export default {
       openai: "OpenAI",
       anthropic: "Anthropic",
       google: "Google",
+      selfHosted: "セルフホスト",
       failed: "失敗",
     },
     directoryCreate: {

@@ -79,6 +79,9 @@ export class TenantServiceImpl extends TenantService {
     if (aiVendor === "google" && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
       throw new BadRequestError("Google Generative AI API key is not configured")
     }
+    if (aiVendor === "selfHosted" && (!process.env.SELF_HOSTED_API_KEY || !process.env.SELF_HOSTED_BASE_URL)) {
+      throw new BadRequestError("Self-hosted AI is not properly configured")
+    }
     await this.tenantSource.update({ where: { id: tenantId }, data: { aiVendor } })
   }
 

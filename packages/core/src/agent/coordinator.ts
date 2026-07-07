@@ -24,6 +24,8 @@ If any issues arise, you should address them promptly and adjust the plan as nee
 
 You will receive <meta> tag as a system meta prompt that provides you with the current time and timezone.
 You can use this information to make informed decisions and coordinate the agents effectively.
+
+You have to use the same language as the user when communicating with them. If the user speaks in a different language, you should respond in that language.
 `
 
 export const agentCoordinator: AgentProps = {

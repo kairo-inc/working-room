@@ -10,6 +10,7 @@ import {
   anthropicDefaultTierMapping,
   googleDefaultTierMapping,
   openAiDefaultTierMapping,
+  selfHostedDefaultTierMapping,
 } from "@wr/shared"
 import { DiContainerContext, getPrivateContext } from "@wr/shared-node"
 
@@ -57,6 +58,14 @@ export class Resolver {
       preferredVendor === "anthropic" ? 1 : preferredVendor != null ? null : process.env.ANTHROPIC_API_KEY ? 2 : null
     const googlePriority =
       preferredVendor === "google" ? 1 : preferredVendor != null ? null : process.env.GOOGLE_GENERATIVE_AI_API_KEY ? 3 : null
+    const selfHostedPriority =
+      preferredVendor === "selfHosted"
+        ? 1
+        : preferredVendor != null
+          ? null
+          : process.env.SELF_HOSTED_BASE_URL && process.env.SELF_HOSTED_API_KEY
+            ? 4
+            : null
 
     runtimeContainer.registerInstance<AiVendorConfigs>("AiVendorConfigs", {
       openai: {
@@ -73,6 +82,13 @@ export class Resolver {
         apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? "",
         priority: googlePriority,
         tierMapping: { ...googleDefaultTierMapping },
+      },
+      selfHosted: {
+        // The self-hosted API key is not required for the AI engine to function, as it can be configured in the tenant settings.
+        apiKey: process.env.SELF_HOSTED_API_KEY ?? "not-required",
+        baseUrl: process.env.SELF_HOSTED_BASE_URL ?? "",
+        priority: selfHostedPriority,
+        tierMapping: { ...selfHostedDefaultTierMapping },
       },
     })
 
