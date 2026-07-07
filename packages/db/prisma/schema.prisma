@@ -48,6 +48,7 @@ enum AiVendor {
   openai
   anthropic
   google
+  selfHosted
 }
 
 model Tenant {

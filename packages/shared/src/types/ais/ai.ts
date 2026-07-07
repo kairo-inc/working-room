@@ -89,11 +89,30 @@ export const googleDefaultTierMapping: Record<AiModelTier, AiModelGoogle> = {
 }
 export type AiModelTierMappingGoogle = typeof googleDefaultTierMapping
 
-export type AiModelTierMapping = AiModelTierMapppingOpenAI | AiModelTierMappingAnthropic | AiModelTierMappingGoogle
+// Self-hosting AI models
+export type AiModelSelfHosted =
+  | `Qwen/Qwen2.5-3B-Instruct`
+  | `Qwen/Qwen2.5-7B-Instruct`
+  | `Qwen/Qwen2.5-14B-Instruct`
+  | `Qwen/Qwen2.5-Chat-3B`
+  | `Qwen/Qwen2.5-Chat-7B`
+  | `Qwen/Qwen2.5-Chat-14B`
 
-export type AiModel = `openai:${AiModelOpenAI}` | `anthropic:${AiModelAnthropic}` | `google:${AiModelGoogle}`
+export const selfHostedDefaultTierMapping: Record<AiModelTier, AiModelSelfHosted> = {
+  // The same model is used for all tiers in this example, but you can customize it based on your self-hosted model availability and performance.
+  heavy: "Qwen/Qwen2.5-3B-Instruct",
+  medium: "Qwen/Qwen2.5-3B-Instruct",
+  light: "Qwen/Qwen2.5-3B-Instruct",
+}
+export type AiModelTierMappingSelfHosted = typeof selfHostedDefaultTierMapping
 
-export type AiModelName = AiModelOpenAI | AiModelAnthropic | AiModelGoogle
+export type AiModelTierMapping =
+  AiModelTierMapppingOpenAI | AiModelTierMappingAnthropic | AiModelTierMappingGoogle | AiModelTierMappingSelfHosted
+
+export type AiModel =
+  `openai:${AiModelOpenAI}` | `anthropic:${AiModelAnthropic}` | `google:${AiModelGoogle}` | `self-hosted:${AiModelSelfHosted}`
+
+export type AiModelName = AiModelOpenAI | AiModelAnthropic | AiModelGoogle | AiModelSelfHosted
 
 export type AiWorkingFolder = {
   id: string
