@@ -5,15 +5,15 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@ai-sdk/anthropic@npm:4.0.8":
-  version: 4.0.8
-  resolution: "@ai-sdk/anthropic@npm:4.0.8"
+"@ai-sdk/anthropic@npm:4.0.9":
+  version: 4.0.9
+  resolution: "@ai-sdk/anthropic@npm:4.0.9"
   dependencies:
     "@ai-sdk/provider": "npm:4.0.2"
     "@ai-sdk/provider-utils": "npm:5.0.5"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/640aa6b889af1d45c951a50f0bde29ff407fed99fef55a1f3c30ea7d0ca6162ea48387b45ab744b9be9f8044c1b9d8cfd999331fe652ce3e953a1ab374aaeb96
+  checksum: 10c0/9720b756e9854f1e1b306dfacf998d98070e3c10080a4cee65ce256f3a890cbbedea59535644cc7404871d1ae48dcf8e7da39e92483893f830656a4fc0dbef4f
   languageName: node
   linkType: hard
 
@@ -9486,7 +9486,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/web@workspace:apps/web"
   dependencies:
-    "@ai-sdk/anthropic": "npm:4.0.8"
+    "@ai-sdk/anthropic": "npm:4.0.9"
     "@ai-sdk/google": "npm:4.0.8"
     "@ai-sdk/openai": "npm:4.0.8"
     "@ai-sdk/openai-compatible": "npm:3.0.5"
