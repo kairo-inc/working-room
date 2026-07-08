@@ -7627,7 +7627,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/pm@npm:3.27.2, @tiptap/pm@npm:^3.27.2":
+"@tiptap/pm@npm:3.27.3":
+  version: 3.27.3
+  resolution: "@tiptap/pm@npm:3.27.3"
+  dependencies:
+    prosemirror-changeset: "npm:^2.4.1"
+    prosemirror-commands: "npm:^1.7.1"
+    prosemirror-dropcursor: "npm:^1.8.2"
+    prosemirror-gapcursor: "npm:^1.4.1"
+    prosemirror-history: "npm:^1.5.0"
+    prosemirror-inputrules: "npm:^1.5.1"
+    prosemirror-keymap: "npm:^1.2.3"
+    prosemirror-model: "npm:^1.25.9"
+    prosemirror-schema-list: "npm:^1.5.1"
+    prosemirror-state: "npm:^1.4.4"
+    prosemirror-tables: "npm:^1.8.5"
+    prosemirror-transform: "npm:^1.12.0"
+    prosemirror-view: "npm:^1.41.9"
+  checksum: 10c0/a6d450fd227bc107d249d50811299473dd68cb1128e0db45067a033f0c76dbb32d73319ca976c5fe0969c00472f0c09c73d201ccca82ae2b829431122d782e86
+  languageName: node
+  linkType: hard
+
+"@tiptap/pm@npm:^3.27.2":
   version: 3.27.2
   resolution: "@tiptap/pm@npm:3.27.2"
   dependencies:
@@ -9492,7 +9513,7 @@ __metadata:
     "@ai-sdk/openai-compatible": "npm:3.0.5"
     "@aws-sdk/client-s3": "npm:3.1080.0"
     "@tanstack/react-query": "npm:5.101.2"
-    "@tiptap/pm": "npm:3.27.2"
+    "@tiptap/pm": "npm:3.27.3"
     "@tiptap/react": "npm:3.27.2"
     "@tiptap/starter-kit": "npm:3.27.2"
     "@trpc/client": "npm:11.18.0"
