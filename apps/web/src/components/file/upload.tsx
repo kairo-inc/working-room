@@ -62,16 +62,38 @@ export const FileUploadPane = ({ onFileUpload }: FileUploadPaneProps) => {
       }
     }
 
+    const handlePaste = async (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items
+      if (!items) return
+
+      const files = Array.from(items)
+        .filter((item) => item.kind === "file" && item.type.startsWith("image/"))
+        .map((item) => item.getAsFile())
+        .filter((file): file is File => file !== null)
+
+      if (files.length === 0) return
+
+      e.preventDefault()
+      try {
+        setIsPending(true)
+        await onFileUpload(files)
+      } finally {
+        setIsPending(false)
+      }
+    }
+
     window.addEventListener("dragenter", handleDragEnter)
     window.addEventListener("drop", handleDrop)
     window.addEventListener("dragover", handleDragOver)
     window.addEventListener("dragleave", handleDragLeave)
+    window.addEventListener("paste", handlePaste)
 
     return () => {
       window.removeEventListener("dragenter", handleDragEnter)
       window.removeEventListener("drop", handleDrop)
       window.removeEventListener("dragover", handleDragOver)
       window.removeEventListener("dragleave", handleDragLeave)
+      window.removeEventListener("paste", handlePaste)
     }
   }, [])
 
