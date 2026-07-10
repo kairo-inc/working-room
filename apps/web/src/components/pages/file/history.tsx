@@ -1,5 +1,6 @@
 import clsx from "clsx"
 import dayjs from "dayjs"
+import { X } from "lucide-react"
 import { ComponentPropsWithoutRef, useEffect } from "react"
 
 import { FileOperation } from "@wr/db"
@@ -17,9 +18,10 @@ type FileHistoryPanelProps = ComponentPropsWithoutRef<"div"> & {
   currentHash: string
   selectedHistoryId?: string
   onClickHistory?: (historyId: string) => void
+  onClose?: () => void
 }
 
-export const FileHistoryPanel = ({ descId, currentHash, selectedHistoryId, onClickHistory, className }: FileHistoryPanelProps) => {
+export const FileHistoryPanel = ({ descId, currentHash, selectedHistoryId, onClickHistory, onClose, className }: FileHistoryPanelProps) => {
   const { show: showRestoreModal, modal: RestoreModal } = useFileHistoryRestoreModal()
   const {
     data: fileHistoryPages,
@@ -70,8 +72,18 @@ export const FileHistoryPanel = ({ descId, currentHash, selectedHistoryId, onCli
 
   return (
     <>
-      <div className={clsx("bg-card min-w-48 overflow-y-auto rounded-md", className)} style={{ maxHeight: containerHeight - 48 }}>
-        <div className="bg-card sticky top-0 border-b px-4 py-2 text-sm font-medium">{L.file.history.title}</div>
+      <div className={clsx("bg-card min-w-48 overflow-y-auto rounded-md", className)} style={{ maxHeight: containerHeight - 32 }}>
+        <div className="bg-card sticky top-0 flex items-center justify-between border-b px-4 py-2 text-sm font-medium">
+          {L.file.history.title}
+          <button
+            type="button"
+            aria-label={L.file.history.collapse}
+            className="text-muted-foreground hover:text-primary cursor-pointer transition-colors"
+            onClick={onClose}
+          >
+            <X size={16} />
+          </button>
+        </div>
         <div className="max-h-80 flex-1">
           {isFileHistoryPending ? (
             <div className="text-muted p-4 text-center text-sm">{L.file.history.loading}</div>

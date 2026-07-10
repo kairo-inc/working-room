@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { ArrowLeft, Download, Pencil, X } from "lucide-react"
+import { ArrowLeft, Download, History, Pencil, X } from "lucide-react"
 import { useRef, useState } from "react"
 
 import { TextEditor } from "../../../components/editor"
@@ -11,6 +11,7 @@ import { useFileGetContent, useFileUpdateTextContent } from "../../../hooks/trpc
 import { L } from "../../../localization"
 import { Route } from "../../../route"
 import { AppFileDescriptor } from "../../../types/file"
+import { IconButton } from "../../buttons/iconButton"
 import { RectangleButton } from "../../buttons/rectangleButton"
 import { FileHistoryPanel } from "./history"
 
@@ -24,6 +25,7 @@ export const PageFile = ({ data }: PageFileProps) => {
   const { name, birthtime } = data
   const [historyId, setHistoryId] = useState<string | undefined>(undefined)
   const [isEditing, setIsEditing] = useState(false)
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const { data: content, isPending, refetch } = useFileGetContent({ id: data.id, historyId })
   const { mutateAsync: updateContent, isPending: isSaving } = useFileUpdateTextContent()
 
@@ -75,9 +77,13 @@ export const PageFile = ({ data }: PageFileProps) => {
           )
         }
         return data.mimeType === "text/markdown" ? (
-          <Markdown markdown={text} />
+          <div className="p-4">
+            <Markdown markdown={text} />
+          </div>
         ) : (
-          <div className="whitespace-pre-wrap">{text || <span className="text-muted-foreground select-none">{L.file.emptyFile}</span>}</div>
+          <div className="p-4 whitespace-pre-wrap">
+            {text || <span className="text-muted-foreground select-none">{L.file.emptyFile}</span>}
+          </div>
         )
       }
       case "text/csv": {
@@ -157,9 +163,10 @@ export const PageFile = ({ data }: PageFileProps) => {
   )
 
   return (
-    <PageLayout>
+    <PageLayout containerClassName="!pb-4">
       <BodyLayout
         className="max-w-6xl"
+        containerClassName="!pt-4"
         title={name}
         tail={tailButtons}
         description={
@@ -174,14 +181,25 @@ export const PageFile = ({ data }: PageFileProps) => {
           </div>
         }
       >
-        <div className={`flex w-full flex-1 gap-4 lg:gap-6`}>
-          <div className={`bg-card flex flex-1 flex-col rounded-md wrap-break-word ${isEditing ? "" : "p-4"}`}>{renderContent()}</div>
-          {!isEditing && (
+        <div className={`flex w-full flex-1 gap-4 lg:gap-4`}>
+          <div className={`bg-card relative flex flex-1 flex-col rounded-md wrap-break-word`}>
+            {!isEditing && !isHistoryOpen && (
+              <IconButton
+                icon={<History size={18} />}
+                aria-label={L.file.history.title}
+                onClick={() => setIsHistoryOpen(true)}
+                className="absolute top-2 right-2"
+              />
+            )}
+            {renderContent()}
+          </div>
+          {!isEditing && isHistoryOpen && (
             <FileHistoryPanel
               descId={data.id}
               currentHash={data.blobHash}
               onClickHistory={setHistoryId}
               selectedHistoryId={historyId}
+              onClose={() => setIsHistoryOpen(false)}
               className="align-self-start sticky top-8"
             />
           )}

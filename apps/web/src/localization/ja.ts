@@ -190,6 +190,7 @@ export default {
       loading: "読み込み中...",
       noHistory: "履歴がありません。",
       current: "現在",
+      collapse: "ファイル履歴を閉じる",
     },
     list: {
       noFiles: "ファイルがありません",

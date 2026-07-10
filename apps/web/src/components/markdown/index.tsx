@@ -82,7 +82,7 @@ export const Markdown = ({ markdown, disabled }: { markdown: string; disabled?: 
         ul: ({ node: _, ...props }) => <UnorderedList {...props} />,
         li: ({ node: _, ...props }) => <ListItem {...props} />,
         code: ({ node: _, className, ...props }) => <CodeBlock {...props} className={`${className ?? ""} whitespace-pre-line`.trim()} />,
-        p: ({ node: _, ...props }) => <P {...props} />,
+        p: ({ node: _, ...props }) => <P {...props} className="whitespace-pre-line" />,
         hr: ({ node: _, ...props }) => <Hr {...props} />,
         blockquote: ({ node: _, ...props }) => <BlockQuote {...props} />,
         a: ({ node: _, ...props }) => <Anchor {...props} />,
