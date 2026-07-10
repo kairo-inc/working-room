@@ -188,6 +188,7 @@ export default {
       loading: "Loading...",
       noHistory: "No history available.",
       current: "current",
+      collapse: "Hide file history",
     },
     list: {
       noFiles: "No files found",
