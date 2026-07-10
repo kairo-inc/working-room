@@ -62,7 +62,7 @@ packages/
 The fastest way to run WorkingRoom:
 
 ```bash
-# Set ANTHROPIC_API_KEY and/or OPENAI_API_KEY in your shell environment,
+# Set ANTHROPIC_API_KEY, OPENAI_API_KEY, and/or GOOGLE_GENERATIVE_AI_API_KEY in your shell environment,
 # then run:
 docker compose up
 ```
@@ -73,7 +73,7 @@ Open `http://localhost:3000`.
 
 ## Local Development
 
-**Prerequisites:** Node.js 20–24, Yarn 4+, Anthropic and/or OpenAI API key
+**Prerequisites:** Node.js 20–24, Yarn 4+, Anthropic, OpenAI, and/or Google Gemini API key
 
 ```bash
 # 1. Install dependencies
@@ -82,7 +82,7 @@ yarn install
 
 # 2. Configure environment
 # .env.local is committed with local development defaults
-# Set ANTHROPIC_API_KEY and/or OPENAI_API_KEY in your shell environment
+# Set ANTHROPIC_API_KEY, OPENAI_API_KEY, and/or GOOGLE_GENERATIVE_AI_API_KEY in your shell environment
 
 # 3. Initialize database
 yarn prisma:dev
@@ -122,6 +122,7 @@ yarn dev:web
 | `NEXTAUTH_SECRET`   | Yes      | Empty in `.env.example` | Session signing secret                                     |
 | `ANTHROPIC_API_KEY` | Yes\*    | —                       | Anthropic Claude API key                                   |
 | `OPENAI_API_KEY`    | Yes\*    | —                       | OpenAI API key                                             |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Yes\* | —              | Google Gemini API key                                      |
 | `MULTI_TENANT`      | No       | `false`                 | Enables multi-tenant mode; currently not available         |
 | `ROOT_DIR`          | No       | `~/.wr`                 | Workspace directory root; files are stored under this path |
 

@@ -11,7 +11,7 @@ custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/getti
 Before running WorkingRoom, prepare the following requirements for your setup:
 
 - For all setups: at least one AI provider API key
-  - `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY`
+  - `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, and/or `GOOGLE_GENERATIVE_AI_API_KEY`
   - At least one of these keys is required to run the application.
 - For local development:
   - Node.js 18-22
@@ -26,7 +26,7 @@ Local development uses the repository's committed `.env.local` defaults together
 git clone https://github.com/kairo-inc/working-room.git
 cd working-room
 
-# Set up OPENAI_API_KEY or ANTHROPIC_API_KEY in your shell environment variables.
+# Set up ANTHROPIC_API_KEY, OPENAI_API_KEY, and/or GOOGLE_GENERATIVE_AI_API_KEY in your shell environment variables.
 # Then, run the following command to start the application using docker compose:
 docker compose up
 ```
@@ -45,7 +45,7 @@ yarn install
 
 # 2. Configure environment
 # .env.local is committed with local development defaults
-# Set ANTHROPIC_API_KEY and/or OPENAI_API_KEY in your shell environment
+# Set ANTHROPIC_API_KEY, OPENAI_API_KEY, and/or GOOGLE_GENERATIVE_AI_API_KEY in your shell environment
 
 # 3. Initialize database
 yarn prisma:dev
