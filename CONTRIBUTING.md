@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node.js 20–22
+- Node.js 20–24
 - Yarn 4+ (`corepack enable`)
 - Anthropic and/or OpenAI API key
 
@@ -54,7 +54,7 @@ packages/testing/     Shared testing fixtures and helpers
 | `yarn test:watch`      | Run tests in watch mode                     |
 | `yarn coverage`        | Run tests with coverage                     |
 | `yarn lint`            | Check TS and TSX files with Prettier        |
-| `yarn lint-fix`        | Format TS and TSX files with Prettier       |
+| `yarn lint:fix`        | Format TS and TSX files with Prettier       |
 | `yarn seed:docs`       | Apply docs DB migrations and seed docs data |
 | `yarn start:web:docs`  | Start the web app with the docs environment |
 
@@ -74,7 +74,7 @@ packages/testing/     Shared testing fixtures and helpers
   - Use `docs` for documentation changes
   - Use `test` for adding or updating tests
   - e.g. `feature/#123`, `fix/#456`, `refactor/#789`
-- Run `yarn lint-fix` before pushing
+- Run `yarn lint:fix` before pushing
 - Ensure `yarn build:web` passes locally
 - Ensure `yarn test` passes locally
 - Write clear commit messages
