@@ -107,7 +107,7 @@ yarn dev:web
 | `yarn test:watch`      | Run tests in watch mode                     |
 | `yarn coverage`        | Run tests with coverage                     |
 | `yarn lint`            | Check TS and TSX files with Prettier        |
-| `yarn lint-fix`        | Format TS and TSX files with Prettier       |
+| `yarn lint:fix`        | Format TS and TSX files with Prettier       |
 | `yarn seed:docs`       | Apply docs DB migrations and seed docs data |
 | `yarn start:web:docs`  | Start the web app with the docs environment |
 
