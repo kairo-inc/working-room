@@ -18,16 +18,19 @@ import {
   ChatEngine,
   CoreConfig,
   EventBus,
+  ToolCompareTextFileHistory,
   ToolDeleteDir,
   ToolDeleteFile,
   ToolFindFileByName,
   ToolFindFileByText,
   ToolListDir,
+  ToolListHistory,
   ToolMakeDir,
   ToolMoveFile,
   ToolReadImageFile,
   ToolReadPdfFile,
   ToolReadTextFile,
+  ToolReadTextFileHistory,
   ToolRegistry,
   ToolTraverseDir,
   ToolWebSearch,
@@ -127,6 +130,9 @@ container.register<Tool>("Tool", { useClass: ToolDeleteDir })
 container.register<Tool>("Tool", { useClass: ToolFindFileByText })
 container.register<Tool>("Tool", { useClass: ToolFindFileByName })
 container.register<Tool>("Tool", { useClass: ToolTraverseDir })
+container.register<Tool>("Tool", { useClass: ToolListHistory })
+container.register<Tool>("Tool", { useClass: ToolReadTextFileHistory })
+container.register<Tool>("Tool", { useClass: ToolCompareTextFileHistory })
 
 // Externally Defined Tools.
 container.register<Tool[]>("AdditionalTools", { useValue: [] })

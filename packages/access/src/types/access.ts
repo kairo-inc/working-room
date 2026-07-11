@@ -1,8 +1,8 @@
 /**
  * This service is responsible for managing files and folders.
  */
-import { FileDescriptorSortBy } from "@wr/db"
-import { DomainFileDescriptor, MimeType, PageArg, PageResult } from "@wr/shared"
+import { FileDescriptorSortBy, FileHistorySortBy } from "@wr/db"
+import { DomainFileDescriptor, DomainFileHistory, MimeType, PageArg, PageResult } from "@wr/shared"
 
 export type FileAccessContext = {
   userId: string
@@ -27,6 +27,14 @@ export type FileAccessServiceReadFileArg = {
 export type FileAccessServiceReadBlobArg = {
   blobHash: string
   maxBytes?: number
+}
+
+export type FileAccessServiceListFileHistoryArg = {
+  descId: string
+} & PageArg<FileHistorySortBy>
+
+export type FileAccessServiceReadHistoryArg = {
+  historyId: string
 }
 
 export type FileAccessServiceDeleteManyArg = {
@@ -148,6 +156,9 @@ export abstract class FileAccessService {
   abstract readFile(arg: FileAccessServiceReadFileArg): Promise<ArrayBuffer>
   abstract readBlob(arg: FileAccessServiceReadBlobArg): Promise<ArrayBuffer>
   abstract readBlobStream(arg: FileAccessServiceReadBlobArg): Promise<NodeJS.ReadableStream>
+
+  abstract listFileHistory(arg: FileAccessServiceListFileHistoryArg): Promise<PageResult<DomainFileHistory>>
+  abstract readHistory(arg: FileAccessServiceReadHistoryArg): Promise<DomainFileHistory>
 
   abstract makeDirectory(arg: FileAccessServiceMakeDirectoryArg): Promise<DomainFileDescriptor>
 

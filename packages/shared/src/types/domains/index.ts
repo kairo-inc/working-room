@@ -1,6 +1,7 @@
 export * from "./chat"
 export * from "./consumedToken"
 export * from "./file"
+export * from "./fileHistory"
 export * from "./message"
 export * from "./policy"
 export * from "./role"

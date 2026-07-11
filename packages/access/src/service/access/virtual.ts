@@ -2,10 +2,17 @@ import { createPatch } from "diff"
 import { inject, injectable } from "tsyringe"
 
 import { CoreConfig } from "@wr/core"
-import { AccessGroupSource, FileDescriptorSource, FileHistorySource, mapFileDescriptorEntityToDomain } from "@wr/db"
+import {
+  AccessGroupSource,
+  FileDescriptorSource,
+  FileHistorySource,
+  mapFileDescriptorEntityToDomain,
+  mapFileHistoryEntityToDomain,
+} from "@wr/db"
 import {
   BadRequestError,
   DomainFileDescriptor,
+  DomainFileHistory,
   ImplementationError,
   InvalidChatDirAccessError,
   InvalidPrivateDirAccessError,
@@ -29,10 +36,12 @@ import {
   FileAccessServiceFindByTextOptions,
   FileAccessServiceFindByTextResult,
   FileAccessServiceListArg,
+  FileAccessServiceListFileHistoryArg,
   FileAccessServiceMakeDirectoryArg,
   FileAccessServiceMoveFileArg,
   FileAccessServiceReadBlobArg,
   FileAccessServiceReadFileArg,
+  FileAccessServiceReadHistoryArg,
   FileAccessServiceRenameArg,
   FileAccessServiceTraverseArg,
   FileAccessServiceUploadArg,
@@ -740,6 +749,26 @@ export class FileAccessServiceImpl extends FileAccessService {
   async readBlob(arg: FileAccessServiceReadBlobArg): Promise<ArrayBuffer> {
     const { blobHash } = arg
     return this.readBlobHash(blobHash)
+  }
+
+  async listFileHistory(arg: FileAccessServiceListFileHistoryArg): Promise<PageResult<DomainFileHistory>> {
+    const { descId, page, take } = arg
+    await this.checkAccessPolicyAndThrow(descId, "read")
+    const { data, ...rest } = await this.fileHistorySource.findMany("EntityFileHistory", {
+      where: { fileDescriptor: { id: descId } },
+      sortBy: "createdAt",
+      sortDirection: "desc",
+      page,
+      take,
+    })
+    return { data: data.map(mapFileHistoryEntityToDomain), ...rest }
+  }
+
+  async readHistory(arg: FileAccessServiceReadHistoryArg): Promise<DomainFileHistory> {
+    const { historyId } = arg
+    const history = await this.fileHistorySource.find("EntityFileHistory", { where: { id: historyId } })
+    await this.checkAccessPolicyAndThrow(history.fileDescriptorId, "read")
+    return mapFileHistoryEntityToDomain(history)
   }
 
   async deleteMany(arg: FileAccessServiceDeleteManyArg): Promise<void> {
