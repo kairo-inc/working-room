@@ -8,8 +8,8 @@ import { randomId } from "@wr/shared-node"
 import { Tool, ToolRunArgs, ToolRunResult } from "./base"
 
 const inputSchema = z.object({
-  targetHistoryId: z.string().describe(`The ID of the history item to compare from.`),
-  compareToHistoryId: z.string().describe(`The ID of the history item to compare against.`),
+  sourceHistoryId: z.string().describe(`The ID of the history item to read.`),
+  targetHistoryId: z.string().describe(`The ID of the history item to compare against.`),
 })
 
 @injectable()
@@ -34,8 +34,8 @@ Be careful of the file type when using this tool. This tool is designed for text
     }
 
     try {
-      const history = await this.fileAccessService.readHistory({ historyId: input.data.targetHistoryId })
-      const compareToHistory = await this.fileAccessService.readHistory({ historyId: input.data.compareToHistoryId })
+      const history = await this.fileAccessService.readHistory({ historyId: input.data.sourceHistoryId })
+      const compareToHistory = await this.fileAccessService.readHistory({ historyId: input.data.targetHistoryId })
       const desc = await this.fileAccessService.getDescriptor(history.fileDescriptorId)
       if (desc.isDirectory) {
         return { message: this.buildError(toolCall, `Given history ID corresponds to a directory. Please provide a file history ID.`) }
@@ -50,6 +50,8 @@ Be careful of the file type when using this tool. This tool is designed for text
         return { message: this.buildError(toolCall, `The history item does not have a blob hash. Cannot read content.`) }
       } else if (history.id === compareToHistory.id) {
         return { message: this.buildError(toolCall, `Comparing the same history id. No differences to show.`) }
+      } else if (history.fileDescriptorId !== compareToHistory.fileDescriptorId) {
+        return { message: this.buildError(toolCall, `The two history items belong to different file descriptors. Cannot compare.`) }
       }
 
       // Construct the result message and file content
@@ -77,7 +79,7 @@ Be careful of the file type when using this tool. This tool is designed for text
       }
     } catch (e) {
       if (e instanceof NotFoundError) {
-        return { message: this.buildError(toolCall, `History not found: ${input.data.targetHistoryId}`) }
+        return { message: this.buildError(toolCall, `History not found: ${input.data.sourceHistoryId}`) }
       }
       return { message: this.buildError(toolCall, `Failed to compare history: ${e instanceof Error ? e.message : String(e)}`) }
     }
