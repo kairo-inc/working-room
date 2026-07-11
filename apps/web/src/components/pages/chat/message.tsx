@@ -21,6 +21,7 @@ type ChatMessageProps = ComponentPropsWithoutRef<"div"> & {
 }
 
 export const ChatMessage = ({ role, text, fileMeta, proceededFiles, showLoading, progressText, ...rest }: ChatMessageProps) => {
+  const uniqueProceededFiles = proceededFiles?.filter((file, index, self) => self.findIndex((f) => f.descId === file.descId) === index)
   return (
     <div className={clsx("my-2 flex flex-col gap-2 rounded-sm p-4 pb-2", role === "user" ? "" : "bg-card")}>
       <span className="inline-block text-sm">
@@ -50,15 +51,15 @@ export const ChatMessage = ({ role, text, fileMeta, proceededFiles, showLoading,
             })}
           </div>
         )}
-        {proceededFiles && proceededFiles.length > 0 && (
+        {uniqueProceededFiles && uniqueProceededFiles.length > 0 && (
           <div className="flex flex-wrap gap-2 pb-2">
-            {proceededFiles.slice(0, MAX_PROCEEDED_FILES_DISPLAY).map((file) => (
+            {uniqueProceededFiles.slice(0, MAX_PROCEEDED_FILES_DISPLAY).map((file) => (
               <FileListItem key={file.descId} descId={file.descId} />
             ))}
-            {proceededFiles.length > MAX_PROCEEDED_FILES_DISPLAY && (
+            {uniqueProceededFiles.length > MAX_PROCEEDED_FILES_DISPLAY && (
               <div className="text-muted-foreground py-1 text-xs">
                 {(() => {
-                  const n = proceededFiles.length - MAX_PROCEEDED_FILES_DISPLAY
+                  const n = uniqueProceededFiles.length - MAX_PROCEEDED_FILES_DISPLAY
                   return (n > 1 ? L.chat.moreFilePlural : L.chat.moreFileSingular).replace("{0}", String(n))
                 })()}
               </div>
