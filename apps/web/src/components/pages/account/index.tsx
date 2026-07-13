@@ -10,7 +10,9 @@ import { Section } from "../../../components/section"
 import { useNotification } from "../../../contexts/notification"
 import { useAuthSignout } from "../../../hooks/trpc/auth"
 import { L } from "../../../localization"
+import { Route } from "../../../route"
 import { AppUserSetting } from "../../../types/user"
+import { SlackLogoIcon } from "../../asset/logo"
 import { VerticalAlignedItems } from "../../layout/verticalAlignedItems"
 
 export interface PageAccountProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,6 +36,23 @@ export const PageAccount = ({ data }: PageAccountProps) => {
               { label: L.account.userData.name, value: data.name },
               { label: L.account.userData.email, value: data.email },
               { label: L.account.userData.role, value: data.role },
+            ]}
+          />
+        </Section>
+        <Section title="外部連携">
+          <VerticalAlignedItems
+            items={[
+              {
+                label: "",
+                value: (
+                  // NOTE: Navigates in the same tab (not window.open) so a stray extra tab can't
+                  // start a second /authorize flow and overwrite the PKCE code_verifier cookie
+                  // set by this one.
+                  <div onClick={() => open(Route.oauthAuthorize("slack"), "_blank")}>
+                    <SlackLogoIcon size={24} gray />
+                  </div>
+                ),
+              },
             ]}
           />
         </Section>

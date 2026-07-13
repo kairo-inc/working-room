@@ -11,6 +11,7 @@
     "@ai-sdk/openai": "3.0.0",
     "@ai-sdk/openai-compatible": "3.0.5",
     "@wr/access": "workspace:*",
+    "@wr/integration": "workspace:*",
     "@wr/shared": "workspace:*",
     "@wr/shared-node": "workspace:*",
     "ai": "6.0.0",

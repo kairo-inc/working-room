@@ -22,16 +22,27 @@ export type SortArg<T> = {
   sortDirection?: SortDirection
 }
 
+// Number based pagination.
 export type PageArg<T> = {
   page?: number
   take?: number
 } & SortArg<T>
-
 export type PageResult<T> = {
   data: T[]
   nextPage: number | null
   maxPage: number
   count: number
+}
+
+// For external APIs that use cursor-based pagination,
+// we can define a generic type for the cursor argument and result.
+export type CursorArg = {
+  cursor?: string
+  take?: number
+}
+export type CursorResult<T> = {
+  data: T[]
+  nextCursor: string | null
 }
 
 export const supportedTextMimeTypes = ["text/markdown", "text/plain", "text/csv"] as const

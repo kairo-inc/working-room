@@ -2,10 +2,14 @@ import "reflect-metadata"
 
 import { FileAccessListener } from "@wr/access"
 import { getDiContainer } from "@wr/composition"
+import { IntegrationContext } from "@wr/integration"
 import { DiContainerContext, getDiContainerStore } from "@wr/shared-node"
 
+import { OauthServiceImpl } from "../../../../packages/integration/src/oauth/service"
+import { OauthService } from "../../../../packages/integration/src/oauth/serviceType"
 import { AuthServiceImpl } from "../server/services/auth"
 import { AuthService } from "../server/services/authType"
+import { serverConfig } from "./config"
 import { FileAccessListenerImpl } from "./listener/file"
 import { Resolver } from "./resolver"
 import { AccessGroupServiceImpl } from "./services/accessGroup"
@@ -36,6 +40,7 @@ container.register<UserService>("UserService", { useClass: UserServiceImpl }) //
 container.register<AccessGroupService>("AccessGroupService", { useClass: AccessGroupServiceImpl })
 container.register<FileService>("FileService", { useClass: FileServiceImpl })
 container.register<AgentService>("AgentService", { useClass: AgentServiceImpl })
+container.register<OauthService>("OauthService", { useClass: OauthServiceImpl })
 
 // Resolver registrations
 // You need to use file service resolver to use FileService.
@@ -45,8 +50,12 @@ container.register<Resolver>("Resolver", { useClass: Resolver })
 // Listener registrations
 container.register<FileAccessListener>("FileAccessListener", { useClass: FileAccessListenerImpl })
 
-// Container helpers.
+// Override this when calling agent.
+container.register<IntegrationContext>("IntegrationContext", {
+  useValue: { serverConfig: { baseUrl: serverConfig.HOST } },
+})
 
+// Container helpers.
 export function getWebAppDiContainer(): DiContainerContext {
   const containerOrUndefined = getDiContainerStore()
   return containerOrUndefined ?? container

@@ -12,6 +12,7 @@
     "@wr/access": "workspace:*",
     "@wr/core": "workspace:*",
     "@wr/db": "workspace:*",
+    "@wr/integration": "workspace:*",
     "@wr/shared": "workspace:*",
     "@wr/shared-node": "workspace:*",
     "ai": "6.0.0",
