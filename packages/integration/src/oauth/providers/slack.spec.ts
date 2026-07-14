@@ -24,7 +24,7 @@ describe("[Success] getSlackOAuthConfig", () => {
 })
 
 describe("[Success] exchangeSlackCode", () => {
-  it("Maps a successful token response, including team.id/team.name", async () => {
+  it("Maps a successful token response, including team.id/team.name and authed_user.id", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -32,10 +32,15 @@ describe("[Success] exchangeSlackCode", () => {
         status: 200,
         json: async () => ({
           ok: true,
-          access_token: "xoxp-user-token",
-          scope: "identity.basic,identity.email,identity.team",
-          token_type: "user",
           team: { id: "T123", name: "Test Team" },
+          authed_user: {
+            id: "U123",
+            scope: "channels:read,groups:read",
+            access_token: "xoxp-user-token",
+            token_type: "user",
+            refresh_token: "xoxe-refresh-token",
+            expires_in: 43200,
+          },
         }),
       })
     )
@@ -45,12 +50,13 @@ describe("[Success] exchangeSlackCode", () => {
     })
     expect(result).toEqual({
       accessToken: "xoxp-user-token",
-      refreshToken: undefined,
-      expiresIn: undefined,
-      scope: "identity.basic,identity.email,identity.team",
+      refreshToken: "xoxe-refresh-token",
+      expiresIn: 43200,
+      scope: "channels:read,groups:read",
       tokenType: "user",
       teamId: "T123",
       teamName: "Test Team",
+      id: "U123",
     })
   })
 
@@ -58,7 +64,17 @@ describe("[Success] exchangeSlackCode", () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      json: async () => ({ ok: true, access_token: "xoxb-bot-token", token_type: "bot", team: { id: "T123", name: "Test Team" } }),
+      json: async () => ({
+        ok: true,
+        team: { id: "T123", name: "Test Team" },
+        authed_user: {
+          id: "U123",
+          access_token: "xoxp-user-token",
+          token_type: "user",
+          refresh_token: "xoxe-refresh-token",
+          scope: "channels:read,groups:read",
+        },
+      }),
     })
     vi.stubGlobal("fetch", fetchMock)
     await exchangeSlackCode("https://app.example.com/api/oauth/slack/callback", { code: "auth-code", codeVerifier: "verifier" })
@@ -69,7 +85,7 @@ describe("[Success] exchangeSlackCode", () => {
 })
 
 describe("[Failure] exchangeSlackCode", () => {
-  it("Throws when access_token is not present in the response", async () => {
+  it("Throws OAuthTokenExchangeError when authed_user.access_token is not present", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -80,7 +96,25 @@ describe("[Failure] exchangeSlackCode", () => {
     )
     await expect(
       exchangeSlackCode("https://app.example.com/api/oauth/slack/callback", { code: "auth-code", codeVerifier: "verifier" })
-    ).rejects.toThrow()
+    ).rejects.toThrow(OAuthTokenExchangeError)
+  })
+
+  it("Throws OAuthTokenExchangeError when refresh_token or scope is missing", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          ok: true,
+          team: { id: "T123", name: "Test Team" },
+          authed_user: { id: "U123", access_token: "xoxp-user-token", token_type: "user" },
+        }),
+      })
+    )
+    await expect(
+      exchangeSlackCode("https://app.example.com/api/oauth/slack/callback", { code: "auth-code", codeVerifier: "verifier" })
+    ).rejects.toThrow(OAuthTokenExchangeError)
   })
 
   it("Throws OAuthTokenExchangeError when team information is missing", async () => {
@@ -89,7 +123,16 @@ describe("[Failure] exchangeSlackCode", () => {
       vi.fn().mockResolvedValue({
         ok: true,
         status: 200,
-        json: async () => ({ ok: true, access_token: "xoxp-user-token", token_type: "user" }),
+        json: async () => ({
+          ok: true,
+          authed_user: {
+            id: "U123",
+            access_token: "xoxp-user-token",
+            token_type: "user",
+            refresh_token: "xoxe-refresh-token",
+            scope: "channels:read,groups:read",
+          },
+        }),
       })
     )
     await expect(

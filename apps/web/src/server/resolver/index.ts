@@ -3,7 +3,7 @@ import { inject, injectable } from "tsyringe"
 import { FileAccessContext } from "@wr/access"
 import { AgentProps, ChatEngine, ChatEngineConfig, EventBus } from "@wr/core"
 import { TenantSource, UserSource } from "@wr/db"
-import { IntegrationContext } from "@wr/integration"
+import { ContextStore, IntegrationContext } from "@wr/integration"
 import {
   AiModelTier,
   AiVendorConfigs,
@@ -13,7 +13,7 @@ import {
   openAiDefaultTierMapping,
   selfHostedDefaultTierMapping,
 } from "@wr/shared"
-import { ContextStore, DiContainerContext, getPrivateContext } from "@wr/shared-node"
+import { DiContainerContext, getPrivateContext } from "@wr/shared-node"
 
 import { serverConfig } from "../config"
 import { getWebAppDiContainer } from "../container"

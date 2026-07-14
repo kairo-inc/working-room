@@ -37,8 +37,9 @@ describe("[Success] Find records", () => {
           accessToken: "access-token",
           refreshToken: "refresh-token",
           scope: "channels:read chat:write",
-          teamId: "T123",
-          teamName: "Test Team",
+          slackUserId: "U123",
+          slackTeamId: "T123",
+          slackTeamName: "Test Team",
           userId: user.id,
         },
       })
@@ -48,8 +49,9 @@ describe("[Success] Find records", () => {
           accessToken: "deleted-access-token",
           refreshToken: "deleted-refresh-token",
           scope: "channels:read",
-          teamId: "T456",
-          teamName: "Deleted Team",
+          slackUserId: "U456",
+          slackTeamId: "T456",
+          slackTeamName: "Deleted Team",
           userId: user.id,
           deletedAt: new Date(),
         },
@@ -61,7 +63,7 @@ describe("[Success] Find records", () => {
       })
       expect(connections).toHaveLength(1)
       expect(connections[0]?.id).toBe(connection.id)
-      expect(connections[0]?.teamId).toBe(connection.teamId)
+      expect(connections[0]?.slackTeamId).toBe(connection.slackTeamId)
 
       // Check findAll
       const allConnections = await oauthClientSlackSource.findAll("EntityOauthClientSlack", {
@@ -75,7 +77,7 @@ describe("[Success] Find records", () => {
         where: { id: connection.id },
       })
       expect(foundConnection?.id).toBe(connection.id)
-      expect(foundConnection?.teamName).toBe(connection.teamName)
+      expect(foundConnection?.slackTeamName).toBe(connection.slackTeamName)
 
       // Check find 2 (deleted record)
       const foundConnection2 = oauthClientSlackSource.find("EntityOauthClientSlack", {
@@ -144,8 +146,9 @@ describe("[Success] Soft delete", () => {
           accessToken: "access-token",
           refreshToken: "refresh-token",
           scope: "channels:read",
-          teamId: "T123",
-          teamName: "Test Team",
+          slackUserId: "U123",
+          slackTeamId: "T123",
+          slackTeamName: "Test Team",
           userId: user.id,
         },
       })
@@ -170,8 +173,9 @@ describe("[Success] Soft delete", () => {
           accessToken: "access-token",
           refreshToken: "refresh-token",
           scope: "channels:read",
-          teamId: "T123",
-          teamName: "Test Team",
+          slackUserId: "U123",
+          slackTeamId: "T123",
+          slackTeamName: "Test Team",
           userId: user.id,
         },
       })

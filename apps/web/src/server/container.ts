@@ -2,11 +2,9 @@ import "reflect-metadata"
 
 import { FileAccessListener } from "@wr/access"
 import { getDiContainer } from "@wr/composition"
-import { IntegrationContext } from "@wr/integration"
+import { IntegrationContext, OauthService, OauthServiceImpl } from "@wr/integration"
 import { DiContainerContext, getDiContainerStore } from "@wr/shared-node"
 
-import { OauthServiceImpl } from "../../../../packages/integration/src/oauth/service"
-import { OauthService } from "../../../../packages/integration/src/oauth/serviceType"
 import { AuthServiceImpl } from "../server/services/auth"
 import { AuthService } from "../server/services/authType"
 import { serverConfig } from "./config"
@@ -20,6 +18,8 @@ import { ChatServiceImpl } from "./services/chat"
 import { ChatService } from "./services/chatType"
 import { FileServiceImpl } from "./services/file"
 import { FileService } from "./services/fileType"
+import { OauthClientServiceImpl } from "./services/oauthClient"
+import { OauthClientService } from "./services/oauthClientType"
 import { TenantServiceImpl } from "./services/tenant"
 import { TenantService } from "./services/tenantType"
 import { UserServiceImpl } from "./services/user"
@@ -41,6 +41,7 @@ container.register<AccessGroupService>("AccessGroupService", { useClass: AccessG
 container.register<FileService>("FileService", { useClass: FileServiceImpl })
 container.register<AgentService>("AgentService", { useClass: AgentServiceImpl })
 container.register<OauthService>("OauthService", { useClass: OauthServiceImpl })
+container.register<OauthClientService>("OauthClientService", { useClass: OauthClientServiceImpl })
 
 // Resolver registrations
 // You need to use file service resolver to use FileService.

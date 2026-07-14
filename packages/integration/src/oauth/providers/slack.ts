@@ -5,10 +5,15 @@ import { OAuth2ProviderConfig, TokenResponse } from "../types"
 // The shape of a successfully-parsed Slack token response, once the fields specific to Slack
 // (e.g. `team.id`/`team.name`) have been pulled out of TokenResponse.raw. See
 // https://docs.slack.dev/reference/methods/oauth.v2.access/ for the underlying response shape.
-export type SlackTokenResponse = TokenResponse & {
+// Unlike the generic TokenResponse, refreshToken/scope are required here: WorkingRoom persists
+// an OauthClientSlack record with non-nullable refreshToken/scope columns, so a response missing
+// either is treated as a parse failure rather than silently persisting an incomplete connection.
+export type SlackTokenResponse = Omit<TokenResponse, "refreshToken" | "scope"> & {
   id: string
   teamId: string
   teamName: string
+  refreshToken: string
+  scope: string
 }
 export type SlackRefreshTokenResponse = Pick<TokenResponse, "accessToken" | "refreshToken" | "scope">
 
@@ -90,6 +95,11 @@ export const parseSlackTokenResponse = (token: Record<string, unknown>): SlackTo
   const tokenType = data?.authed_user?.token_type as string | undefined
   if (!accessToken || !tokenType) {
     throw new OAuthTokenExchangeError("Slack token response is missing access_token or token_type.")
+  }
+  if (!refreshToken || !scope) {
+    // WorkingRoom persists these as non-nullable columns on OauthClientSlack, so treat a
+    // response missing either as a failure rather than persisting an incomplete connection.
+    throw new OAuthTokenExchangeError("Slack token response is missing refresh_token or scope.")
   }
 
   const user = data?.authed_user as { id?: string } | undefined

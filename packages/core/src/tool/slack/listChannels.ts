@@ -53,7 +53,7 @@ export class ToolSlackListChannels extends Tool {
 
       let resultMessage = `Channels:\n`
       for (const channel of result.data) {
-        resultMessage += `- ${channel.name} (ID: ${channel.id})\n`
+        resultMessage += `- ${channel.name} (ID: ${channel.id}), isPrivate: ${channel.isPrivate}\n`
       }
       if (result.nextCursor) {
         resultMessage += `Next cursor: ${result.nextCursor}\n`

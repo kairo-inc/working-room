@@ -71,9 +71,9 @@ import {
   UserSourceImpl,
   createPrismaClient,
 } from "@wr/db"
-import { SlackClient, SlackClientImpl } from "@wr/integration"
+import { OauthService, OauthServiceImpl, SlackClient, SlackClientImpl } from "@wr/integration"
 import { AiVendorConfigs } from "@wr/shared"
-import { DiContainerContext, OauthService, OauthServiceImpl, getDiContainerStore } from "@wr/shared-node"
+import { DiContainerContext, getDiContainerStore } from "@wr/shared-node"
 
 // AWS S3 Client. This is used by the FileAccessServiceImpl for file storage.
 container.register<S3Client>("S3Client", { useValue: new S3Client({}) })

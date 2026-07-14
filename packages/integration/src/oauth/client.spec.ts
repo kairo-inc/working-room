@@ -46,7 +46,7 @@ describe("[Success] buildAuthorizationUrl", () => {
 })
 
 describe("[Success] exchangeCodeForToken", () => {
-  it("Maps a successful token response", async () => {
+  it("Returns the token endpoint's parsed JSON response as-is", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -56,27 +56,7 @@ describe("[Success] exchangeCodeForToken", () => {
       })
     )
     const result = await exchangeCodeForToken(CONFIG, { code: "auth-code", codeVerifier: "verifier" })
-    expect(result).toEqual({
-      accessToken: "at",
-      refreshToken: "rt",
-      expiresIn: 3600,
-      scope: "read",
-      tokenType: "Bearer",
-      raw: { access_token: "at", refresh_token: "rt", expires_in: 3600, scope: "read", token_type: "Bearer" },
-    })
-  })
-
-  it("Includes the full parsed response body as `raw`", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        status: 200,
-        json: async () => ({ access_token: "at", token_type: "Bearer", team: { id: "T123", name: "Test Team" } }),
-      })
-    )
-    const result = await exchangeCodeForToken(CONFIG, { code: "auth-code", codeVerifier: "verifier" })
-    expect(result.raw).toEqual({ access_token: "at", token_type: "Bearer", team: { id: "T123", name: "Test Team" } })
+    expect(result).toEqual({ access_token: "at", refresh_token: "rt", expires_in: 3600, scope: "read", token_type: "Bearer" })
   })
 
   it("Includes client_secret in the request body by default", async () => {
@@ -161,22 +141,10 @@ describe("[Failure] exchangeCodeForToken", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network down")))
     await expect(exchangeCodeForToken(CONFIG, { code: "code", codeVerifier: "verifier" })).rejects.toThrow(OAuthTokenExchangeError)
   })
-
-  it("Throws OAuthTokenExchangeError when the response is missing required fields", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        status: 200,
-        json: async () => ({}),
-      })
-    )
-    await expect(exchangeCodeForToken(CONFIG, { code: "code", codeVerifier: "verifier" })).rejects.toThrow(OAuthTokenExchangeError)
-  })
 })
 
 describe("[Success] refreshAccessToken", () => {
-  it("Maps a successful refresh response", async () => {
+  it("Returns the token endpoint's parsed JSON response as-is", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -186,13 +154,6 @@ describe("[Success] refreshAccessToken", () => {
       })
     )
     const result = await refreshAccessToken(CONFIG, { refreshToken: "rt" })
-    expect(result).toEqual({
-      accessToken: "new-at",
-      refreshToken: undefined,
-      expiresIn: undefined,
-      scope: undefined,
-      tokenType: "Bearer",
-      raw: { access_token: "new-at", token_type: "Bearer" },
-    })
+    expect(result).toEqual({ access_token: "new-at", token_type: "Bearer" })
   })
 })
