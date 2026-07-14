@@ -115,18 +115,23 @@ yarn dev:web
 
 `.env.example` defines the base environment variables for the app. In local development, `.env.local` also provides local defaults such as `ENV=local` and `NEXTAUTH_SECRET=local`.
 
-| Variable            | Required | Default                 | Description                                                |
-| ------------------- | -------- | ----------------------- | ---------------------------------------------------------- |
-| `DATABASE_URL`      | Yes      | `file:./dev.db`         | Database connection string                                 |
-| `NEXTAUTH_URL`      | Yes      | `http://localhost:3000` | App base URL                                               |
-| `NEXTAUTH_SECRET`   | Yes      | Empty in `.env.example` | Session signing secret                                     |
-| `ANTHROPIC_API_KEY` | Yes\*    | —                       | Anthropic Claude API key                                   |
-| `OPENAI_API_KEY`    | Yes\*    | —                       | OpenAI API key                                             |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | Yes\* | —              | Google Gemini API key                                      |
-| `MULTI_TENANT`      | No       | `false`                 | Enables multi-tenant mode; currently not available         |
-| `ROOT_DIR`          | No       | `~/.wr`                 | Workspace directory root; files are stored under this path |
+| Variable                       | Required | Default                 | Description                                                          |
+| ------------------------------ | -------- | ----------------------- | -------------------------------------------------------------------- |
+| `DATABASE_URL`                 | Yes      | `file:./dev.db`         | Database connection string                                           |
+| `HOST`                         | No       | `http://localhost:3000` | App base URL used to build OAuth2 redirect URLs                      |
+| `NEXTAUTH_URL`                 | Yes      | `http://localhost:3000` | App base URL                                                         |
+| `NEXTAUTH_SECRET`              | Yes      | Empty in `.env.example` | Session signing secret                                               |
+| `OAUTH_STATE_SECRET`           | Yes\*\*  | Empty in `.env.example` | Signing secret for the OAuth2 `state` parameter                      |
+| `ANTHROPIC_API_KEY`            | Yes\*    | —                       | Anthropic Claude API key                                             |
+| `OPENAI_API_KEY`               | Yes\*    | —                       | OpenAI API key                                                       |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Yes\*    | —                       | Google Gemini API key                                                |
+| `MULTI_TENANT`                 | No       | `false`                 | Enables multi-tenant mode; currently not available                   |
+| `ROOT_DIR`                     | No       | `~/.wr`                 | Workspace directory root; files are stored under this path           |
+| `SLACK_CLIENT_ID`              | No       | —                       | Slack app client ID; required to enable Slack OAuth2 connections     |
+| `SLACK_CLIENT_SECRET`          | No       | —                       | Slack app client secret; required to enable Slack OAuth2 connections |
 
 \*At least one AI provider key is required.
+\*\*Required outside local environments (`ENV` other than `local`); falls back to a default in local development.
 
 ## Self-Hosting
 

@@ -17,6 +17,9 @@ services:
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
       ROOT_DIR: "/workspace"
       LOG_LEVEL: "${LOG_LEVEL:-info}"
+      OAUTH_STATE_SECRET: "${OAUTH_STATE_SECRET:-secret}"
+      SLACK_CLIENT_ID: "${SLACK_CLIENT_ID}"
+      SLACK_CLIENT_SECRET: "${SLACK_CLIENT_SECRET}"
     volumes:
       - ./workspace-data:/workspace
     restart: unless-stopped
