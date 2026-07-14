@@ -26,6 +26,7 @@
     "coverage": "dotenv -e .env.test -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.test -- vitest run --coverage",
     "lint": "prettier --check '**/*.{tsx,ts}'",
     "lint:fix": "prettier --write '**/*.{tsx,ts}'",
+    "typecheck": "yarn workspaces foreach --all --parallel run typecheck",
     "seed:docs": "dotenv -e .env.docs -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.docs -- yarn workspace @wr/db seed:docs"
   },
   "devDependencies": {

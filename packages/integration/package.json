@@ -5,6 +5,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "typecheck": "tsc"
+  },
   "peerDependencies": {
     "@slack/web-api": "7.19.0",
     "@wr/core": "workspace:*",
