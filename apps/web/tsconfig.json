@@ -25,7 +25,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "./global.d.ts"
+    "./global.d.ts",
+    "../../packages/integration/src/oauth/service.ts",
+    "../../packages/integration/src/oauth/serviceType.ts"
   ],
   "exclude": [
     "node_modules"

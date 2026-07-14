@@ -4,7 +4,7 @@ import { inject, injectable } from "tsyringe"
 
 import { ImplementationError, PageArg } from "@wr/shared"
 
-import { EntityUser, EntityUserSecret, EntityUserSetting, UserSortBy } from "../entities/user"
+import { EntityUser, EntityUserOauthClient, EntityUserSecret, EntityUserSetting, UserSortBy } from "../entities/user"
 import {
   BaseCreateArgs,
   BaseDatabaseSource,
@@ -18,7 +18,7 @@ import {
   BaseUpsertArgs,
 } from "./base"
 
-type Selector = "EntityUser" | "EntityUserSecret" | "EntityUserSetting"
+type Selector = "EntityUser" | "EntityUserSecret" | "EntityUserSetting" | "EntityUserOauthClient"
 
 type CreateArgs = BaseCreateArgs<Prisma.UserCreateInput>
 type UpdateArgs = BaseUpdateArgs<Prisma.UserUpdateInput, Prisma.UserWhereUniqueInput>
@@ -40,6 +40,8 @@ export abstract class UserSource extends BaseDatabaseSource {
         return EntityUserSecret.select
       case "EntityUserSetting":
         return EntityUserSetting.select
+      case "EntityUserOauthClient":
+        return EntityUserOauthClient.select
       default:
         throw new ImplementationError(`Unknown selector: ${selector}`)
     }
@@ -55,18 +57,22 @@ export abstract class UserSource extends BaseDatabaseSource {
   abstract find(selector: "EntityUser", args: FindArgs): Promise<EntityUser>
   abstract find(selector: "EntityUserSecret", args: FindArgs): Promise<EntityUserSecret>
   abstract find(selector: "EntityUserSetting", args: FindArgs): Promise<EntityUserSetting>
+  abstract find(selector: "EntityUserOauthClient", args: FindArgs): Promise<EntityUserOauthClient>
 
   abstract findIfExists(selector: "EntityUser", args: FindArgs): Promise<EntityUser | null>
   abstract findIfExists(selector: "EntityUserSecret", args: FindArgs): Promise<EntityUserSecret | null>
   abstract findIfExists(selector: "EntityUserSetting", args: FindArgs): Promise<EntityUserSetting | null>
+  abstract findIfExists(selector: "EntityUserOauthClient", args: FindArgs): Promise<EntityUserOauthClient | null>
 
   abstract findAll(selector: "EntityUser", args: FindAllArgs): Promise<EntityUser[]>
   abstract findAll(selector: "EntityUserSecret", args: FindAllArgs): Promise<EntityUserSecret[]>
   abstract findAll(selector: "EntityUserSetting", args: FindAllArgs): Promise<EntityUserSetting[]>
+  abstract findAll(selector: "EntityUserOauthClient", args: FindAllArgs): Promise<EntityUserOauthClient[]>
 
   abstract findMany(selector: "EntityUser", args: FindManyArgs): Promise<FindManyResultUser>
   abstract findMany(selector: "EntityUserSecret", args: FindManyArgs): Promise<FindManyResultUserSecret>
   abstract findMany(selector: "EntityUserSetting", args: FindManyArgs): Promise<BaseFindManyRet<EntityUserSetting>>
+  abstract findMany(selector: "EntityUserOauthClient", args: FindManyArgs): Promise<BaseFindManyRet<EntityUserOauthClient>>
 }
 
 @injectable()

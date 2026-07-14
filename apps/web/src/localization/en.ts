@@ -65,6 +65,11 @@ export default {
       email: "Email",
       role: "Role",
     },
+    oauthClient: {
+      title: "Connections",
+      notConnected: "Not connected",
+      disconnect: "Disconnect",
+    },
     signout: {
       title: "Signout",
       button: "Sign Out",
@@ -335,6 +340,11 @@ export default {
       title: "Delete Chat",
       confirm: "Are you sure you want to delete this chat?",
       error: "Error",
+    },
+    oauthClientDisconnect: {
+      title: "Disconnect",
+      confirm: "Are you sure you want to disconnect this connection?",
+      failed: "Failed to disconnect.",
     },
     initializePassword: {
       title: "Password Initialization",

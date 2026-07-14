@@ -3,6 +3,7 @@ import { inject, injectable } from "tsyringe"
 import { FileAccessContext } from "@wr/access"
 import { AgentProps, ChatEngine, ChatEngineConfig, EventBus } from "@wr/core"
 import { TenantSource, UserSource } from "@wr/db"
+import { ContextStore, IntegrationContext } from "@wr/integration"
 import {
   AiModelTier,
   AiVendorConfigs,
@@ -14,6 +15,7 @@ import {
 } from "@wr/shared"
 import { DiContainerContext, getPrivateContext } from "@wr/shared-node"
 
+import { serverConfig } from "../config"
 import { getWebAppDiContainer } from "../container"
 import { FileService } from "../services/fileType"
 
@@ -41,6 +43,7 @@ export class Resolver {
 
   async resolveEngine(args: ResolveEngineArgs): Promise<ChatEngine> {
     const { eventBus, agents, tierOverrides, workingFolder } = args
+
     const runtimeContainer = await this.createRuntimeContainer()
     if (eventBus) {
       runtimeContainer.registerInstance<EventBus>("EventBus", eventBus)
@@ -49,7 +52,7 @@ export class Resolver {
       runtimeContainer.registerInstance<AgentProps[]>("AdditionalAgents", agents)
     }
 
-    const { tenantId } = getPrivateContext()
+    const { tenantId, userId } = getPrivateContext()
     const tenant = await this.tenantSource.find("EntityTenant", { where: { id: tenantId } })
     const preferredVendor = tenant.aiVendor
 
@@ -95,6 +98,15 @@ export class Resolver {
     runtimeContainer.registerInstance<ChatEngineConfig>("ChatEngineConfig", {
       tierOverrides,
       workingFolder,
+    })
+
+    // external api integrations.
+    const oauthClient = await this.userSource.findIfExists("EntityUserOauthClient", { where: { id: userId } })
+    runtimeContainer.registerInstance<IntegrationContext>("IntegrationContext", {
+      serverConfig: { baseUrl: serverConfig.HOST },
+      // External api integrations can be added here, for example, Slack, Google, etc.
+      // slack: new ContextStore(""),
+      slack: oauthClient?.oauthClientsSlack[0] ? new ContextStore(oauthClient.oauthClientsSlack[0].accessToken) : undefined,
     })
 
     return runtimeContainer.resolve<ChatEngine>("ChatEngine")

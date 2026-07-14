@@ -8,6 +8,7 @@ services:
     ports:
       - "${PORT:-3000}:3000"
     environment:
+      HOST: "${HOST:-http://localhost:3000}"
       DATABASE_URL: "file:/workspace/db.sqlite"
       NEXTAUTH_URL: "${NEXTAUTH_URL:-http://localhost:3000}"
       NEXTAUTH_SECRET: "${NEXTAUTH_SECRET:-secret}"
@@ -16,6 +17,9 @@ services:
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
       ROOT_DIR: "/workspace"
       LOG_LEVEL: "${LOG_LEVEL:-info}"
+      OAUTH_STATE_SECRET: "${OAUTH_STATE_SECRET:-secret}"
+      SLACK_CLIENT_ID: "${SLACK_CLIENT_ID}"
+      SLACK_CLIENT_SECRET: "${SLACK_CLIENT_SECRET}"
     volumes:
       - ./workspace-data:/workspace
     restart: unless-stopped

@@ -80,4 +80,9 @@ export class Route {
   static settingAccessGroupEdit(id: string) {
     return `/setting/accessGroup/${id}/edit`
   }
+
+  static oauthAuthorize(provider: string) {
+    // This will redirect the user to the OAuth provider's authorization page.
+    return `/api/oauth/${provider}/authorize`
+  }
 }

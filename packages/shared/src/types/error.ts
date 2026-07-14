@@ -135,3 +135,21 @@ export class ValidationError extends BaseError {
   public statusCode = 400
   public errorCode = "VALIDATION_ERROR"
 }
+
+// OAuth2 client related errors
+export class OAuthStateError extends BaseError {
+  public statusCode = 400
+  public errorCode = "OAUTH_STATE_ERROR"
+}
+
+export class OAuthTokenExchangeError extends BaseError {
+  public statusCode = 502
+  public errorCode = "OAUTH_TOKEN_EXCHANGE_ERROR"
+}
+
+// Used for integration packages, e.g., Slack, Google Drive, etc.
+// Names will be prefixed with the integration name, e.g., SLACK_API_ERROR_TOO_MANY_REQUESTS.
+export class SlackApiErrorNotFound extends BaseError {
+  public statusCode = 404
+  public errorCode = "SLACK_API_ERROR_NOT_FOUND"
+}

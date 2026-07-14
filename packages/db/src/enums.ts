@@ -1,1 +1,1 @@
-export { FileOperation, UserRole } from "@prisma/client"
+export { FileOperation, OauthClient, UserRole } from "@prisma/client"

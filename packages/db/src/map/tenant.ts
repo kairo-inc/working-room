@@ -7,6 +7,7 @@ export const mapTenantEntityToDomain = (entity: EntityTenant): DomainTenant => {
     id: entity.id,
     name: entity.name,
     aiVendor: entity.aiVendor ?? null,
+    allowedOauthClients: entity.allowedOauthClients,
   }
 }
 
@@ -15,5 +16,6 @@ export const mapTenantDomainToEntity = (domain: DomainTenant): EntityTenant => {
     id: domain.id,
     name: domain.name,
     aiVendor: domain.aiVendor ?? null,
+    allowedOauthClients: domain.allowedOauthClients,
   }
 }
