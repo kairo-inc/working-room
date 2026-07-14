@@ -20,6 +20,7 @@ export class OauthClientServiceImpl extends OauthClientService {
 
   async disconnect(args: OauthClientServiceDisconnectArg): Promise<void> {
     const { id } = args
-    await this.oauthClientSlackSource.delete({ where: { id }, physically: true })
+    const { userId } = getPrivateContext()
+    await this.oauthClientSlackSource.delete({ where: { id, userId }, physically: true })
   }
 }
