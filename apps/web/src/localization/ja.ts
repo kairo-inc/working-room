@@ -67,6 +67,11 @@ export default {
       email: "メールアドレス",
       role: "権限",
     },
+    oauthClient: {
+      title: "外部連携",
+      notConnected: "未接続",
+      disconnect: "接続解除",
+    },
     signout: {
       title: "サインアウト",
       button: "サインアウト",
@@ -337,6 +342,11 @@ export default {
       title: "チャット削除",
       confirm: "このチャットを削除してもよろしいですか？",
       error: "エラー",
+    },
+    oauthClientDisconnect: {
+      title: "接続解除",
+      confirm: "この連携を解除してもよろしいですか？",
+      failed: "接続の解除に失敗しました。",
     },
     initializePassword: {
       title: "パスワードの初期設定",

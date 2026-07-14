@@ -4,6 +4,7 @@ import * as agent from "./agent"
 import * as auth from "./auth"
 import * as chat from "./chat"
 import * as file from "./file"
+import * as oauth from "./oauthClient"
 import * as tenant from "./tenant"
 import * as user from "./user"
 
@@ -14,6 +15,7 @@ export const appRouter = router({
   ...tenant,
   ...file,
   ...agent,
+  ...oauth,
   ...accessGroup,
 })
 
