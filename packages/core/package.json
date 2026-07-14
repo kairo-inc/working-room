@@ -5,6 +5,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "typecheck": "tsc"
+  },
   "peerDependencies": {
     "@ai-sdk/anthropic": "3.0.0",
     "@ai-sdk/google": "3.0.86",

@@ -3,6 +3,7 @@ import "next-auth/jwt"
 
 declare global {
   declare module "*.css"
+  declare module "*.svg"
 }
 
 declare module "next-auth" {

@@ -7,6 +7,7 @@
   },
   "sideEffects": true,
   "scripts": {
+    "typecheck": "tsc",
     "generate": "prisma generate --schema ./prisma/schema.prisma",
     "migrate:dev": "prisma migrate dev --schema ./prisma/schema.prisma",
     "migrate:reset": "prisma migrate reset --schema ./prisma/schema.prisma",
