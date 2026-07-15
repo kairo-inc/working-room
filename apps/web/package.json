@@ -15,7 +15,7 @@
     "@ai-sdk/openai": "4.0.13",
     "@ai-sdk/openai-compatible": "3.0.9",
     "@aws-sdk/client-s3": "3.1086.0",
-    "@slack/web-api": "7.19.0",
+    "@slack/web-api": "8.0.0",
     "@svgr/webpack": "8.1.0",
     "@tanstack/react-query": "5.101.2",
     "@tiptap/pm": "3.27.4",
