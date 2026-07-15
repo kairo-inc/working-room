@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "4.0.14",
-    "@ai-sdk/google": "4.0.14",
+    "@ai-sdk/google": "4.0.16",
     "@ai-sdk/openai": "4.0.13",
     "@ai-sdk/openai-compatible": "3.0.9",
     "@aws-sdk/client-s3": "3.1086.0",
