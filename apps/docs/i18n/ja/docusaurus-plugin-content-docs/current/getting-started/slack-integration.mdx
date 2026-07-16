@@ -1,0 +1,72 @@
+---
+title: Slack 連携
+sidebar_position: 3
+custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/getting-started/slack-integration.mdx"
+---
+
+# Slack 連携
+
+WorkingRoom は OAuth2 を使ってユーザーのアカウントを Slack に接続し、Agent の Tool がそのユーザーに代わって Slack チャンネルの一覧取得やメッセージ送信を行えるようにします。この連携は任意です。設定しない場合、ユーザーは Slack を接続できず、Slack 連携の Tool には操作対象がありません。
+
+このページは、セルフホスト環境を構築する管理者向けです。
+
+## 1. Slack アプリを作成する
+
+1. [api.slack.com/apps](https://api.slack.com/apps) にアクセスし、**Create New App** > **From scratch** を選択します。
+2. アプリ名と、開発対象とする Slack ワークスペースを指定します。
+3. 作成後、サイドバーの **Basic Information** を開き、**App Credentials** にある **Client ID** と **Client Secret** を確認します。これらを `SLACK_CLIENT_ID` と `SLACK_CLIENT_SECRET` として使用します。
+
+## 2. Redirect URL を登録する
+
+1. サイドバーの **OAuth & Permissions** を開きます。
+2. **Redirect URLs** に以下を追加します。
+
+   ```
+   {HOST}/api/oauth/slack/callback
+   ```
+
+   `{HOST}` は自分のインスタンスの `HOST` 環境変数に置き換えてください（例: `https://workingroom.example.com/api/oauth/slack/callback`）。
+
+:::note
+
+Slack は `http://localhost` のような URL を「non-web」な URI とみなして Redirect URL に拒否します。ローカル開発環境で Slack 連携をテストする場合は、開発サーバーを HTTPS トンネル（例: `ngrok http 3000`）で公開し、`HOST` と Slack アプリの Redirect URL の両方を `localhost` の代わりにその HTTPS URL に設定してください。
+
+:::
+
+## 3. 環境変数を設定する
+
+Slack 連携を有効にするには、以下を環境変数に設定します。
+
+| 変数                    | Slack を有効にするために必須 | 説明                              |
+| ----------------------- | ------------------------------ | ----------------------------------- |
+| `SLACK_CLIENT_ID`       | はい                            | Slack アプリのクライアント ID      |
+| `SLACK_CLIENT_SECRET`   | はい                            | Slack アプリのクライアントシークレット |
+
+Slack 連携全体は任意です。これらを設定しなくても WorkingRoom 自体は問題なく動作するため、リポジトリの README にある [Environment Variables](https://github.com/kairo-inc/working-room#environment-variables) の表ではどちらも「必須ではない」と記載されています。ただし Slack 連携を機能させたい場合は両方の設定が必須で、どちらか一方でも欠けているとアカウントページからの Slack 接続に失敗します。
+
+Slack に限らず、OAuth2 連携全般に `HOST` と `OAUTH_STATE_SECRET` も設定されている必要があります。`HOST` は上記の Redirect URL の構築に使われ、`OAUTH_STATE_SECRET` は連携フローを保護する OAuth2 の `state` パラメータの署名に使われます。
+
+## リクエストするスコープ
+
+ユーザーが Slack を接続すると、WorkingRoom は以下の OAuth2 ユーザースコープをリクエストします。
+
+| スコープ         | 許可される操作                                                       |
+| ---------------- | ---------------------------------------------------------------------- |
+| `channels:read`  | ワークスペース内のパブリックチャンネルの閲覧                          |
+| `groups:read`    | ユーザーが参加しているプライベートチャンネルの閲覧                    |
+| `chat:write`     | ユーザーとしてチャンネルおよびダイレクトメッセージにメッセージを送信  |
+| `users:read`      | 他のワークスペースメンバーの基本情報（表示名など）の閲覧              |
+| `im:read`         | ユーザーが既に持っている 1 対 1 のダイレクトメッセージの会話の閲覧    |
+| `mpim:read`       | ユーザーが既に持っているグループダイレクトメッセージの会話の閲覧      |
+
+この一覧は、Slack 連携の Tool が追加されるにつれて今後増える可能性があります。実装は `packages/integration/src/oauth/providers/slack.ts` の `defaultSlackOAuthUserScope` にあり、このページの内容とコードが食い違う場合はコードを正としてください。
+
+## 接続と切断
+
+上記の環境変数を設定すると、ユーザーは **アカウント** ページの **Connections** セクションから自分の Slack アカウントを接続できます。
+
+1. Slack のボタンを選択すると、新しいタブで Slack の OAuth 同意画面が開きます。
+2. リクエストされたスコープを承認します。WorkingRoom にリダイレクトされ、Connections セクションに接続した Slack チームの名前が表示されます。
+3. 接続を解除するには、接続済みのチームの横にある **Disconnect** を選択します。
+
+新しいスコープが追加される前（例えば `chat:write` が追加される前）に Slack を接続していたユーザーは、新しいスコープを許可するために一度切断してから再接続する必要があります。Slack のスコープは接続時に固定されるためです。
