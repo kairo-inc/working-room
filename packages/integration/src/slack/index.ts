@@ -5,7 +5,19 @@ import { CursorResult, NoContextError, SlackApiErrorNotFound } from "@wr/shared"
 
 import { OauthService } from "../oauth/serviceType"
 import { IntegrationContext } from "../types"
-import { SlackChannel, SlackClient, SlackClientDescribeTeamArgs, SlackClientListChannelsArgs, SlackTeam } from "./type"
+import {
+  SlackChannel,
+  SlackClient,
+  SlackClientDescribeTeamArgs,
+  SlackClientGetChannelArgs,
+  SlackClientGetUserArgs,
+  SlackClientListChannelsArgs,
+  SlackClientListUsersArgs,
+  SlackClientSendMessageArgs,
+  SlackMessage,
+  SlackTeam,
+  SlackUser,
+} from "./type"
 
 export * from "./type"
 
@@ -58,6 +70,51 @@ export class SlackClientImpl extends SlackClient {
     return new WebClient(accessToken)
   }
 
+  // Maps a conversation from conversations.list/conversations.info to a SlackChannel. A direct-message
+  // conversation (1:1 or group) has no channel name of its own, so its `name` is resolved to its
+  // participants' display names instead, falling back to their raw ID(s) if that lookup fails.
+  private async mapChannel(channel: {
+    id?: string
+    name?: string
+    is_private?: boolean
+    is_im?: boolean
+    is_mpim?: boolean
+    user?: string
+  }): Promise<SlackChannel> {
+    if (channel.is_im && channel.user) {
+      const user = await this.getUser({ userId: channel.user }).catch(() => null)
+      return {
+        id: channel.id!,
+        name: user?.name ?? channel.user,
+        isPrivate: true,
+        isIm: true,
+      }
+    }
+    if (channel.is_mpim && channel.id) {
+      const members = await this.retryable(() => this.getClient().conversations.members({ channel: channel.id! })).catch(() => null)
+      const memberIds = members?.ok ? (members.members ?? []) : []
+      const names = await Promise.all(
+        memberIds.map((userId) =>
+          this.getUser({ userId })
+            .then((user) => user.name)
+            .catch(() => userId)
+        )
+      )
+      return {
+        id: channel.id!,
+        name: names.length > 0 ? names.join(", ") : channel.name!,
+        isPrivate: true,
+        isIm: true,
+      }
+    }
+    return {
+      id: channel.id!,
+      name: channel.name!,
+      isPrivate: channel.is_private ?? false,
+      isIm: false,
+    }
+  }
+
   async describeTeam(args: SlackClientDescribeTeamArgs): Promise<SlackTeam> {
     const { teamId } = args
     const response = await this.retryable(() => this.getClient().users.identity({}))
@@ -70,25 +127,92 @@ export class SlackClientImpl extends SlackClient {
     }
   }
 
+  async describeSelf(): Promise<SlackUser> {
+    // auth.test identifies the connected token's own user, unlike users.identity, without requiring
+    // the "Sign in with Slack" identity.basic scope this app deliberately avoids requesting.
+    const response = await this.retryable(() => this.getClient().auth.test({}))
+    if (!response.ok || !response.user_id) {
+      throw new SlackApiErrorNotFound("Failed to identify the connected Slack user.")
+    }
+    return this.getUser({ userId: response.user_id })
+  }
+
   async listChannels(args: SlackClientListChannelsArgs): Promise<CursorResult<SlackChannel>> {
     const response = await this.retryable(() =>
       this.getClient().conversations.list({
         limit: args.take,
         cursor: args.cursor,
-        types: "public_channel,private_channel",
+        // "im" and "mpim" include the User's existing 1:1 and group direct-message conversations
+        // alongside channels, so a DM can be targeted the same way as a channel — by its own conversation ID.
+        types: "public_channel,private_channel,im,mpim",
       })
     )
     if (!response.ok || !response.channels) {
       throw new SlackApiErrorNotFound("Failed to list Slack channels.")
     }
-    const channels = response.channels.map((channel) => ({
-      id: channel.id!,
-      name: channel.name!,
-      isPrivate: channel.is_private ?? false,
-    }))
+    const channels = await Promise.all(response.channels.map((channel) => this.mapChannel(channel)))
     return {
       data: channels,
       nextCursor: response.response_metadata?.next_cursor || null,
+    }
+  }
+
+  async listUsers(args: SlackClientListUsersArgs): Promise<CursorResult<SlackUser>> {
+    const response = await this.retryable(() =>
+      this.getClient().users.list({
+        limit: args.take,
+        cursor: args.cursor,
+      })
+    )
+    if (!response.ok || !response.members) {
+      throw new SlackApiErrorNotFound("Failed to list Slack users.")
+    }
+    // Exclude bots, deactivated accounts, and the Slackbot pseudo-user, since none of them are valid DM targets for a User.
+    const users = response.members
+      .filter((member) => !member.deleted && !member.is_bot && member.id !== "USLACKBOT")
+      .map((member) => ({
+        id: member.id!,
+        name: member.real_name || member.name!,
+      }))
+    return {
+      data: users,
+      nextCursor: response.response_metadata?.next_cursor || null,
+    }
+  }
+
+  async getChannel(args: SlackClientGetChannelArgs): Promise<SlackChannel> {
+    const response = await this.retryable(() => this.getClient().conversations.info({ channel: args.channelId }))
+    if (!response.ok || !response.channel) {
+      throw new SlackApiErrorNotFound(`Failed to find Slack channel with ID: ${args.channelId}`)
+    }
+    return this.mapChannel(response.channel)
+  }
+
+  async getUser(args: SlackClientGetUserArgs): Promise<SlackUser> {
+    const response = await this.retryable(() => this.getClient().users.info({ user: args.userId }))
+    if (!response.ok || !response.user) {
+      throw new SlackApiErrorNotFound(`Failed to find Slack user with ID: ${args.userId}`)
+    }
+    return {
+      id: response.user.id!,
+      name: response.user.real_name || response.user.name!,
+    }
+  }
+
+  async sendMessage(args: SlackClientSendMessageArgs): Promise<SlackMessage> {
+    const response = await this.retryable(() =>
+      this.getClient().chat.postMessage({
+        channel: args.channelId,
+
+        text: args.text,
+      })
+    )
+    if (!response.ok || !response.channel || !response.ts) {
+      throw new SlackApiErrorNotFound("Failed to send Slack message.")
+    }
+    return {
+      channel: response.channel,
+      ts: response.ts,
     }
   }
 }
