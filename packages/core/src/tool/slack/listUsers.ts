@@ -21,10 +21,9 @@ const inputSchema = z.object({
 })
 
 @injectable()
-export class ToolSlackListChannels extends Tool {
-  name = "ToolSlackListChannels"
-  description =
-    "List the channels in a Slack workspace, as well as the connected User's existing direct-message conversations. Use this to find the conversation ID to pass to ToolSlackSendMessage, whether posting to a channel or replying in an existing DM."
+export class ToolSlackListUsers extends Tool {
+  name = "ToolSlackListUsers"
+  description = "List the users in a Slack workspace."
   needApproval = false
   inputSchema = inputSchema
   toolType: DomainToolType = "read"
@@ -50,15 +49,11 @@ export class ToolSlackListChannels extends Tool {
     try {
       const take = input.data.take ?? DEFAULT_TAKE
       const cursor = input.data.cursor ?? undefined
-      const result = await this.slackClient.listChannels({ take, cursor })
+      const result = await this.slackClient.listUsers({ take, cursor })
 
-      let resultMessage = `Channels:\n`
-      for (const channel of result.data) {
-        if (channel.isIm) {
-          resultMessage += `- Direct message with ${channel.name} (ID: ${channel.id})\n`
-        } else {
-          resultMessage += `- ${channel.name} (ID: ${channel.id}), isPrivate: ${channel.isPrivate}\n`
-        }
+      let resultMessage = `Users:\n`
+      for (const user of result.data) {
+        resultMessage += `- ${user.name} (ID: ${user.id})\n`
       }
       if (result.nextCursor) {
         resultMessage += `Next cursor: ${result.nextCursor}\n`
@@ -72,7 +67,7 @@ export class ToolSlackListChannels extends Tool {
         },
       }
     } catch (e) {
-      return { message: this.buildError(toolCall, `Failed to list channels: ${e instanceof Error ? e.message : String(e)}`) }
+      return { message: this.buildError(toolCall, `Failed to list users: ${e instanceof Error ? e.message : String(e)}`) }
     }
   }
 }
