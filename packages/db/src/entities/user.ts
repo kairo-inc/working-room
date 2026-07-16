@@ -71,12 +71,13 @@ export class EntityUserSecret implements Omit<User, "deletedAt" | "privateDirId"
 
 export class EntityUserOauthClient {
   oauthClientsSlack: {
+    id: string
     accessToken: string
   }[]
 
   static select = {
     oauthClientsSlack: {
-      select: { accessToken: true },
+      select: { id: true, accessToken: true },
     },
   } as const satisfies Prisma.UserSelect
 }

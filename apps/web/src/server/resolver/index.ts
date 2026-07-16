@@ -106,7 +106,9 @@ export class Resolver {
       serverConfig: { baseUrl: serverConfig.HOST },
       // External api integrations can be added here, for example, Slack, Google, etc.
       // slack: new ContextStore(""),
-      slack: oauthClient?.oauthClientsSlack[0] ? new ContextStore(oauthClient.oauthClientsSlack[0].accessToken) : undefined,
+      slack: oauthClient?.oauthClientsSlack[0]
+        ? new ContextStore(oauthClient.oauthClientsSlack[0].id, oauthClient.oauthClientsSlack[0].accessToken)
+        : undefined,
     })
 
     return runtimeContainer.resolve<ChatEngine>("ChatEngine")

@@ -5,15 +5,16 @@ export type OauthCallbackArgs = {
 }
 
 export type OauthRefreshTokenArgs = {
+  // This is the id of the OauthClient record in the database, which is used to identify the record to update.
+  id: string
   provider: string
-  // Need access token to identify the user and refresh the token.
+}
+
+export type OauthRefreshTokenResult = {
   accessToken: string
 }
 
 export abstract class OauthService {
   abstract handleOauthCallback(args: OauthCallbackArgs): Promise<void>
-
-  abstract refreshToken(args: OauthRefreshTokenArgs): Promise<void>
-  // Shortcut method to refresh the token and update the context store if it exists.
-  abstract refreshTokenAndUpdateContext(args: OauthRefreshTokenArgs): Promise<void>
+  abstract refreshToken(args: OauthRefreshTokenArgs): Promise<OauthRefreshTokenResult>
 }

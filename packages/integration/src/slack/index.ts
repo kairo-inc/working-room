@@ -39,20 +39,23 @@ export class SlackClientImpl extends SlackClient {
       if (!this.isTokenExpiredError(error)) {
         throw error
       }
-      const accessToken = this.integrationContext.slack?.get()
-      if (!accessToken) {
+      const currentStore = this.integrationContext.slack?.get()
+      if (!currentStore) {
         throw error
       }
-      await this.oauthService.refreshTokenAndUpdateContext({ provider: "slack", accessToken })
+      const { accessToken: refreshedAccessToken } = await this.oauthService.refreshToken({ id: currentStore.id, provider: "slack" })
+      this.integrationContext.slack?.setAccessToken(refreshedAccessToken)
       return fn()
     }
   }
 
   private getClient(): WebClient {
-    if (!this.integrationContext.slack?.get()) {
+    const slackContext = this.integrationContext.slack?.get()
+    if (!slackContext) {
       throw new NoContextError("Slack access token is not given in the integration context.")
     }
-    return new WebClient(this.integrationContext.slack.get())
+    const { accessToken } = slackContext
+    return new WebClient(accessToken)
   }
 
   async describeTeam(args: SlackClientDescribeTeamArgs): Promise<SlackTeam> {

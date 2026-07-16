@@ -5,7 +5,7 @@ import { NotFoundError } from "@wr/shared"
 
 import { IntegrationContext } from "../types"
 import { parseSlackTokenResponse, refreshSlackAccessToken } from "./providers/slack"
-import { OauthCallbackArgs, OauthRefreshTokenArgs, OauthService } from "./serviceType"
+import { OauthCallbackArgs, OauthRefreshTokenArgs, OauthRefreshTokenResult, OauthService } from "./serviceType"
 
 const callbackUrl = (provider: string, baseUrl: string): string => {
   return `${baseUrl}/api/oauth/${provider}/callback`
@@ -53,13 +53,13 @@ export class OauthServiceImpl extends OauthService {
     }
   }
 
-  async refreshToken(args: OauthRefreshTokenArgs): Promise<void> {
-    const { accessToken, provider } = args
+  async refreshToken(args: OauthRefreshTokenArgs): Promise<OauthRefreshTokenResult> {
+    const { id, provider } = args
     const redirectUrl = callbackUrl(provider, this.context.serverConfig.baseUrl)
     switch (provider) {
       case "slack": {
         const record = await this.oauthClientSlackSource.findIfExists("EntityOauthClientSlack", {
-          where: { accessToken },
+          where: { id },
         })
         if (!record) {
           throw new NotFoundError("Refresh token not found.")
@@ -74,25 +74,9 @@ export class OauthServiceImpl extends OauthService {
             updatedAt: new Date(),
           },
         })
-        break
+        return { accessToken: data.accessToken }
       }
     }
-  }
-
-  async refreshTokenAndUpdateContext(args: OauthRefreshTokenArgs): Promise<void> {
-    // This ensures that the token is refreshed and updated in the database before updating the context store.
-    await this.refreshToken(args)
-    const { provider, accessToken } = args
-    switch (provider) {
-      case "slack": {
-        // Appologies for the confusion. The following code snippet is a continuation of the `refreshTokenAndUpdateContext` method in the `OauthServiceImpl` class.
-        // It retrieves the updated token record from the database and updates the context store accordingly.
-        const record = await this.oauthClientSlackSource.find("EntityOauthClientSlack", {
-          where: { accessToken },
-        })
-        this.context.slack?.set(record.accessToken)
-        break
-      }
-    }
+    throw new NotFoundError(`Provider ${provider} not supported for token refresh.`)
   }
 }
