@@ -18,7 +18,9 @@ describe("[Success] getSlackOAuthConfig", () => {
   it("Requests no bot scopes and joins user_scope with commas", () => {
     const config = getSlackOAuthConfig("https://app.example.com/api/oauth/slack/callback")
     expect(config.scopes).toEqual([])
-    expect(config.extraParams?.user_scope).toBe("channels:read,groups:read,chat:write,users:read,im:read,mpim:read")
+    expect(config.extraParams?.user_scope).toBe(
+      "channels:read,groups:read,chat:write,users:read,im:read,mpim:read,channels:history,groups:history,im:history,mpim:history,reactions:write"
+    )
     expect(config.scopeSeparator).toBe(",")
   })
 })

@@ -8,12 +8,17 @@ import { IntegrationContext } from "../types"
 import {
   SlackChannel,
   SlackClient,
+  SlackClientAddReactionArgs,
   SlackClientDescribeTeamArgs,
   SlackClientGetChannelArgs,
+  SlackClientGetMessageArgs,
   SlackClientGetUserArgs,
   SlackClientListChannelsArgs,
+  SlackClientListMessagesArgs,
   SlackClientListUsersArgs,
+  SlackClientRemoveReactionArgs,
   SlackClientSendMessageArgs,
+  SlackConversationMessage,
   SlackMessage,
   SlackTeam,
   SlackUser,
@@ -213,6 +218,77 @@ export class SlackClientImpl extends SlackClient {
     return {
       channel: response.channel,
       ts: response.ts,
+    }
+  }
+
+  async listMessages(args: SlackClientListMessagesArgs): Promise<CursorResult<SlackConversationMessage>> {
+    const response = await this.retryable(() =>
+      this.getClient().conversations.history({
+        channel: args.channelId,
+        limit: args.take,
+        cursor: args.cursor,
+      })
+    )
+    if (!response.ok || !response.messages) {
+      throw new SlackApiErrorNotFound(`Failed to list messages for Slack conversation with ID: ${args.channelId}`)
+    }
+    const messages = response.messages
+      .filter((message) => !!message.ts)
+      .map((message) => ({
+        ts: message.ts!,
+        text: message.text ?? "",
+        userId: message.user ?? null,
+      }))
+    return {
+      data: messages,
+      nextCursor: response.response_metadata?.next_cursor || null,
+    }
+  }
+
+  async getMessage(args: SlackClientGetMessageArgs): Promise<SlackConversationMessage | null> {
+    const response = await this.retryable(() =>
+      this.getClient().conversations.history({
+        channel: args.channelId,
+        latest: args.timestamp,
+        oldest: args.timestamp,
+        inclusive: true,
+        limit: 1,
+      })
+    )
+    const message = response.ok ? response.messages?.[0] : undefined
+    if (!message?.ts) {
+      return null
+    }
+    return {
+      ts: message.ts,
+      text: message.text ?? "",
+      userId: message.user ?? null,
+    }
+  }
+
+  async addReaction(args: SlackClientAddReactionArgs): Promise<void> {
+    const response = await this.retryable(() =>
+      this.getClient().reactions.add({
+        channel: args.channelId,
+        timestamp: args.timestamp,
+        name: args.emojiName,
+      })
+    )
+    if (!response.ok) {
+      throw new SlackApiErrorNotFound("Failed to add Slack reaction.")
+    }
+  }
+
+  async removeReaction(args: SlackClientRemoveReactionArgs): Promise<void> {
+    const response = await this.retryable(() =>
+      this.getClient().reactions.remove({
+        channel: args.channelId,
+        timestamp: args.timestamp,
+        name: args.emojiName,
+      })
+    )
+    if (!response.ok) {
+      throw new SlackApiErrorNotFound("Failed to remove Slack reaction.")
     }
   }
 }

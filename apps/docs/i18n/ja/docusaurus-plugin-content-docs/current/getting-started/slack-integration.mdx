@@ -6,7 +6,7 @@ custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/getti
 
 # Slack 連携
 
-WorkingRoom は OAuth2 を使ってユーザーのアカウントを Slack に接続し、Agent の Tool がそのユーザーに代わって Slack チャンネルの一覧取得やメッセージ送信を行えるようにします。この連携は任意です。設定しない場合、ユーザーは Slack を接続できず、Slack 連携の Tool には操作対象がありません。
+WorkingRoom は OAuth2 を使ってユーザーのアカウントを Slack に接続し、Agent の Tool がそのユーザーに代わって Slack チャンネルの一覧取得、メッセージの閲覧、メッセージ送信、絵文字リアクションの追加・削除を行えるようにします。この連携は任意です。設定しない場合、ユーザーは Slack を接続できず、Slack 連携の Tool には操作対象がありません。
 
 このページは、セルフホスト環境を構築する管理者向けです。
 
@@ -58,6 +58,11 @@ Slack に限らず、OAuth2 連携全般に `HOST` と `OAUTH_STATE_SECRET` も�
 | `users:read`      | 他のワークスペースメンバーの基本情報（表示名など）の閲覧              |
 | `im:read`         | ユーザーが既に持っている 1 対 1 のダイレクトメッセージの会話の閲覧    |
 | `mpim:read`       | ユーザーが既に持っているグループダイレクトメッセージの会話の閲覧      |
+| `channels:history` | パブリックチャンネルの最近のメッセージの閲覧                          |
+| `groups:history`   | ユーザーが参加しているプライベートチャンネルの最近のメッセージの閲覧  |
+| `im:history`       | ユーザーの 1 対 1 のダイレクトメッセージの最近のメッセージの閲覧      |
+| `mpim:history`     | ユーザーのグループダイレクトメッセージの最近のメッセージの閲覧        |
+| `reactions:write`  | ユーザーとしてメッセージへの絵文字リアクションの追加・削除            |
 
 この一覧は、Slack 連携の Tool が追加されるにつれて今後増える可能性があります。実装は `packages/integration/src/oauth/providers/slack.ts` の `defaultSlackOAuthUserScope` にあり、このページの内容とコードが食い違う場合はコードを正としてください。
 

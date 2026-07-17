@@ -29,7 +29,19 @@ export type SlackRefreshTokenResponse = Pick<TokenResponse, "accessToken" | "ref
 // with "Invalid permissions requested" if SIWS and non-SIWS scopes are combined. team.id and
 // authed_user.id are already present in the oauth.v2.access response regardless of scope, so
 // SIWS scopes aren't needed just to identify the connecting user/team.
-export const defaultSlackOAuthUserScope = ["channels:read", "groups:read", "chat:write", "users:read", "im:read", "mpim:read"]
+export const defaultSlackOAuthUserScope = [
+  "channels:read",
+  "groups:read",
+  "chat:write",
+  "users:read",
+  "im:read",
+  "mpim:read",
+  "channels:history",
+  "groups:history",
+  "im:history",
+  "mpim:history",
+  "reactions:write",
+]
 // Slack forbids bot scopes when the redirect_uri is treated as a "non-web" URI (e.g. local
 // development over http), so no bot scopes are requested here — only `user_scope` is used.
 export const defaultSlackOAuthBotScope: string[] = []

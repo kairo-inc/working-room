@@ -20,6 +20,10 @@ const buildSlackClient = (overrides?: Partial<SlackClient>): SlackClient =>
     getChannel: vi.fn(),
     getUser: vi.fn(),
     sendMessage: vi.fn(),
+    listMessages: vi.fn(),
+    getMessage: vi.fn(),
+    addReaction: vi.fn(),
+    removeReaction: vi.fn(),
     ...overrides,
   }) as SlackClient
 

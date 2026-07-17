@@ -11,9 +11,12 @@ const postMessageMock = vi.fn()
 const conversationsInfoMock = vi.fn()
 const conversationsListMock = vi.fn()
 const conversationsMembersMock = vi.fn()
+const conversationsHistoryMock = vi.fn()
 const usersInfoMock = vi.fn()
 const usersListMock = vi.fn()
 const authTestMock = vi.fn()
+const reactionsAddMock = vi.fn()
+const reactionsRemoveMock = vi.fn()
 
 vi.mock("@slack/web-api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@slack/web-api")>()
@@ -21,14 +24,26 @@ vi.mock("@slack/web-api", async (importOriginal) => {
     ...actual,
     WebClient: vi.fn().mockImplementation(function MockWebClient(this: {
       chat: { postMessage: typeof postMessageMock }
-      conversations: { info: typeof conversationsInfoMock; list: typeof conversationsListMock; members: typeof conversationsMembersMock }
+      conversations: {
+        info: typeof conversationsInfoMock
+        list: typeof conversationsListMock
+        members: typeof conversationsMembersMock
+        history: typeof conversationsHistoryMock
+      }
       users: { info: typeof usersInfoMock; list: typeof usersListMock }
       auth: { test: typeof authTestMock }
+      reactions: { add: typeof reactionsAddMock; remove: typeof reactionsRemoveMock }
     }) {
       this.chat = { postMessage: postMessageMock }
-      this.conversations = { info: conversationsInfoMock, list: conversationsListMock, members: conversationsMembersMock }
+      this.conversations = {
+        info: conversationsInfoMock,
+        list: conversationsListMock,
+        members: conversationsMembersMock,
+        history: conversationsHistoryMock,
+      }
       this.users = { info: usersInfoMock, list: usersListMock }
       this.auth = { test: authTestMock }
+      this.reactions = { add: reactionsAddMock, remove: reactionsRemoveMock }
     }),
   }
 })
@@ -48,9 +63,12 @@ beforeEach(() => {
   conversationsInfoMock.mockReset()
   conversationsListMock.mockReset()
   conversationsMembersMock.mockReset()
+  conversationsHistoryMock.mockReset()
   usersInfoMock.mockReset()
   usersListMock.mockReset()
   authTestMock.mockReset()
+  reactionsAddMock.mockReset()
+  reactionsRemoveMock.mockReset()
 })
 
 afterEach(() => {
@@ -292,5 +310,132 @@ describe("[Failure] SlackClientImpl.sendMessage", () => {
     const client = new SlackClientImpl(buildOauthService(), { serverConfig: { baseUrl: "https://app.example.com" } })
 
     await expect(client.sendMessage({ channelId: "C123", text: "Hello team!" })).rejects.toThrow(NoContextError)
+  })
+})
+
+describe("[Success] SlackClientImpl.listMessages", () => {
+  it("Returns messages mapped to ts/text/userId, newest first as returned by the API", async () => {
+    conversationsHistoryMock.mockResolvedValue({
+      ok: true,
+      messages: [
+        { ts: "1234.2", text: "See you there!", user: "U123" },
+        { ts: "1234.1", text: "Meeting at 3pm", user: "U123" },
+      ],
+      response_metadata: { next_cursor: "next-page" },
+    })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    const result = await client.listMessages({ channelId: "C123", take: 50 })
+
+    expect(conversationsHistoryMock).toHaveBeenCalledWith({ channel: "C123", limit: 50, cursor: undefined })
+    expect(result).toEqual({
+      data: [
+        { ts: "1234.2", text: "See you there!", userId: "U123" },
+        { ts: "1234.1", text: "Meeting at 3pm", userId: "U123" },
+      ],
+      nextCursor: "next-page",
+    })
+  })
+
+  it("Maps a message with no associated user to a null userId", async () => {
+    conversationsHistoryMock.mockResolvedValue({
+      ok: true,
+      messages: [{ ts: "1234.1", text: "Channel created." }],
+      response_metadata: {},
+    })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    const result = await client.listMessages({ channelId: "C123", take: 50 })
+
+    expect(result.data).toEqual([{ ts: "1234.1", text: "Channel created.", userId: null }])
+  })
+})
+
+describe("[Failure] SlackClientImpl.listMessages", () => {
+  it("Throws SlackApiErrorNotFound when the response is not ok", async () => {
+    conversationsHistoryMock.mockResolvedValue({ ok: false })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    await expect(client.listMessages({ channelId: "C123", take: 50 })).rejects.toThrow(SlackApiErrorNotFound)
+  })
+})
+
+describe("[Success] SlackClientImpl.getMessage", () => {
+  it("Requests a single message by timestamp, inclusively", async () => {
+    conversationsHistoryMock.mockResolvedValue({ ok: true, messages: [{ ts: "1234.5678", text: "Hello team!", user: "U123" }] })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    const result = await client.getMessage({ channelId: "C123", timestamp: "1234.5678" })
+
+    expect(conversationsHistoryMock).toHaveBeenCalledWith({
+      channel: "C123",
+      latest: "1234.5678",
+      oldest: "1234.5678",
+      inclusive: true,
+      limit: 1,
+    })
+    expect(result).toEqual({ ts: "1234.5678", text: "Hello team!", userId: "U123" })
+  })
+
+  it("Returns null when the response is not ok", async () => {
+    conversationsHistoryMock.mockResolvedValue({ ok: false })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    const result = await client.getMessage({ channelId: "C123", timestamp: "1234.5678" })
+
+    expect(result).toBeNull()
+  })
+
+  it("Returns null when no message is found at that timestamp", async () => {
+    conversationsHistoryMock.mockResolvedValue({ ok: true, messages: [] })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    const result = await client.getMessage({ channelId: "C123", timestamp: "1234.5678" })
+
+    expect(result).toBeNull()
+  })
+})
+
+describe("[Success] SlackClientImpl.addReaction", () => {
+  it("Adds a reaction via reactions.add", async () => {
+    reactionsAddMock.mockResolvedValue({ ok: true })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    await client.addReaction({ channelId: "C123", timestamp: "1234.5678", emojiName: "thumbsup" })
+
+    expect(reactionsAddMock).toHaveBeenCalledWith({ channel: "C123", timestamp: "1234.5678", name: "thumbsup" })
+  })
+})
+
+describe("[Failure] SlackClientImpl.addReaction", () => {
+  it("Throws SlackApiErrorNotFound when the response is not ok", async () => {
+    reactionsAddMock.mockResolvedValue({ ok: false })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    await expect(client.addReaction({ channelId: "C123", timestamp: "1234.5678", emojiName: "thumbsup" })).rejects.toThrow(
+      SlackApiErrorNotFound
+    )
+  })
+})
+
+describe("[Success] SlackClientImpl.removeReaction", () => {
+  it("Removes a reaction via reactions.remove", async () => {
+    reactionsRemoveMock.mockResolvedValue({ ok: true })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    await client.removeReaction({ channelId: "C123", timestamp: "1234.5678", emojiName: "thumbsup" })
+
+    expect(reactionsRemoveMock).toHaveBeenCalledWith({ channel: "C123", timestamp: "1234.5678", name: "thumbsup" })
+  })
+})
+
+describe("[Failure] SlackClientImpl.removeReaction", () => {
+  it("Throws SlackApiErrorNotFound when the response is not ok", async () => {
+    reactionsRemoveMock.mockResolvedValue({ ok: false })
+    const client = new SlackClientImpl(buildOauthService(), buildContext())
+
+    await expect(client.removeReaction({ channelId: "C123", timestamp: "1234.5678", emojiName: "thumbsup" })).rejects.toThrow(
+      SlackApiErrorNotFound
+    )
   })
 })
