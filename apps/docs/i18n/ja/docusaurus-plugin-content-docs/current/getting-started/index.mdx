@@ -13,6 +13,7 @@ WorkingRoom を実行する前に、以下の要件を準備してください�
 - すべての環境共通：AI プロバイダーの API キーが少なくとも 1 つ必要
   - `ANTHROPIC_API_KEY`、`OPENAI_API_KEY`、および/または `GOOGLE_GENERATIVE_AI_API_KEY`
   - アプリケーションの実行にはこれらのキーのいずれか 1 つが必要です。
+  - 代わりに、`SELF_HOSTED_BASE_URL` と `SELF_HOSTED_API_KEY` を設定することで、OpenAI 互換 API 経由でセルフホストの LLM を使用することもできます。
 - ローカル開発環境の場合：
   - Node.js 18〜22
   - Yarn 4 以降（`packageManager: yarn@4.5.3`、`engines.yarn: >=4.0.0`）

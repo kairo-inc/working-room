@@ -129,6 +129,8 @@ yarn dev:web
 | `ROOT_DIR`                     | No       | `~/.wr`                 | Workspace directory root; files are stored under this path           |
 | `SLACK_CLIENT_ID`              | No       | —                       | Slack app client ID; required to enable Slack OAuth2 connections     |
 | `SLACK_CLIENT_SECRET`          | No       | —                       | Slack app client secret; required to enable Slack OAuth2 connections |
+| `SELF_HOSTED_BASE_URL`         | No       | —                       | Base URL of a self-hosted, OpenAI-compatible LLM endpoint; required to select the Self-hosted AI vendor |
+| `SELF_HOSTED_API_KEY`          | No       | —                       | API key for the self-hosted LLM endpoint; required to select the Self-hosted AI vendor                  |
 
 \*At least one AI provider key is required.
 \*\*Required outside local environments (`ENV` other than `local`); falls back to a default in local development.
