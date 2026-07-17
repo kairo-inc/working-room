@@ -1,11 +1,6 @@
 import { CursorArg, CursorResult } from "@wr/shared"
 
 // Slack types.
-export type SlackTeam = {
-  id: string
-  name: string
-}
-
 export type SlackChannel = {
   id: string
   name: string
@@ -22,10 +17,6 @@ export type SlackUser = {
 }
 
 // Slack client interface.
-export type SlackClientDescribeTeamArgs = {
-  teamId: string
-}
-
 export type SlackClientListChannelsArgs = CursorArg & {}
 
 export type SlackClientListUsersArgs = CursorArg & {}
@@ -83,7 +74,6 @@ export type SlackConversationMessage = {
 }
 
 export abstract class SlackClient {
-  abstract describeTeam(args: SlackClientDescribeTeamArgs): Promise<SlackTeam>
   abstract describeSelf(): Promise<SlackUser>
   abstract listChannels(args: SlackClientListChannelsArgs): Promise<CursorResult<SlackChannel>>
   abstract listUsers(args: SlackClientListUsersArgs): Promise<CursorResult<SlackUser>>

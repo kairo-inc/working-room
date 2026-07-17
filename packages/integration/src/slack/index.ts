@@ -9,7 +9,6 @@ import {
   SlackChannel,
   SlackClient,
   SlackClientAddReactionArgs,
-  SlackClientDescribeTeamArgs,
   SlackClientGetChannelArgs,
   SlackClientGetMessageArgs,
   SlackClientGetUserArgs,
@@ -20,7 +19,6 @@ import {
   SlackClientSendMessageArgs,
   SlackConversationMessage,
   SlackMessage,
-  SlackTeam,
   SlackUser,
 } from "./type"
 
@@ -117,18 +115,6 @@ export class SlackClientImpl extends SlackClient {
       name: channel.name!,
       isPrivate: channel.is_private ?? false,
       isIm: false,
-    }
-  }
-
-  async describeTeam(args: SlackClientDescribeTeamArgs): Promise<SlackTeam> {
-    const { teamId } = args
-    const response = await this.retryable(() => this.getClient().users.identity({}))
-    if (!response.team) {
-      throw new SlackApiErrorNotFound(`Failed to describe Slack team with ID: ${teamId}`)
-    }
-    return {
-      id: response.team.id!,
-      name: response.team.name!,
     }
   }
 

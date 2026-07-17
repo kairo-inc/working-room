@@ -14,7 +14,6 @@ const buildToolCall = (input: unknown): DomainMessageContentToolCall => ({
 
 const buildSlackClient = (overrides?: Partial<SlackClient>): SlackClient =>
   ({
-    describeTeam: vi.fn(),
     listChannels: vi.fn(),
     listUsers: vi.fn(),
     getChannel: vi.fn().mockResolvedValue({ id: "C123", name: "general", isPrivate: false, isIm: false }),
