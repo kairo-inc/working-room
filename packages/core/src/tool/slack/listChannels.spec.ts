@@ -14,12 +14,15 @@ const buildToolCall = (input: unknown): DomainMessageContentToolCall => ({
 
 const buildSlackClient = (overrides?: Partial<SlackClient>): SlackClient =>
   ({
-    describeTeam: vi.fn(),
     listChannels: vi.fn().mockResolvedValue({ data: [], nextCursor: null }),
     listUsers: vi.fn(),
     getChannel: vi.fn(),
     getUser: vi.fn(),
     sendMessage: vi.fn(),
+    listMessages: vi.fn(),
+    getMessage: vi.fn(),
+    addReaction: vi.fn(),
+    removeReaction: vi.fn(),
     ...overrides,
   }) as SlackClient
 

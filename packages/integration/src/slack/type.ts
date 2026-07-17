@@ -1,11 +1,6 @@
 import { CursorArg, CursorResult } from "@wr/shared"
 
 // Slack types.
-export type SlackTeam = {
-  id: string
-  name: string
-}
-
 export type SlackChannel = {
   id: string
   name: string
@@ -22,10 +17,6 @@ export type SlackUser = {
 }
 
 // Slack client interface.
-export type SlackClientDescribeTeamArgs = {
-  teamId: string
-}
-
 export type SlackClientListChannelsArgs = CursorArg & {}
 
 export type SlackClientListUsersArgs = CursorArg & {}
@@ -36,6 +27,27 @@ export type SlackClientGetChannelArgs = {
 
 export type SlackClientGetUserArgs = {
   userId: string
+}
+
+export type SlackClientListMessagesArgs = CursorArg & {
+  channelId: string
+}
+
+export type SlackClientGetMessageArgs = {
+  channelId: string
+  timestamp: string
+}
+
+export type SlackClientAddReactionArgs = {
+  channelId: string
+  timestamp: string
+  emojiName: string
+}
+
+export type SlackClientRemoveReactionArgs = {
+  channelId: string
+  timestamp: string
+  emojiName: string
 }
 
 export type SlackClientSendMessageArgs = {
@@ -52,12 +64,24 @@ export type SlackMessage = {
   ts: string
 }
 
+// A single message returned from a conversation's history. `userId` is null for messages with no
+// associated Slack user (for example some bot or system messages), in which case it is not resolved
+// to a name.
+export type SlackConversationMessage = {
+  ts: string
+  text: string
+  userId: string | null
+}
+
 export abstract class SlackClient {
-  abstract describeTeam(args: SlackClientDescribeTeamArgs): Promise<SlackTeam>
   abstract describeSelf(): Promise<SlackUser>
   abstract listChannels(args: SlackClientListChannelsArgs): Promise<CursorResult<SlackChannel>>
   abstract listUsers(args: SlackClientListUsersArgs): Promise<CursorResult<SlackUser>>
   abstract getChannel(args: SlackClientGetChannelArgs): Promise<SlackChannel>
   abstract getUser(args: SlackClientGetUserArgs): Promise<SlackUser>
   abstract sendMessage(args: SlackClientSendMessageArgs): Promise<SlackMessage>
+  abstract listMessages(args: SlackClientListMessagesArgs): Promise<CursorResult<SlackConversationMessage>>
+  abstract getMessage(args: SlackClientGetMessageArgs): Promise<SlackConversationMessage | null>
+  abstract addReaction(args: SlackClientAddReactionArgs): Promise<void>
+  abstract removeReaction(args: SlackClientRemoveReactionArgs): Promise<void>
 }
