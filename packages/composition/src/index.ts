@@ -18,17 +18,27 @@ import {
   ChatEngine,
   CoreConfig,
   EventBus,
+  ToolCompareTextFileHistory,
   ToolDeleteDir,
   ToolDeleteFile,
   ToolFindFileByName,
   ToolFindFileByText,
   ToolListDir,
+  ToolListHistory,
   ToolMakeDir,
   ToolMoveFile,
   ToolReadImageFile,
   ToolReadPdfFile,
   ToolReadTextFile,
+  ToolReadTextFileHistory,
   ToolRegistry,
+  ToolSlackAddReaction,
+  ToolSlackDescribeMySelf,
+  ToolSlackListChannels,
+  ToolSlackListMessages,
+  ToolSlackListUsers,
+  ToolSlackRemoveReaction,
+  ToolSlackSendMessage,
   ToolTraverseDir,
   ToolWebSearch,
   ToolWriteAppend,
@@ -55,6 +65,8 @@ import {
   LocalSessionSourceImpl,
   MessageSource,
   MessageSourceImpl,
+  OauthClientSlackSource,
+  OauthClientSlackSourceImpl,
   TenantSource,
   TenantSourceImpl,
   TokenUsageOnTenantSource,
@@ -65,6 +77,7 @@ import {
   UserSourceImpl,
   createPrismaClient,
 } from "@wr/db"
+import { OauthService, OauthServiceImpl, SlackClient, SlackClientImpl } from "@wr/integration"
 import { AiVendorConfigs } from "@wr/shared"
 import { DiContainerContext, getDiContainerStore } from "@wr/shared-node"
 
@@ -86,6 +99,7 @@ container.register<ChatSource>("ChatSource", { useClass: ChatSourceImpl })
 container.register<AccessGroupSource>("AccessGroupSource", { useClass: AccessGroupSourceImpl })
 container.register<AgentSource>("AgentSource", { useClass: AgentSourceImpl })
 container.register<ConsumedTokenSource>("ConsumedTokenSource", { useClass: ConsumedTokenSourceImpl })
+container.register<OauthClientSlackSource>("OauthClientSlackSource", { useClass: OauthClientSlackSourceImpl })
 container.register<TokenUsageOnTenantSource>("TokenUsageOnTenantSource", { useClass: TokenUsageOnTenantSourceImpl })
 container.register<TokenUsageOnUserSource>("TokenUsageOnUserSource", { useClass: TokenUsageOnUserSourceImpl })
 
@@ -127,6 +141,16 @@ container.register<Tool>("Tool", { useClass: ToolDeleteDir })
 container.register<Tool>("Tool", { useClass: ToolFindFileByText })
 container.register<Tool>("Tool", { useClass: ToolFindFileByName })
 container.register<Tool>("Tool", { useClass: ToolTraverseDir })
+container.register<Tool>("Tool", { useClass: ToolListHistory })
+container.register<Tool>("Tool", { useClass: ToolReadTextFileHistory })
+container.register<Tool>("Tool", { useClass: ToolCompareTextFileHistory })
+container.register<Tool>("Tool", { useClass: ToolSlackDescribeMySelf })
+container.register<Tool>("Tool", { useClass: ToolSlackListChannels })
+container.register<Tool>("Tool", { useClass: ToolSlackListUsers })
+container.register<Tool>("Tool", { useClass: ToolSlackSendMessage })
+container.register<Tool>("Tool", { useClass: ToolSlackListMessages })
+container.register<Tool>("Tool", { useClass: ToolSlackAddReaction })
+container.register<Tool>("Tool", { useClass: ToolSlackRemoveReaction })
 
 // Externally Defined Tools.
 container.register<Tool[]>("AdditionalTools", { useValue: [] })
@@ -136,6 +160,11 @@ container.register<ToolRegistry>("ToolRegistry", { useClass: ToolRegistry })
 
 // Listener
 container.register<FileAccessListener>("FileAccessListener", { useClass: NoopFileAccessListenerImpl }) // Placeholder.
+
+// Integration
+container.register<SlackClient>("SlackClient", { useClass: SlackClientImpl })
+
+container.register<OauthService>("OauthService", { useClass: OauthServiceImpl })
 
 export function getDiContainer(): DiContainerContext {
   const containerOrUndefined = getDiContainerStore()

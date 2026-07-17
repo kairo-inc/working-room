@@ -591,7 +591,7 @@ describe("[Failure] FileAccessService", () => {
       const traverseResult = runWithPrivateContext({ idToken: user.idToken }, async () => {
         return await fileAccessService.traverse({ descId: memberUser.privateDir.id, maxDepth: 1 })
       })
-      expect(traverseResult).rejects.toThrow(PermissionDeniedError)
+      await expect(traverseResult).rejects.toThrow(PermissionDeniedError)
     })
   })
 

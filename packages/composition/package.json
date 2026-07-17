@@ -5,6 +5,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "typecheck": "tsc"
+  },
   "peerDependencies": {
     "@ai-sdk/anthropic": "3.0.0",
     "@ai-sdk/openai": "3.0.0",
@@ -12,6 +15,7 @@
     "@wr/access": "workspace:*",
     "@wr/core": "workspace:*",
     "@wr/db": "workspace:*",
+    "@wr/integration": "workspace:*",
     "@wr/shared": "workspace:*",
     "@wr/shared-node": "workspace:*",
     "ai": "6.0.0",

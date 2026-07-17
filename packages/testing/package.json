@@ -5,6 +5,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "typecheck": "tsc"
+  },
   "dependencies": {
     "jsonwebtoken": "9.0.3",
     "jwks-rsa": "4.1.0"

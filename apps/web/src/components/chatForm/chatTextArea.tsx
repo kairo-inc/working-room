@@ -158,7 +158,7 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
           className="absolute bottom-2.25 -left-1"
           onClick={() => document.getElementById("fileUploadInput")?.click()}
         />
-        <div ref={fileSpaceRef} className="absolute top-6 ml-12 flex flex-wrap gap-2">
+        <div ref={fileSpaceRef} className="absolute top-2 ml-12 flex flex-wrap gap-2">
           {files?.map((file, index) => (
             <FileItem key={index} file={file.file} isUploading={file.isUploading} onRemove={handleRemoveFile} />
           ))}

@@ -23,7 +23,8 @@ export const apiHander = <T>({ method, fn }: { method: Method; fn: API<T> }) => 
 
     const session = await getServerSession(req, res, nextAuthOptions)
     if (!session || !session.idToken) {
-      throw new AuthenticationError("Session not found")
+      res.status(401).end("Unauthorized")
+      return
     }
     const idToken = session.idToken
     // Check idToken validity

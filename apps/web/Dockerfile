@@ -9,6 +9,7 @@ COPY apps/web/package.json apps/web/
 COPY packages/core/package.json packages/core/
 COPY packages/access/package.json packages/access/
 COPY packages/composition/package.json packages/composition/
+COPY packages/integration/package.json packages/integration/
 COPY packages/db/package.json packages/db/
 COPY packages/shared/package.json packages/shared/
 COPY packages/shared-node/package.json packages/shared-node/

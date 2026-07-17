@@ -4,6 +4,53 @@ All notable changes to WorkingRoom will be documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.6] - 2026-07-17
+
+### Added
+
+#### Integrations
+
+- Added Slack integration: connect a User's account via OAuth2, then let Agents list channels and direct-message conversations, look up workspace members, send messages, read recent conversation history, and add or remove emoji reactions, all on the User's behalf.
+
+#### AI Agent System
+
+- Added support for self-hosted LLMs via an OpenAI-compatible API, letting operators point WorkingRoom at their own inference server instead of a third-party provider.
+
+#### File Management
+
+- Added Tools that let an Agent browse a file's edit history: listing history entries, reading content at a given history point, and comparing two history points.
+- Added support for uploading images pasted from the clipboard in the file upload area.
+
+### Changed
+
+#### File Management
+
+- The file content page's edit history sidebar is now collapsed by default and opens via an icon button, freeing up space for the main content.
+
+#### Chat Experience
+
+- The AI agent now replies in the user's language.
+
+### Fixed
+
+#### Integrations
+
+- Fixed Slack OAuth token refresh failing once the access token had already rotated, which could break the automatic recovery from an expired token.
+
+#### File Management
+
+- Fixed the file list not refreshing after a move operation.
+- Fixed duplicate file entries appearing in a chat message's referenced-file list when multiple history Tools reference the same file.
+
+#### Deployment
+
+- Fixed the web application's Docker build, which failed after the Slack integration was added.
+
+### Documentation
+
+- Added a Slack Integration setup guide for self-hosted administrators (English and Japanese).
+- Added a README to each internal package, and documented the self-hosted LLM and Slack environment variables.
+
 ## [0.2.5] - 2026-07-05
 
 ### Added

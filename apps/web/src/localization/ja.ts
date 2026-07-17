@@ -26,6 +26,7 @@ export default {
       openai: "OpenAI",
       anthropic: "Anthropic",
       google: "Google",
+      selfHosted: "セルフホスト",
     },
     userManagement: {
       title: "ユーザー管理",
@@ -65,6 +66,11 @@ export default {
       name: "名前",
       email: "メールアドレス",
       role: "権限",
+    },
+    oauthClient: {
+      title: "外部連携",
+      notConnected: "未接続",
+      disconnect: "接続解除",
     },
     signout: {
       title: "サインアウト",
@@ -189,6 +195,7 @@ export default {
       loading: "読み込み中...",
       noHistory: "履歴がありません。",
       current: "現在",
+      collapse: "ファイル履歴を閉じる",
     },
     list: {
       noFiles: "ファイルがありません",
@@ -287,6 +294,7 @@ export default {
       openai: "OpenAI",
       anthropic: "Anthropic",
       google: "Google",
+      selfHosted: "セルフホスト",
       failed: "失敗",
     },
     directoryCreate: {
@@ -334,6 +342,11 @@ export default {
       title: "チャット削除",
       confirm: "このチャットを削除してもよろしいですか？",
       error: "エラー",
+    },
+    oauthClientDisconnect: {
+      title: "接続解除",
+      confirm: "この連携を解除してもよろしいですか？",
+      failed: "接続の解除に失敗しました。",
     },
     initializePassword: {
       title: "パスワードの初期設定",

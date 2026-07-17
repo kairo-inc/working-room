@@ -1,0 +1,77 @@
+---
+title: Slack Integration
+sidebar_position: 3
+custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/getting-started/slack-integration.mdx"
+---
+
+# Slack Integration
+
+WorkingRoom can connect a User's account to Slack via OAuth2, letting Agent Tools list Slack channels, read recent messages, send messages, and add or remove emoji reactions on that User's behalf. This integration is optional: if it is not configured, Users simply cannot connect Slack, and Slack-backed Tools have nothing to act on.
+
+This page is for administrators setting up a self-hosted instance.
+
+## 1. Create a Slack app
+
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) and select **Create New App** > **From scratch**.
+2. Give the app a name and select the Slack workspace to develop it in.
+3. Once created, open **Basic Information** in the sidebar and note the **Client ID** and **Client Secret** under **App Credentials**. You will use these as `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`.
+
+## 2. Register the Redirect URL
+
+1. Open **OAuth & Permissions** in the sidebar.
+2. Under **Redirect URLs**, add:
+
+   ```
+   {HOST}/api/oauth/slack/callback
+   ```
+
+   replacing `{HOST}` with your instance's `HOST` environment variable (for example `https://workingroom.example.com/api/oauth/slack/callback`).
+
+:::note
+
+Slack rejects a plain `http://localhost` Redirect URL as a "non-web" URI. To test the Slack connection on local development, expose your dev server through an HTTPS tunnel (for example `ngrok http 3000`) and set `HOST` and the Slack app's Redirect URL to that HTTPS URL instead of `localhost`.
+
+:::
+
+## 3. Set environment variables
+
+Add the following to your environment to enable the Slack integration:
+
+| Variable              | Required to enable Slack | Description                        |
+| ---------------------- | -------------------------- | ------------------------------------ |
+| `SLACK_CLIENT_ID`      | Yes                        | Slack app client ID                 |
+| `SLACK_CLIENT_SECRET`  | Yes                        | Slack app client secret             |
+
+The Slack integration as a whole is optional — WorkingRoom runs fine without these set, which is why the repository README's [Environment Variables](https://github.com/kairo-inc/working-room#environment-variables) table lists both as not required. But if you want Slack connections to work at all, both must be set: if either is missing, connecting Slack from the Account page fails.
+
+Both `HOST` and `OAUTH_STATE_SECRET` must also be set for any OAuth2 connection to work, Slack included: `HOST` is used to build the Redirect URL above, and `OAUTH_STATE_SECRET` signs the OAuth2 `state` parameter used to protect the connection flow.
+
+## Requested scopes
+
+When a User connects Slack, WorkingRoom requests the following OAuth2 user scopes:
+
+| Scope           | Grants access to                                                                  |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| `channels:read`  | Viewing public channels in the workspace                                          |
+| `groups:read`    | Viewing private channels the User is a member of                                  |
+| `chat:write`     | Sending messages to channels and direct-message conversations, as the User        |
+| `users:read`     | Viewing basic information (such as display names) about other workspace members  |
+| `im:read`        | Viewing the User's existing 1:1 direct-message conversations                      |
+| `mpim:read`      | Viewing the User's existing group direct-message conversations                    |
+| `channels:history`| Reading recent messages in public channels                                       |
+| `groups:history` | Reading recent messages in private channels the User is a member of               |
+| `im:history`     | Reading recent messages in the User's 1:1 direct-message conversations            |
+| `mpim:history`   | Reading recent messages in the User's group direct-message conversations          |
+| `reactions:write`| Adding and removing emoji reactions on messages, as the User                      |
+
+This list may grow as more Slack-backed Tools are added. It is defined in `packages/integration/src/oauth/providers/slack.ts` (`defaultSlackOAuthUserScope`), which is the source of truth if this page and the code ever disagree.
+
+## Connecting and disconnecting
+
+Once the environment variables above are set, a User can connect their own Slack account from the **Account** page's **Connections** section:
+
+1. Select the Slack button to open Slack's OAuth consent screen in a new tab.
+2. Approve the requested scopes. WorkingRoom redirects back and shows the connected Slack team's name in the Connections section.
+3. To revoke the connection, select **Disconnect** next to the connected team.
+
+A User who connected Slack before new scopes were added (for example before `chat:write` was introduced) needs to disconnect and reconnect to grant the new scopes, since Slack scopes are fixed at connection time.

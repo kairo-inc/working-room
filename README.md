@@ -62,7 +62,7 @@ packages/
 The fastest way to run WorkingRoom:
 
 ```bash
-# Set ANTHROPIC_API_KEY and/or OPENAI_API_KEY in your shell environment,
+# Set ANTHROPIC_API_KEY, OPENAI_API_KEY, and/or GOOGLE_GENERATIVE_AI_API_KEY in your shell environment,
 # then run:
 docker compose up
 ```
@@ -73,7 +73,7 @@ Open `http://localhost:3000`.
 
 ## Local Development
 
-**Prerequisites:** Node.js 20–24, Yarn 4+, Anthropic and/or OpenAI API key
+**Prerequisites:** Node.js 20–24, Yarn 4+, Anthropic, OpenAI, and/or Google Gemini API key
 
 ```bash
 # 1. Install dependencies
@@ -82,7 +82,7 @@ yarn install
 
 # 2. Configure environment
 # .env.local is committed with local development defaults
-# Set ANTHROPIC_API_KEY and/or OPENAI_API_KEY in your shell environment
+# Set ANTHROPIC_API_KEY, OPENAI_API_KEY, and/or GOOGLE_GENERATIVE_AI_API_KEY in your shell environment
 
 # 3. Initialize database
 yarn prisma:dev
@@ -107,7 +107,7 @@ yarn dev:web
 | `yarn test:watch`      | Run tests in watch mode                     |
 | `yarn coverage`        | Run tests with coverage                     |
 | `yarn lint`            | Check TS and TSX files with Prettier        |
-| `yarn lint-fix`        | Format TS and TSX files with Prettier       |
+| `yarn lint:fix`        | Format TS and TSX files with Prettier       |
 | `yarn seed:docs`       | Apply docs DB migrations and seed docs data |
 | `yarn start:web:docs`  | Start the web app with the docs environment |
 
@@ -115,17 +115,25 @@ yarn dev:web
 
 `.env.example` defines the base environment variables for the app. In local development, `.env.local` also provides local defaults such as `ENV=local` and `NEXTAUTH_SECRET=local`.
 
-| Variable            | Required | Default                 | Description                                                |
-| ------------------- | -------- | ----------------------- | ---------------------------------------------------------- |
-| `DATABASE_URL`      | Yes      | `file:./dev.db`         | Database connection string                                 |
-| `NEXTAUTH_URL`      | Yes      | `http://localhost:3000` | App base URL                                               |
-| `NEXTAUTH_SECRET`   | Yes      | Empty in `.env.example` | Session signing secret                                     |
-| `ANTHROPIC_API_KEY` | Yes\*    | —                       | Anthropic Claude API key                                   |
-| `OPENAI_API_KEY`    | Yes\*    | —                       | OpenAI API key                                             |
-| `MULTI_TENANT`      | No       | `false`                 | Enables multi-tenant mode; currently not available         |
-| `ROOT_DIR`          | No       | `~/.wr`                 | Workspace directory root; files are stored under this path |
+| Variable                       | Required | Default                 | Description                                                          |
+| ------------------------------ | -------- | ----------------------- | -------------------------------------------------------------------- |
+| `DATABASE_URL`                 | Yes      | `file:./dev.db`         | Database connection string                                           |
+| `HOST`                         | No       | `http://localhost:3000` | App base URL used to build OAuth2 redirect URLs                      |
+| `NEXTAUTH_URL`                 | Yes      | `http://localhost:3000` | App base URL                                                         |
+| `NEXTAUTH_SECRET`              | Yes      | Empty in `.env.example` | Session signing secret                                               |
+| `OAUTH_STATE_SECRET`           | Yes\*\*  | Empty in `.env.example` | Signing secret for the OAuth2 `state` parameter                      |
+| `ANTHROPIC_API_KEY`            | Yes\*    | —                       | Anthropic Claude API key                                             |
+| `OPENAI_API_KEY`               | Yes\*    | —                       | OpenAI API key                                                       |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Yes\*    | —                       | Google Gemini API key                                                |
+| `MULTI_TENANT`                 | No       | `false`                 | Enables multi-tenant mode; currently not available                   |
+| `ROOT_DIR`                     | No       | `~/.wr`                 | Workspace directory root; files are stored under this path           |
+| `SLACK_CLIENT_ID`              | No       | —                       | Slack app client ID; required to enable Slack OAuth2 connections     |
+| `SLACK_CLIENT_SECRET`          | No       | —                       | Slack app client secret; required to enable Slack OAuth2 connections |
+| `SELF_HOSTED_BASE_URL`         | No       | —                       | Base URL of a self-hosted, OpenAI-compatible LLM endpoint; required to select the Self-hosted AI vendor |
+| `SELF_HOSTED_API_KEY`          | No       | —                       | API key for the self-hosted LLM endpoint; required to select the Self-hosted AI vendor                  |
 
 \*At least one AI provider key is required.
+\*\*Required outside local environments (`ENV` other than `local`); falls back to a default in local development.
 
 ## Self-Hosting
 

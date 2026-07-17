@@ -1,6 +1,7 @@
 import { createAnthropic } from "@ai-sdk/anthropic"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { createOpenAI } from "@ai-sdk/openai"
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible"
 import {
   APICallError,
   AssistantModelMessage,
@@ -32,6 +33,7 @@ import {
   aiVendorAnthropic,
   aiVendorGoogle,
   aiVendorOpenAI,
+  aiVendorSelfHosted,
   isAiVendorConfigured,
   isDomainAssistantMessage,
   isDomainSystemMessage,
@@ -55,16 +57,28 @@ const vendorByPrefix: Record<string, AiVendor> = {
   openai: aiVendorOpenAI,
   anthropic: aiVendorAnthropic,
   google: aiVendorGoogle,
+  selfHosted: aiVendorSelfHosted,
 }
 
 const buildRegistry = (vendorConfigs: AiVendorConfigs) => {
   const providers: Record<
     string,
-    ReturnType<typeof createOpenAI> | ReturnType<typeof createAnthropic> | ReturnType<typeof createGoogleGenerativeAI>
+    | ReturnType<typeof createOpenAI>
+    | ReturnType<typeof createAnthropic>
+    | ReturnType<typeof createGoogleGenerativeAI>
+    | ReturnType<typeof createOpenAICompatible>
   > = {}
   if (vendorConfigs.openai?.apiKey) providers.openai = createOpenAI({ apiKey: vendorConfigs.openai.apiKey })
   if (vendorConfigs.anthropic?.apiKey) providers.anthropic = createAnthropic({ apiKey: vendorConfigs.anthropic.apiKey })
   if (vendorConfigs.google?.apiKey) providers.google = createGoogleGenerativeAI({ apiKey: vendorConfigs.google.apiKey })
+
+  // Uses the self-hosted OpenAI-compatible API if both apiKey and baseUrl are provided in the selfHosted config.
+  if (vendorConfigs.selfHosted?.apiKey && vendorConfigs.selfHosted?.baseUrl)
+    providers.selfHosted = createOpenAICompatible({
+      name: "selfHosted",
+      apiKey: vendorConfigs.selfHosted.apiKey,
+      baseURL: vendorConfigs.selfHosted.baseUrl,
+    })
   return {
     providers,
     registry: createProviderRegistry(providers),
@@ -95,7 +109,11 @@ export class Model {
   private model: AiModel
   private vendor: AiVendor
   private registry: ReturnType<typeof createProviderRegistry>
-  private provider: ReturnType<typeof createOpenAI> | ReturnType<typeof createAnthropic> | ReturnType<typeof createGoogleGenerativeAI>
+  private provider:
+    | ReturnType<typeof createOpenAI>
+    | ReturnType<typeof createAnthropic>
+    | ReturnType<typeof createGoogleGenerativeAI>
+    | ReturnType<typeof createOpenAICompatible>
 
   constructor(args: ModelConstructorArgs) {
     const { modelTier, vendorConfigs } = args
@@ -165,6 +183,7 @@ export class Model {
         system: systemMessages,
         messages: contextMessages,
         tools,
+        toolChoice: "auto",
       })
     } catch (error) {
       throwAsAiError(error)

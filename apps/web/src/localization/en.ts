@@ -24,6 +24,7 @@ export default {
       openai: "OpenAI",
       anthropic: "Anthropic",
       google: "Google",
+      selfHosted: "Self-hosted",
     },
     userManagement: {
       title: "User Management",
@@ -63,6 +64,11 @@ export default {
       name: "Name",
       email: "Email",
       role: "Role",
+    },
+    oauthClient: {
+      title: "Connections",
+      notConnected: "Not connected",
+      disconnect: "Disconnect",
     },
     signout: {
       title: "Signout",
@@ -187,6 +193,7 @@ export default {
       loading: "Loading...",
       noHistory: "No history available.",
       current: "current",
+      collapse: "Hide file history",
     },
     list: {
       noFiles: "No files found",
@@ -285,6 +292,7 @@ export default {
       openai: "OpenAI",
       anthropic: "Anthropic",
       google: "Google",
+      selfHosted: "Self-hosted",
       failed: "Failed",
     },
     directoryCreate: {
@@ -332,6 +340,11 @@ export default {
       title: "Delete Chat",
       confirm: "Are you sure you want to delete this chat?",
       error: "Error",
+    },
+    oauthClientDisconnect: {
+      title: "Disconnect",
+      confirm: "Are you sure you want to disconnect this connection?",
+      failed: "Failed to disconnect.",
     },
     initializePassword: {
       title: "Password Initialization",

@@ -14,7 +14,7 @@
 
 # Testing
 
-- [ ] `yarn lint-fix`
+- [ ] `yarn lint:fix`
 - [ ] `yarn build:web`
 - [ ] `yarn test`
 - [ ] Not run

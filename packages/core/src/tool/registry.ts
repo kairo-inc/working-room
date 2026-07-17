@@ -42,9 +42,9 @@ export class ToolRegistry {
     const tools = Array.from(this.tools.values())
     if (options?.withoutApprovalOnly) {
       // Filter out tools that require approval when the option is set, as sub-agents cannot invoke such tools without user approval.
-      return Object.fromEntries(tools.filter((t) => !t.needApproval).map((t) => [t.name, this.toAiTool(t)]))
+      return Object.fromEntries(tools.filter((t) => !t.needApproval && t.shouldBeListedInToolList()).map((t) => [t.name, this.toAiTool(t)]))
     }
-    return Object.fromEntries(tools.map((t) => [t.name, this.toAiTool(t)]))
+    return Object.fromEntries(tools.filter((t) => t.shouldBeListedInToolList()).map((t) => [t.name, this.toAiTool(t)]))
   }
 
   needApproval(name: string): boolean {

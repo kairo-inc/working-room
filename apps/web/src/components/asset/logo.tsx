@@ -1,3 +1,5 @@
+import SlackLogo from "../../../public/slack.svg"
+
 export const LogoIcon = ({ size = 24 }: { size?: number }) => {
   return (
     <div style={{ width: size, height: size }}>
@@ -13,4 +15,8 @@ export const LogoIcon = ({ size = 24 }: { size?: number }) => {
       </svg>
     </div>
   )
+}
+
+export const SlackLogoIcon = ({ size = 24, gray = false }: { size?: number; gray?: boolean }) => {
+  return <SlackLogo className="text-foreground" style={{ height: size, filter: gray ? "grayscale(100%)" : "none" }} />
 }

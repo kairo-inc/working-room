@@ -281,6 +281,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
       for (const id of descIds) {
         await moveFile({ descId: id, targetFolderId })
       }
+      refetchFiles?.()
       notify.info(L.file.list.moveTitle, L.file.list.moveSuccess)
       router.replace(router.asPath)
     } catch (e) {

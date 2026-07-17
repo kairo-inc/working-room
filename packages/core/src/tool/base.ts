@@ -41,6 +41,12 @@ export abstract class Tool {
 
   abstract run(args: ToolRunArgs, options?: ToolRunOptions): Promise<ToolRunResult>
 
+  // Override this method to determine if the tool should be listed in the tool list.
+  // e.g. Slack tools should only be listed if the Slack integration is configured in the integration context.
+  public shouldBeListedInToolList(): boolean {
+    return true
+  }
+
   public async getChangeDescription(_: DomainMessageContentToolCall): Promise<ToolIncomingChange> {
     return
   }

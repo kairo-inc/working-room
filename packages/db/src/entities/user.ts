@@ -69,5 +69,18 @@ export class EntityUserSecret implements Omit<User, "deletedAt" | "privateDirId"
   } as const satisfies Prisma.UserSelect
 }
 
+export class EntityUserOauthClient {
+  oauthClientsSlack: {
+    id: string
+    accessToken: string
+  }[]
+
+  static select = {
+    oauthClientsSlack: {
+      select: { id: true, accessToken: true },
+    },
+  } as const satisfies Prisma.UserSelect
+}
+
 export const UserSortByList = ["createdAt", "updatedAt", "email", "name"] as const
 export type UserSortBy = (typeof UserSortByList)[number]

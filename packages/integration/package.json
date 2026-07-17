@@ -1,0 +1,21 @@
+{
+  "name": "@wr/integration",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc"
+  },
+  "peerDependencies": {
+    "@slack/web-api": "7.19.0",
+    "@wr/core": "workspace:*",
+    "@wr/shared": "workspace:*",
+    "@wr/shared-node": "workspace:*",
+    "ai": "6.0.0",
+    "cuid": "3.0.0",
+    "diff": "9.0.0",
+    "tsyringe": "4.10.0"
+  }
+}
