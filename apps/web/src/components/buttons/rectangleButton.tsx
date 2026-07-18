@@ -80,5 +80,4 @@ export const RectangleButton = forwardRef<HTMLButtonElement, RectangleButtonProp
     )
   }
 )
-
 RectangleButton.displayName = "RectangleButton"

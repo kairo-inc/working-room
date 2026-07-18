@@ -9,15 +9,6 @@ import { buildClearCodeVerifierCookie, readCodeVerifierCookie } from "../../../.
 import { getOAuthProviderConfig } from "../../../../server/oauth/oauthProviders"
 import { ensureQuery } from "../../../../utils/queryParser"
 
-type OAuth2TokenExchangeResult = {
-  provider: string
-  userId: string
-  accessToken: string
-  refreshToken?: string
-  expiresAt?: Date
-  scope?: string
-}
-
 export default apiHander({
   method: "GET",
   fn: async (req, res) => {

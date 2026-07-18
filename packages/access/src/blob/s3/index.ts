@@ -19,22 +19,22 @@ export class S3BlobStore extends BlobStore {
   async hash(buffer: ArrayBuffer): Promise<string> {
     return makeHash(buffer)
   }
-  async createBlobHash(buffer: ArrayBuffer): Promise<string> {
+  async createBlobHash(_buffer: ArrayBuffer): Promise<string> {
     throw new Error("Method not implemented.")
   }
-  async getBlobHash(hashValue: string): Promise<ArrayBuffer> {
+  async getBlobHash(_hashValue: string): Promise<ArrayBuffer> {
     throw new Error("Method not implemented.")
   }
-  async getBlobHashStream(hashValue: string): Promise<NodeJS.ReadableStream> {
+  async getBlobHashStream(_hashValue: string): Promise<NodeJS.ReadableStream> {
     throw new Error("Method not implemented.")
   }
-  async getBlobPath(hashValue: string): Promise<string> {
+  async getBlobPath(_hashValue: string): Promise<string> {
     throw new Error("Method not implemented.")
   }
-  async pathToHash(blobPath: string): Promise<string> {
+  async pathToHash(_blobPath: string): Promise<string> {
     throw new Error("Method not implemented.")
   }
-  async findByText(text: string, searchPath: string, options?: { maxResults?: number }): Promise<string[]> {
+  async findByText(_text: string, _searchPath: string, _options?: { maxResults?: number }): Promise<string[]> {
     throw new Error("Method not implemented.")
   }
 }

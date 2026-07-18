@@ -28,7 +28,7 @@ describe("[Success] Find records", () => {
   })
 
   it("Filter out deleted records", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user } = await fixtureFactory.createTenantWithOwner()
     await runWithDiContainer(testContainer, async () => {
       const fileDescriptorSource = testContainer.resolve<FileDescriptorSource>("FileDescriptorSource")
       await runWithPrivateContext({ idToken: user.idToken }, async () => {

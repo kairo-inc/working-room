@@ -36,7 +36,7 @@ export const FileUploadPane = ({ onFileUpload }: FileUploadPaneProps) => {
           await onFileUpload(files)
           setIsPending(false)
         }
-      } catch (e) {
+      } catch {
         setIsDragging(false)
       } finally {
         setIsPending(false)

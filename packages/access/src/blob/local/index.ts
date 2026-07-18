@@ -46,7 +46,7 @@ export class LocalBlobStore extends BlobStore {
     try {
       const fileBuffer = await fsPromise.readFile(filePath)
       return new Uint8Array(fileBuffer).buffer
-    } catch (e) {
+    } catch {
       throw new NotFoundError(`Blob not found for hash: ${hashValue}`)
     }
   }
@@ -56,7 +56,7 @@ export class LocalBlobStore extends BlobStore {
     try {
       const stream = fs.createReadStream(filePath)
       return stream
-    } catch (e) {
+    } catch {
       throw new NotFoundError(`Blob not found for hash: ${hashValue}`)
     }
   }

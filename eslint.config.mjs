@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
     "apps/web/.next/**",
     "apps/docs/.docusaurus/**",
     "apps/docs/src/plugins/**",
+    "apps/docs/build/**",
     "coverage/**",
   ]),
   {
@@ -25,6 +26,7 @@ const eslintConfig = defineConfig([
           caughtErrorsIgnorePattern: "^_",
         },
       ],
+      "@typescript-eslint/no-empty-object-type": "off",
     },
   },
 ])

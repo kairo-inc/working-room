@@ -34,6 +34,7 @@ export const TextForm = forwardRef<HTMLInputElement, TextFormProps>((props, ref)
     return <BaseTextForm {...props} ref={ref} />
   }
 })
+TextForm.displayName = "TextForm"
 
 const FinalTextForm = forwardRef<HTMLInputElement, TextFormProps & { formName: string }>(
   ({ formName, disabled, onChange: _, ...props }, ref) => {
@@ -42,6 +43,7 @@ const FinalTextForm = forwardRef<HTMLInputElement, TextFormProps & { formName: s
     return <BaseTextForm {...input} {...props} ref={ref} disabled={isDisabled} errorText={meta.touched && meta.error} />
   }
 )
+FinalTextForm.displayName = "FinalTextForm"
 
 const BaseTextForm = forwardRef<HTMLInputElement, TextFormProps>(
   ({ icon, className, variant = "default", label, disabled, noError, errorText, ...props }, ref) => {
@@ -73,5 +75,4 @@ const BaseTextForm = forwardRef<HTMLInputElement, TextFormProps>(
     )
   }
 )
-
-TextForm.displayName = "TextForm"
+BaseTextForm.displayName = "BaseTextForm"
