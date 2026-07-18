@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority"
 import clsx from "clsx"
 import { FilePlus, Forward } from "lucide-react"
-import { ComponentPropsWithoutRef, useCallback, useEffect, useRef } from "react"
+import { ComponentPropsWithoutRef, useCallback, useLayoutEffect, useRef, useState } from "react"
 import { useField, useForm } from "react-final-form"
 
 import { useFileUploadFileToChat } from "../../hooks/trpc/file"
@@ -40,6 +40,7 @@ type ChatTextAreaProps = ComponentPropsWithoutRef<"textarea"> & {
 export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTextAreaProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileSpaceRef = useRef<HTMLDivElement>(null)
+  const [rows, setRows] = useState(1)
   const { mutateAsync: uploadFile } = useFileUploadFileToChat()
   const { getFieldState, change } = useForm<ChatInputFormType>()
 
@@ -88,13 +89,13 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
       return
     }
     const fileSpaceHeight = fileSpace.offsetHeight
-    textarea.rows = calculateRows(input.value)
+    setRows(calculateRows(input.value))
     if (fileSpaceHeight > 0) {
       textarea.style.paddingTop = `${fileSpaceHeight + 24}px`
     } else {
       textarea.style.paddingTop = `16px`
     }
-  }, [files, calculateRows])
+  }, [input.value, calculateRows])
 
   const handleRemoveFile = useCallback(
     (file: File) => {
@@ -134,7 +135,7 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
                 mimeType,
               },
             }
-          } catch (e) {
+          } catch {
             return { file: f, isUploading: false }
           }
         })
@@ -144,7 +145,7 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
     [change, getFieldState, uploadFile]
   )
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     resizeTextarea()
   }, [files, resizeTextarea])
 
@@ -167,7 +168,7 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
           id="chatTextArea"
           ref={textareaRef}
           className={clsx(variants({ variant: "default" }), className)}
-          rows={calculateRows(input.value)}
+          rows={rows}
           placeholder={L.chat.inputPlaceholder}
           {...input}
           {...props}

@@ -1,6 +1,7 @@
 import clsx from "clsx"
 import { Blend, Folder, MessageSquareText, Moon, Plus, Settings, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
+import Link from "next/link"
 import { useRouter } from "next/router"
 
 import { useIsAdminOrOwner } from "../../contexts/setting"
@@ -35,10 +36,10 @@ export const SideMenu = ({ isMobileOpen = false, onMobileClose }: SideMenuProps)
   const navContent = (showLabels: boolean) => (
     <>
       <div className="flex h-16 items-center pl-4.5">
-        <a href="/" className="flex items-center justify-start gap-2.5 transition-opacity hover:opacity-80">
+        <Link href="/" className="flex items-center justify-start gap-2.5 transition-opacity hover:opacity-80">
           <LogoIcon size={size + 4} />
           <span className={clsx("text-primary text-lg font-bold", showLabels ? "block" : "hidden lg:block")}>WorkingRoom</span>
-        </a>
+        </Link>
       </div>
       <div className="flex flex-1 flex-col items-center justify-between overflow-y-auto">
         <nav className="w-full">

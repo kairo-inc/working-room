@@ -33,5 +33,4 @@ export const ImageThumbnail = ({ descId, className, onError, alt, ...rest }: Ima
     </a>
   )
 }
-
 ImageThumbnail.displayName = "ImageThumbnail"

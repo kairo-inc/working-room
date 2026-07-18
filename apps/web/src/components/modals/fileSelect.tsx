@@ -92,6 +92,7 @@ export const FileSelectModal = ({ show, onClose, onFileSelected, initialParentFo
     if (isError) {
       // Can be 403 error.
       // Redirect to root folder if the user doesn't have access to the current folder.
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reacts to the query's error state, which is only known after the fetch settles.
       setQueryArgs({ parentId: undefined })
     }
   }, [isError])

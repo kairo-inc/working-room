@@ -1,6 +1,6 @@
 import { MessageSquarePlus, Upload } from "lucide-react"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 import { FileList } from "../../../components/file/list"
 import { FileUploadPane } from "../../../components/file/upload"
@@ -22,9 +22,7 @@ export interface PageTreeProps extends React.HTMLAttributes<HTMLDivElement> {
 export const PageTree = ({ parent, ancestors }: PageTreeProps) => {
   const router = useRouter()
   const notify = useNotification()
-  const [queryArgs, setQueryArgs] = useState<Parameters<typeof useFileGetList>[0]>({ parentId: parent.id })
-
-  const { data, isPending, refetch, fetchNextPage, hasNextPage } = useFileGetList(queryArgs)
+  const { data, isPending, refetch, fetchNextPage, hasNextPage } = useFileGetList({ parentId: parent.id })
   const { mutateAsync: upload, isPending: isUploading } = useFileUploadFiles()
 
   const fileList = data?.pages.flatMap((page) => page.data) ?? []

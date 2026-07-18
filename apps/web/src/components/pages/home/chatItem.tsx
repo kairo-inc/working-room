@@ -14,7 +14,7 @@ type ChatItemProps = ComponentPropsWithoutRef<"div"> & {
   onRemoveClick?: (chatId: string) => void
 }
 
-export const ChatItem = ({ item, onRemoveClick, ...rest }: ChatItemProps) => {
+export const ChatItem = ({ item, onRemoveClick }: ChatItemProps) => {
   const { lastUserMessage, updatedAt, workingFolder } = item
   const contents = lastUserMessage?.content || []
   const content = contents.filter((c): c is AppMessageContentText => c.type === "text" && c.text.trim() !== "")[0]?.text
