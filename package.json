@@ -24,9 +24,8 @@
     "test": "dotenv -e .env.test -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.test -- vitest run",
     "test:watch": "dotenv -e .env.test -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.test -- vitest",
     "coverage": "dotenv -e .env.test -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.test -- vitest run --coverage",
-    "lint": "prettier --check '**/*.{tsx,ts}'",
-    "lint:fix": "prettier --write '**/*.{tsx,ts}'",
-    "eslint": "eslint --ext .ts,.tsx",
+    "lint": "prettier --check '**/*.{tsx,ts}' && eslint --ext .ts,.tsx",
+    "lint:fix": "prettier --write '**/*.{tsx,ts}' && eslint --ext .ts,.tsx --fix",
     "typecheck": "yarn workspaces foreach --all --parallel run typecheck",
     "seed:docs": "dotenv -e .env.docs -- yarn workspace @wr/db migrate:deploy && dotenv -e .env.docs -- yarn workspace @wr/db seed:docs"
   },
