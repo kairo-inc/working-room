@@ -21,7 +21,7 @@ export type ChatEngineConfig = {
   // The key is the tool name or agent name, and the value is the model tier to use for that tool or agent.
   tierOverrides?: Partial<Record<string, AiModelTier>>
 
-  // A folder that the engine assumes it as a current working directory, which can be used by tools that need file access.
+  // A folder that the engine assumes it as a current working folder, which can be used by tools that need file access.
   // This is optional and can be set on a per-chat basis.
   workingFolder?: AiWorkingFolder
 }

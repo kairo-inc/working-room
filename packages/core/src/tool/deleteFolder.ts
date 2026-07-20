@@ -11,17 +11,17 @@ const inputSchema = z.object({
   descIds: z
     .array(z.string())
     .describe(
-      "A list of IDs of the directories to be deleted. This can be obtained from the directory reference returned by the tool that created or accessed the directory."
+      "A list of IDs of the folders to be deleted. This can be obtained from the folder reference returned by the tool that created or accessed the folder."
     ),
 })
 
 @injectable()
-export class ToolDeleteDir extends Tool {
-  name = "ToolDeleteDir"
-  description = `Delete directories from the system. Use this when you need to remove directories that are no longer needed.
-The input should include the IDs of the directories to be deleted.This can be obtained from the directory reference returned by the tool that created or accessed the directory.
-Be careful that files under the deleted directories will also be removed.
-Please make sure to list the contents of the directory with the ToolListDir tool before deleting to avoid accidental deletion of important files.
+export class ToolDeleteFolder extends Tool {
+  name = "ToolDeleteFolder"
+  description = `Delete folders from the system. Use this when you need to remove folders that are no longer needed.
+The input should include the IDs of the folders to be deleted.This can be obtained from the folder reference returned by the tool that created or accessed the folder.
+Be careful that files under the deleted folders will also be removed.
+Please make sure to list the contents of the folder with the ToolListFolder tool before deleting to avoid accidental deletion of important files.
 `
   needApproval = true
   inputSchema = inputSchema
@@ -67,7 +67,7 @@ Please make sure to list the contents of the directory with the ToolListDir tool
               type: "tool-result",
               toolCallId,
               toolName,
-              output: { type: "text", value: `Directories deleted: ${parsed.data.descIds.join(", ")}` },
+              output: { type: "text", value: `Folders deleted: ${parsed.data.descIds.join(", ")}` },
             },
           ],
         },
@@ -83,14 +83,14 @@ Please make sure to list the contents of the directory with the ToolListDir tool
                 type: "tool-result",
                 toolCallId,
                 toolName,
-                output: { type: "text", value: `Directories are already deleted: ${parsed.data.descIds.join(", ")}` },
+                output: { type: "text", value: `Folders are already deleted: ${parsed.data.descIds.join(", ")}` },
               },
             ],
           },
         }
       }
       return {
-        message: this.buildError(toolCall, `Failed to delete directory: ${(error as Error).message}`),
+        message: this.buildError(toolCall, `Failed to delete folder: ${(error as Error).message}`),
       }
     }
   }
