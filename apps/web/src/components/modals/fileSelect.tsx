@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, FolderPlus } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { useFileGetList, useFileGetParentOrRoot } from "../../hooks/trpc/file"
@@ -8,6 +8,7 @@ import { AppFileDescriptor } from "../../types/file"
 import { RectangleButton } from "../buttons/rectangleButton"
 import { FileIconSm } from "../file/item"
 import { LoadingIndicator } from "../indicator"
+import { useDirectoryCreateModal } from "./directoryCreate"
 import { Modal, ModalProps, useModal } from "./modal"
 
 type Args = {
@@ -24,6 +25,7 @@ const FileList = ({
   onRowClick,
   onRowDoubleClick,
   onBackClick,
+  onNewFolderClick,
   isLoading,
 }: {
   files: AppFileDescriptor[]
@@ -32,17 +34,30 @@ const FileList = ({
   onRowClick: (file: AppFileDescriptor) => void
   onRowDoubleClick: (file: AppFileDescriptor) => void
   onBackClick: (file: AppFileDescriptor) => void
+  onNewFolderClick?: () => void
   isLoading?: boolean
 }) => {
   const hasFiles = files.length > 0
-  const headerClassName = "text-sm font-normal text-muted-foreground p-2 sticky top-0 bg-popover-foreground"
+  const headerClassName =
+    "text-sm font-normal text-muted-foreground p-2 pr-0 sticky top-0 bg-popover-foreground flex items-center justify-between"
   const rowClassName = "text-sm cursor-pointer p-2 hover:bg-muted border-t border-border first:border-t-0"
   const selectedRowClassName = "!bg-link/20 !text-link "
   const notDirectoryRowClassName = "cursor-not-allowed text-sm text-muted-foreground p-2 border-t border-border first:border-t-0"
   const placeholderClassName = "text-sm text-muted-foreground p-2 border-t border-border first:border-t-0 text-center"
   return (
     <div className="grid">
-      <div className={clsx(headerClassName)}>{L.modal.fileSelect.name}</div>
+      <div className={clsx(headerClassName)}>
+        {L.modal.fileSelect.name}
+        <RectangleButton
+          variant="defaultOutline"
+          icon={<FolderPlus className="size-4" />}
+          onClick={onNewFolderClick}
+          disabled={!onNewFolderClick}
+          size="sm"
+        >
+          {L.modal.fileSelect.newFolder}
+        </RectangleButton>
+      </div>
       {grandParent && !grandParent.isRoot && (
         <div className={clsx(rowClassName)} onClick={() => onBackClick(grandParent)}>
           <div className="flex items-center gap-2">
@@ -83,7 +98,8 @@ export const FileSelectModal = ({ show, onClose, onFileSelected, initialParentFo
   const [queryArgs, setQueryArgs] = useState<Parameters<typeof useFileGetList>[0]>({ parentId: initialParentFolderId })
 
   const { data: grandParent, isPending: isGrandParentPending } = useFileGetParentOrRoot(queryArgs?.parentId)
-  const { data, isPending: isFilesPending, isError } = useFileGetList(queryArgs)
+  const { data, isPending: isFilesPending, isError, refetch } = useFileGetList(queryArgs)
+  const { show: showCreateDirectoryModal, modal: CreateDirectoryModal } = useDirectoryCreateModal()
 
   const isPending = isFilesPending || isGrandParentPending
   const files = data?.pages.flatMap((page) => page.data) ?? []
@@ -119,6 +135,13 @@ export const FileSelectModal = ({ show, onClose, onFileSelected, initialParentFo
             setQueryArgs({ parentId: file.parentId })
             setSelectedFile(null)
           }}
+          onNewFolderClick={
+            grandParent
+              ? () => {
+                  showCreateDirectoryModal({ data: { id: grandParent.id }, onResolve: () => refetch() })
+                }
+              : undefined
+          }
         />
       </div>
       <div className="flex justify-end gap-4">
@@ -135,6 +158,7 @@ export const FileSelectModal = ({ show, onClose, onFileSelected, initialParentFo
           {L.modal.fileSelect.close}
         </RectangleButton>
       </div>
+      {CreateDirectoryModal}
     </Modal>
   )
 }

@@ -137,7 +137,13 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                   break
                 }
                 case "newFolder": {
-                  showCreateDirectoryModal({ data: { id: parent.id }, onResolve: refetchFiles })
+                  showCreateDirectoryModal({
+                    data: { id: parent.id },
+                    onResolve: () => {
+                      refetchFiles?.()
+                      router.replace(router.asPath)
+                    },
+                  })
                   break
                 }
                 case "newFile": {
@@ -184,7 +190,13 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
           ],
           onItemClick: (action) => {
             if (action === "newFolder") {
-              showCreateDirectoryModal({ data: { id: parent.id }, onResolve: refetchFiles })
+              showCreateDirectoryModal({
+                data: { id: parent.id },
+                onResolve: () => {
+                  refetchFiles?.()
+                  router.replace(router.asPath)
+                },
+              })
               return
             }
             if (action === "newFile") {

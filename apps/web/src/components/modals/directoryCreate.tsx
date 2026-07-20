@@ -1,4 +1,3 @@
-import { useRouter } from "next/router"
 import { Form } from "react-final-form"
 
 import { DomainFileDescriptor } from "@wr/shared"
@@ -32,7 +31,6 @@ const validate = (values: FormType) => {
 }
 
 export const DirectoryCreateModal = ({ show, onClose, data, onReject, onResolve }: DirectoryCreateModalProps) => {
-  const router = useRouter()
   const notify = useNotification()
   const { mutateAsync: createDirectory, isPending } = useFileCreateDirectory()
   const focusRef = (el: HTMLInputElement | null) => {
@@ -48,7 +46,6 @@ export const DirectoryCreateModal = ({ show, onClose, data, onReject, onResolve 
           try {
             await createDirectory({ parentId: data.id, name: values.name })
             onClose?.()
-            router.replace(router.asPath)
             onResolve?.()
           } catch (error) {
             notify.error(L.modal.directoryCreate.failed, error.message)
