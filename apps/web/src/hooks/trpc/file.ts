@@ -1,9 +1,9 @@
 import { FileDescriptorSortBy, FileHistorySortBy } from "@wr/db"
 import {
   BadRequestError,
-  InvalidChatDirAccessError,
-  InvalidPrivateDirAccessError,
-  InvalidRootDirAccessError,
+  InvalidChatFolderAccessError,
+  InvalidPrivateFolderAccessError,
+  InvalidRootFolderAccessError,
   PermissionDeniedError,
   SortDirection,
   ValidationError,
@@ -127,9 +127,9 @@ export const useFileDeleteMany = () => {
         return handleError(
           e,
           [
-            { error: InvalidRootDirAccessError, message: L.file.errors.cannotDeleteRoot },
-            { error: InvalidPrivateDirAccessError, message: L.file.errors.cannotDeletePrivate },
-            { error: InvalidChatDirAccessError, message: L.file.errors.cannotDeleteChat },
+            { error: InvalidRootFolderAccessError, message: L.file.errors.cannotDeleteRoot },
+            { error: InvalidPrivateFolderAccessError, message: L.file.errors.cannotDeletePrivate },
+            { error: InvalidChatFolderAccessError, message: L.file.errors.cannotDeleteChat },
           ],
           L.file.errors.deleteFailed
         )
@@ -223,7 +223,7 @@ export const useFileMove = () => {
               error: PermissionDeniedError,
               message: L.file.errors.movePermissionDenied,
             },
-            { error: InvalidChatDirAccessError, message: L.file.errors.cannotMoveChat },
+            { error: InvalidChatFolderAccessError, message: L.file.errors.cannotMoveChat },
           ],
           L.file.errors.moveFailed
         )

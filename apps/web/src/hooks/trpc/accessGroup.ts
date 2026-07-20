@@ -1,8 +1,8 @@
 import {
   BadRequestError,
-  InvalidChatDirAccessError,
-  InvalidPrivateDirAccessError,
-  InvalidRootDirAccessError,
+  InvalidChatFolderAccessError,
+  InvalidPrivateFolderAccessError,
+  InvalidRootFolderAccessError,
   ValidationError,
 } from "@wr/shared"
 
@@ -23,11 +23,11 @@ export const useAccessGroupCreate = () => {
           [
             { error: ValidationError, message: "Invalid input data." },
             {
-              error: InvalidChatDirAccessError,
+              error: InvalidChatFolderAccessError,
               message: L.accessGroup.chatFolderNotAllowed,
             },
             {
-              error: InvalidPrivateDirAccessError,
+              error: InvalidPrivateFolderAccessError,
               message: L.accessGroup.privateFolderNotAllowed,
             },
           ],
@@ -50,15 +50,15 @@ export const useAccessGroupEdit = () => {
           e,
           [
             {
-              error: InvalidChatDirAccessError,
+              error: InvalidChatFolderAccessError,
               message: L.accessGroup.chatFolderNotAllowed,
             },
             {
-              error: InvalidPrivateDirAccessError,
+              error: InvalidPrivateFolderAccessError,
               message: L.accessGroup.personalGroupNotEditable,
             },
             {
-              error: InvalidRootDirAccessError,
+              error: InvalidRootFolderAccessError,
               message: L.accessGroup.ownerGroupNotEditable,
             },
           ],

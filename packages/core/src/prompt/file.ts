@@ -23,5 +23,5 @@ When you need to perform operations on a file or directory, you should use its i
 `
 
 export const fileDescriptorToMessageContent = (desc: DomainFileDescriptor): string => {
-  return `id: ${desc.id}, name: ${desc.name}, parentId: ${desc.parentId}, isDirectory: ${desc.isDirectory}, mimeType: ${desc.mimeType}`
+  return `id: ${desc.id}, name: ${desc.name}, parentId: ${desc.parentId}, isDirectory: ${desc.isFolder}, mimeType: ${desc.mimeType}`
 }

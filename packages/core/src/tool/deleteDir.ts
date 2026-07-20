@@ -57,7 +57,7 @@ Please make sure to list the contents of the directory with the ToolListDir tool
     }
 
     try {
-      await this.fileAccessService.deleteMany({ ids: parsed.data.descIds, onlyDirectories: true })
+      await this.fileAccessService.deleteMany({ ids: parsed.data.descIds, onlyFolders: true })
       return {
         message: {
           id: randomId(),

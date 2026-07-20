@@ -40,11 +40,11 @@ export const mapFileDescriptorDomainToApp = (entity: DomainFileDescriptor): AppF
     name: entity.name,
     blobHash: entity.blobHash,
     mimeType: entity.mimeType,
-    isFolder: entity.isDirectory,
+    isFolder: entity.isFolder,
     isRoot: entity.isRoot,
     parentId: entity.parentId || undefined,
     pathIds: entity.pathIds,
-    isChatFolder: entity.isChatDir,
+    isChatFolder: entity.isChatFolder,
     isPrivateRoot: entity.isPrivateRoot,
   }
 }

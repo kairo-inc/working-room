@@ -71,12 +71,12 @@ This tool will throw an error if the directory already exists at the specified p
         desc = await this.fileAccessService.rootDescriptor()
       }
 
-      const dir = await this.fileAccessService.makeDirectory({
+      const folder = await this.fileAccessService.makeFolder({
         parentDescId: desc.id,
-        dirName: input.data.dirName,
+        folderName: input.data.dirName,
       })
       let message = `Directory created successfully`
-      message += `\n- ${dir.name}/ (ID: ${dir.id})`
+      message += `\n- ${folder.name}/ (ID: ${folder.id})`
 
       return {
         message: {
