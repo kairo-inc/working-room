@@ -8,13 +8,13 @@ import { randomId } from "@wr/shared-node"
 import { Tool, ToolIncomingChange, ToolRunArgs, ToolRunResult } from "./base"
 
 const inputSchema = z.object({
-  descId: z.string().describe(`The ID of the existing file to be moved. This should be a file or directory that the agent has access to.`),
+  descId: z.string().describe(`The ID of the existing file to be moved. This should be a file or folder that the agent has access to.`),
   parentDescId: z
     .string()
     .optional()
     .describe(
-      `The ID of the destination directory where the file will be moved to. This should be a directory that the agent has access to.
-If you need to refer to the root directory, do not provide this field.`
+      `The ID of the destination folder where the file will be moved to. This should be a folder that the agent has access to.
+If you need to refer to the root folder, do not provide this field.`
     ),
   newName: z.string().optional().describe(`The new name of the file after moving. If not provided, the original name will be kept.`),
 })
@@ -23,7 +23,7 @@ If you need to refer to the root directory, do not provide this field.`
 export class ToolMoveFile extends Tool {
   name = "ToolMoveFile"
   description = `Move a file from one location to another. Use this when you need to reorganize files within the system. The input should include the source and destination IDs.
-You can use this tool to rename a file by providing the same directory in both source and destination IDs but with different file names.`
+You can use this tool to rename a file by providing the same folder in both source and destination IDs but with different file names.`
   needApproval = true
   inputSchema = inputSchema
   toolType: DomainToolType = "move"

@@ -7,7 +7,7 @@ export type DomainAccessPolicy = {
   resources: {
     id: string
     pathIds?: string
-    isDirectory: boolean
+    isFolder: boolean
     mimeType: string
   }[]
 }

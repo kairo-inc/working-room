@@ -1,9 +1,9 @@
 import { FileDescriptorSortBy, FileHistorySortBy } from "@wr/db"
 import {
   BadRequestError,
-  InvalidChatDirAccessError,
-  InvalidPrivateDirAccessError,
-  InvalidRootDirAccessError,
+  InvalidChatFolderAccessError,
+  InvalidPrivateFolderAccessError,
+  InvalidRootFolderAccessError,
   PermissionDeniedError,
   SortDirection,
   ValidationError,
@@ -127,9 +127,9 @@ export const useFileDeleteMany = () => {
         return handleError(
           e,
           [
-            { error: InvalidRootDirAccessError, message: L.file.errors.cannotDeleteRoot },
-            { error: InvalidPrivateDirAccessError, message: L.file.errors.cannotDeletePrivate },
-            { error: InvalidChatDirAccessError, message: L.file.errors.cannotDeleteChat },
+            { error: InvalidRootFolderAccessError, message: L.file.errors.cannotDeleteRoot },
+            { error: InvalidPrivateFolderAccessError, message: L.file.errors.cannotDeletePrivate },
+            { error: InvalidChatFolderAccessError, message: L.file.errors.cannotDeleteChat },
           ],
           L.file.errors.deleteFailed
         )
@@ -138,7 +138,7 @@ export const useFileDeleteMany = () => {
   }
 }
 
-export const useFileCreateDirectory = () => {
+export const useFileCreateFolder = () => {
   const { mutateAsync, mutate: _, ...rest } = trpc.fileCreateDirectory.useMutation()
   return {
     ...rest,
@@ -152,10 +152,10 @@ export const useFileCreateDirectory = () => {
             { error: ValidationError, message: L.common.invalidInput },
             {
               error: PermissionDeniedError,
-              message: L.file.errors.createDirectoryPermissionDenied,
+              message: L.file.errors.createFolderPermissionDenied,
             },
           ],
-          L.file.errors.createDirectoryFailed
+          L.file.errors.createFolderFailed
         )
       }
     },
@@ -198,7 +198,7 @@ export const useFileCopy = () => {
           [
             {
               error: BadRequestError,
-              message: L.file.errors.cannotCopyDirectory,
+              message: L.file.errors.cannotCopyFolder,
             },
           ],
           L.file.errors.copyFailed
@@ -223,7 +223,7 @@ export const useFileMove = () => {
               error: PermissionDeniedError,
               message: L.file.errors.movePermissionDenied,
             },
-            { error: InvalidChatDirAccessError, message: L.file.errors.cannotMoveChat },
+            { error: InvalidChatFolderAccessError, message: L.file.errors.cannotMoveChat },
           ],
           L.file.errors.moveFailed
         )

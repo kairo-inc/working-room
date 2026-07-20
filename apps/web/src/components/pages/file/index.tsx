@@ -174,7 +174,7 @@ export const PageFile = ({ data }: PageFileProps) => {
             {data.parentId && (
               <a href={Route.tree(data.parentId)} className="text-primary inline-flex items-center gap-1 hover:underline">
                 <ArrowLeft className="size-4" />
-                {L.file.backToDirectory}
+                {L.file.backToFolder}
               </a>
             )}
             <span className="text-muted-foreground ml-4 text-sm">{L.file.createdAt.replace("{0}", createdAt)}</span>

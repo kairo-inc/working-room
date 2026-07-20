@@ -28,7 +28,7 @@ describe("[Success] FileAccessService", () => {
   })
 
   it("Create new file and read its content", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       await runWithPrivateContext({ idToken: user.idToken }, async () => {
@@ -39,7 +39,7 @@ describe("[Success] FileAccessService", () => {
           return await fileAccessProvider.writeFileNew({
             content,
             fileName: "test.txt",
-            parentDescId: dirs.sharedRoot.id,
+            parentDescId: folders.sharedRoot.id,
             mimeType: "text/plain",
           })
         })
@@ -51,10 +51,10 @@ describe("[Success] FileAccessService", () => {
 
         // Check.
         expect(new TextDecoder().decode(readResult)).toBe(text)
-        expect(newResult.isDirectory).toBe(false)
+        expect(newResult.isFolder).toBe(false)
         expect(newResult.isRoot).toBe(false)
         expect(newResult.mimeType).toBe("text/plain")
-        expect(newResult.parentId).toBe(dirs.sharedRoot.id)
+        expect(newResult.parentId).toBe(folders.sharedRoot.id)
 
         // Find the file by text.
         const findResult = await runWithPrivateContext({ idToken: user.idToken }, async () => {
@@ -92,7 +92,7 @@ describe("[Success] FileAccessService", () => {
   })
 
   it("Get stat of the root", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       await runWithDiContainer(testContainer, async () => {
@@ -100,13 +100,13 @@ describe("[Success] FileAccessService", () => {
         const existingFileStat = await runWithPrivateContext({ idToken: user.idToken }, async () => {
           return await fileAccessProvider.rootDescriptor()
         })
-        expect(existingFileStat.id).toBe(dirs.root.id)
+        expect(existingFileStat.id).toBe(folders.root.id)
       })
     })
   })
 
   it("Move a file", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       await runWithDiContainer(testContainer, async () => {
@@ -116,12 +116,12 @@ describe("[Success] FileAccessService", () => {
           return await fileAccessProvider.writeFileNew({
             content,
             fileName: "test.txt",
-            parentDescId: dirs.sharedRoot.id,
+            parentDescId: folders.sharedRoot.id,
             mimeType: "text/plain",
           })
         })
         const newDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-          return await fileAccessProvider.makeDirectory({ dirName: "newDir", parentDescId: dirs.sharedRoot.id })
+          return await fileAccessProvider.makeFolder({ folderName: "newDir", parentDescId: folders.sharedRoot.id })
         })
 
         // Move file into another directory should work.
@@ -140,15 +140,15 @@ describe("[Success] FileAccessService", () => {
   })
 
   it("Move a directory with childrens", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
       const sourceDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessProvider.makeDirectory({ dirName: "sourceDir", parentDescId: dirs.sharedRoot.id })
+        return await fileAccessProvider.makeFolder({ folderName: "sourceDir", parentDescId: folders.sharedRoot.id })
       })
       const childDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessProvider.makeDirectory({ dirName: "childDir", parentDescId: sourceDir.id })
+        return await fileAccessProvider.makeFolder({ folderName: "childDir", parentDescId: sourceDir.id })
       })
       const childFileText = "Nested file content"
       const childFile = await runWithPrivateContext({ idToken: user.idToken }, async () => {
@@ -161,7 +161,7 @@ describe("[Success] FileAccessService", () => {
         })
       })
       const targetDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessProvider.makeDirectory({ dirName: "targetDir", parentDescId: dirs.sharedRoot.id })
+        return await fileAccessProvider.makeFolder({ folderName: "targetDir", parentDescId: folders.sharedRoot.id })
       })
 
       const movedDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
@@ -188,7 +188,7 @@ describe("[Success] FileAccessService", () => {
   })
 
   it("Copy a file", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessService = testContainer.resolve<FileAccessService>("FileAccessService")
@@ -198,7 +198,7 @@ describe("[Success] FileAccessService", () => {
         return await fileAccessService.writeFileNew({
           content,
           fileName: "original.txt",
-          parentDescId: dirs.sharedRoot.id,
+          parentDescId: folders.sharedRoot.id,
           mimeType: "text/plain",
         })
       })
@@ -208,7 +208,7 @@ describe("[Success] FileAccessService", () => {
         return await fileAccessService.copyFile({ descId: originalFile.id })
       })
       expect(copiedFile.id).not.toBe(originalFile.id)
-      expect(copiedFile.parentId).toBe(dirs.sharedRoot.id)
+      expect(copiedFile.parentId).toBe(folders.sharedRoot.id)
       expect(copiedFile.name).toBe("original_copy.txt")
 
       const copiedContent = await runWithPrivateContext({ idToken: user.idToken }, async () => {
@@ -221,13 +221,13 @@ describe("[Success] FileAccessService", () => {
         return await fileAccessService.copyFile({ descId: originalFile.id, newName: "renamed-copy.txt" })
       })
       expect(namedCopy.id).not.toBe(originalFile.id)
-      expect(namedCopy.parentId).toBe(dirs.sharedRoot.id)
+      expect(namedCopy.parentId).toBe(folders.sharedRoot.id)
       expect(namedCopy.name).toBe("renamed-copy.txt")
     })
   })
 
   it("Delete a file", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
@@ -236,7 +236,7 @@ describe("[Success] FileAccessService", () => {
         return await fileAccessProvider.writeFileNew({
           content,
           fileName: "delete-me.txt",
-          parentDescId: dirs.sharedRoot.id,
+          parentDescId: folders.sharedRoot.id,
           mimeType: "text/plain",
         })
       })
@@ -253,15 +253,15 @@ describe("[Success] FileAccessService", () => {
   })
 
   it("Delete a directory with childrens", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
       const sourceDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessProvider.makeDirectory({ dirName: "delete-source-dir", parentDescId: dirs.sharedRoot.id })
+        return await fileAccessProvider.makeFolder({ folderName: "delete-source-dir", parentDescId: folders.sharedRoot.id })
       })
       const childDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessProvider.makeDirectory({ dirName: "delete-child-dir", parentDescId: sourceDir.id })
+        return await fileAccessProvider.makeFolder({ folderName: "delete-child-dir", parentDescId: sourceDir.id })
       })
       const childFile = await runWithPrivateContext({ idToken: user.idToken }, async () => {
         const content = new Uint8Array(new TextEncoder().encode("Delete nested file")).buffer
@@ -293,22 +293,25 @@ describe("[Success] FileAccessService", () => {
       await expect(deletedChildFile).rejects.toThrow(NotFoundError)
 
       const sharedChildren = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessProvider.list({ descId: dirs.sharedRoot.id, page: 0, take: 20 })
+        return await fileAccessProvider.list({ descId: folders.sharedRoot.id, page: 0, take: 20 })
       })
       expect(sharedChildren.data.find((desc) => desc.id === sourceDir.id)).toBeUndefined()
     })
   })
 
   it("List a files and folders", async () => {
-    const { user, dirs, adminUser, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    const { user, folders, adminUser, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
       const parentDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessProvider.list({ descId: dirs.root.id })
+        return await fileAccessProvider.list({ descId: folders.root.id })
       })
       expect(parentDir.data).toEqual(
-        expect.arrayContaining([expect.objectContaining({ id: user.privateDir.id }), expect.objectContaining({ id: dirs.sharedRoot.id })])
+        expect.arrayContaining([
+          expect.objectContaining({ id: user.privateDir.id }),
+          expect.objectContaining({ id: folders.sharedRoot.id }),
+        ])
       )
       expect(parentDir.data).not.toEqual(
         expect.arrayContaining([
@@ -329,14 +332,14 @@ describe("[Success] FileAccessService", () => {
     // "Other user" who has access to root -> shared -> targetDir, should be able to list the ancestor directories, but can not write or delete files in those ancestor directories.
     // Also, "other user" can not see root -> common because it is not an ancestor of the accessible directory.
     // Preare directory structure: root -> shared -> targetDir as an owner.
-    const { tenant, user, dirs, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    const { tenant, user, folders, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     const [sharedDirId, targetDirId, commonDirId] = await runWithDiContainer(testContainer, async () => {
       const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
       return await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        const sharedDir = await fileAccessProvider.makeDirectory({ parentDescId: dirs.root.id, dirName: "shared" })
-        const commonDir = await fileAccessProvider.makeDirectory({ parentDescId: dirs.root.id, dirName: "common" })
-        const targetDir = await fileAccessProvider.makeDirectory({ parentDescId: sharedDir.id, dirName: "targetDir" })
+        const sharedDir = await fileAccessProvider.makeFolder({ parentDescId: folders.root.id, folderName: "shared" })
+        const commonDir = await fileAccessProvider.makeFolder({ parentDescId: folders.root.id, folderName: "common" })
+        const targetDir = await fileAccessProvider.makeFolder({ parentDescId: sharedDir.id, folderName: "targetDir" })
 
         // Create an access group and participate the "other user" in that group.
         await prismaClient.accessGroup.create({
@@ -365,7 +368,7 @@ describe("[Success] FileAccessService", () => {
       const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
       await runWithPrivateContext({ idToken: memberUser.idToken }, async () => {
         // This should contain the sharedDir but not the commonDir.
-        const { data: listRootDir } = await fileAccessProvider.list({ descId: dirs.root.id })
+        const { data: listRootDir } = await fileAccessProvider.list({ descId: folders.root.id })
 
         expect(listRootDir.find((desc) => desc.id === sharedDirId)).toBeDefined()
         expect(listRootDir.find((desc) => desc.id === commonDirId)).toBeUndefined()
@@ -380,15 +383,15 @@ describe("[Success] FileAccessService", () => {
   })
 
   it("Traverse a directory", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
       const parentDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessProvider.makeDirectory({ dirName: "traverse-parent", parentDescId: dirs.sharedRoot.id })
+        return await fileAccessProvider.makeFolder({ folderName: "traverse-parent", parentDescId: folders.sharedRoot.id })
       })
       const childDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessProvider.makeDirectory({ dirName: "traverse-child", parentDescId: parentDir.id })
+        return await fileAccessProvider.makeFolder({ folderName: "traverse-child", parentDescId: parentDir.id })
       })
       const childFileText = "Traverse me"
       const childFile = await runWithPrivateContext({ idToken: user.idToken }, async () => {
@@ -435,7 +438,7 @@ describe("[Failure] FileAccessService", () => {
   })
 
   it("Fail to remove other user's private file", async () => {
-    const { tenant, user, dirs, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    const { tenant, user, folders, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
@@ -448,7 +451,7 @@ describe("[Failure] FileAccessService", () => {
           isRoot: false,
           isDirectory: false,
           parentId: memberUser.privateDir.id,
-          pathIds: `/${dirs.root.id}/${memberUser.privateDir.id}/other-user-private-file-id`,
+          pathIds: `/${folders.root.id}/${memberUser.privateDir.id}/other-user-private-file-id`,
           mimeType: "text/plain",
           size: 7,
           blobHash: "other-user-private-file-blob-hash",
@@ -467,7 +470,7 @@ describe("[Failure] FileAccessService", () => {
   })
 
   it("Fail to move file to other user's private directory", async () => {
-    const { user, dirs, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    const { user, folders, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessProvider = testContainer.resolve<FileAccessService>("FileAccessService")
@@ -476,7 +479,7 @@ describe("[Failure] FileAccessService", () => {
         return await fileAccessProvider.writeFileNew({
           content,
           fileName: "move-me.txt",
-          parentDescId: dirs.sharedRoot.id,
+          parentDescId: folders.sharedRoot.id,
           mimeType: "text/plain",
         })
       })
@@ -492,24 +495,24 @@ describe("[Failure] FileAccessService", () => {
       const unchangedFile = await runWithPrivateContext({ idToken: user.idToken }, async () => {
         return await fileAccessProvider.getDescriptor(targetFile.id)
       })
-      expect(unchangedFile.parentId).toBe(dirs.sharedRoot.id)
+      expect(unchangedFile.parentId).toBe(folders.sharedRoot.id)
     })
   })
 
   it("Fail to move a directory into its own descendant", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessService = testContainer.resolve<FileAccessService>("FileAccessService")
 
       const parentDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessService.makeDirectory({ dirName: "ancestor-dir", parentDescId: dirs.sharedRoot.id })
+        return await fileAccessService.makeFolder({ folderName: "ancestor-dir", parentDescId: folders.sharedRoot.id })
       })
       const childDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessService.makeDirectory({ dirName: "child-dir", parentDescId: parentDir.id })
+        return await fileAccessService.makeFolder({ folderName: "child-dir", parentDescId: parentDir.id })
       })
       const grandChildDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessService.makeDirectory({ dirName: "grandchild-dir", parentDescId: childDir.id })
+        return await fileAccessService.makeFolder({ folderName: "grandchild-dir", parentDescId: childDir.id })
       })
 
       // Moving a directory into its direct child should fail.
@@ -528,19 +531,19 @@ describe("[Failure] FileAccessService", () => {
       const unchangedDir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
         return await fileAccessService.getDescriptor(parentDir.id)
       })
-      expect(unchangedDir.parentId).toBe(dirs.sharedRoot.id)
+      expect(unchangedDir.parentId).toBe(folders.sharedRoot.id)
     })
   })
 
   it("Fail to copy a own directory", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       // Copy directory is prohibited to prevent potential abuse of storage by creating many copies of large directories.
       const fileAccessService = testContainer.resolve<FileAccessService>("FileAccessService")
 
       const dir = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessService.makeDirectory({ dirName: "copy-dir-test", parentDescId: dirs.sharedRoot.id })
+        return await fileAccessService.makeFolder({ folderName: "copy-dir-test", parentDescId: folders.sharedRoot.id })
       })
 
       const copyResult = runWithPrivateContext({ idToken: user.idToken }, async () => {
@@ -563,19 +566,19 @@ describe("[Failure] FileAccessService", () => {
   })
 
   it("Can not access other user's private directory even if user has access policy to ancestor folder", async () => {
-    const { user, dirs, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    const { user, folders, memberUser } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessService = testContainer.resolve<FileAccessService>("FileAccessService")
       const dirList = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessService.list({ descId: dirs.root.id })
+        return await fileAccessService.list({ descId: folders.root.id })
       })
 
       // Check directory list does not contain other user's private directory.
       const ownPrivateDir = dirList.data.find((desc) => desc.id === user.privateDir.id)
       expect(ownPrivateDir).toBeDefined()
 
-      const sharedDir = dirList.data.find((desc) => desc.id === dirs.sharedRoot.id)
+      const sharedDir = dirList.data.find((desc) => desc.id === folders.sharedRoot.id)
       expect(sharedDir).toBeDefined()
 
       const otherUserPrivateDir = dirList.data.find((desc) => desc.id === memberUser.privateDir.id)
@@ -596,12 +599,12 @@ describe("[Failure] FileAccessService", () => {
   })
 
   it("Can not see other user's private file when traversing directories", async () => {
-    const { user, memberUser, dirs } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    const { user, memberUser, folders } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
     testContainer.registerInstance<FileAccessContext>("FileAccessContext", { userId: user.id })
     await runWithDiContainer(testContainer, async () => {
       const fileAccessService = testContainer.resolve<FileAccessService>("FileAccessService")
       const result = await runWithPrivateContext({ idToken: user.idToken }, async () => {
-        return await fileAccessService.traverse({ descId: dirs.root.id, maxDepth: 1 })
+        return await fileAccessService.traverse({ descId: folders.root.id, maxDepth: 1 })
       })
       expect(result.find((desc) => desc.id === memberUser.privateDir.id)).toBeUndefined()
     })

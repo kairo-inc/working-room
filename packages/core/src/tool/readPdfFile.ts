@@ -10,7 +10,7 @@ import { Tool, ToolRunArgs, ToolRunResult } from "./base"
 const inputSchema = z.object({
   descId: z
     .string()
-    .describe(`The ID of the existing file to perform this action on. This should be a file or directory that the agent has access to.`),
+    .describe(`The ID of the existing file to perform this action on. This should be a file or folder that the agent has access to.`),
 })
 
 @injectable()

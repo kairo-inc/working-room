@@ -2,7 +2,13 @@ import { PrismaClient } from "@prisma/client"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 
 import { CoreConfig } from "@wr/core"
-import { BadRequestError, InvalidChatDirAccessError, InvalidPrivateDirAccessError, NoContextError, PermissionDeniedError } from "@wr/shared"
+import {
+  BadRequestError,
+  InvalidChatFolderAccessError,
+  InvalidPrivateFolderAccessError,
+  NoContextError,
+  PermissionDeniedError,
+} from "@wr/shared"
 import { runWithDiContainer, runWithPrivateContext } from "@wr/shared-node"
 import { fixtureFactory } from "@wr/testing"
 
@@ -28,14 +34,14 @@ describe("[Success] AccessGroupService", () => {
   })
 
   it("Create access group under shared root directory", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     await runWithDiContainer(testContainer, async () => {
       const accessGroupService = testContainer.resolve<AccessGroupService>("AccessGroupService")
       const result = await runWithPrivateContext({ idToken: user.idToken }, async () => {
         return await accessGroupService.create({
           name: "Marketing Team",
           description: "Marketing team access group",
-          resourceId: dirs.sharedRoot.id,
+          resourceId: folders.sharedRoot.id,
           read: true,
           write: true,
         })
@@ -52,19 +58,19 @@ describe("[Success] AccessGroupService", () => {
         include: { resources: true, users: true },
       })
       expect(entity).not.toBeNull()
-      expect(entity?.resources.find((r) => r.id === dirs.sharedRoot.id)).not.toBeUndefined()
+      expect(entity?.resources.find((r) => r.id === folders.sharedRoot.id)).not.toBeUndefined()
       expect(entity?.users.find((u) => u.id === user.id)).not.toBeUndefined()
     })
   })
 
   it("Delete a non-personal access group", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     await runWithDiContainer(testContainer, async () => {
       const accessGroupService = testContainer.resolve<AccessGroupService>("AccessGroupService")
       await runWithPrivateContext({ idToken: user.idToken }, async () => {
         const created = await accessGroupService.create({
           name: "Temporary Group",
-          resourceId: dirs.sharedRoot.id,
+          resourceId: folders.sharedRoot.id,
           read: true,
           write: false,
         })
@@ -77,13 +83,13 @@ describe("[Success] AccessGroupService", () => {
   })
 
   it("Edit access group name, permission, users and resources", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     await runWithDiContainer(testContainer, async () => {
       const accessGroupService = testContainer.resolve<AccessGroupService>("AccessGroupService")
       await runWithPrivateContext({ idToken: user.idToken }, async () => {
         const created = await accessGroupService.create({
           name: "Original Name",
-          resourceId: dirs.sharedRoot.id,
+          resourceId: folders.sharedRoot.id,
           read: true,
           write: false,
         })
@@ -100,26 +106,26 @@ describe("[Success] AccessGroupService", () => {
         expect(updated.write).toBe(true)
 
         const resources = await accessGroupService.getResourceList({ id: created.id })
-        expect(resources.map((r) => r.id).sort()).toEqual([user.privateDir.id, dirs.sharedRoot.id].sort())
+        expect(resources.map((r) => r.id).sort()).toEqual([user.privateDir.id, folders.sharedRoot.id].sort())
 
         await accessGroupService.edit({
           id: created.id,
           resourceIdsToRemove: [user.privateDir.id],
         })
         const resourcesAfterRemove = await accessGroupService.getResourceList({ id: created.id })
-        expect(resourcesAfterRemove.map((r) => r.id)).toEqual([dirs.sharedRoot.id])
+        expect(resourcesAfterRemove.map((r) => r.id)).toEqual([folders.sharedRoot.id])
       })
     })
   })
 
   it("Get access group, its user list and resource list", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     await runWithDiContainer(testContainer, async () => {
       const accessGroupService = testContainer.resolve<AccessGroupService>("AccessGroupService")
       await runWithPrivateContext({ idToken: user.idToken }, async () => {
         const created = await accessGroupService.create({
           name: "Lookup Group",
-          resourceId: dirs.sharedRoot.id,
+          resourceId: folders.sharedRoot.id,
           read: true,
           write: true,
         })
@@ -134,7 +140,7 @@ describe("[Success] AccessGroupService", () => {
         expect(userList.data.find((u) => u.id === user.id)).not.toBeUndefined()
 
         const resourceList = await accessGroupService.getResourceList({ id: created.id })
-        expect(resourceList.find((r) => r.id === dirs.sharedRoot.id)).not.toBeUndefined()
+        expect(resourceList.find((r) => r.id === folders.sharedRoot.id)).not.toBeUndefined()
       })
     })
   })
@@ -188,7 +194,7 @@ describe("[Failure] AccessGroupService", () => {
           write: true,
         })
       })
-      await expect(result).rejects.toThrow(InvalidChatDirAccessError)
+      await expect(result).rejects.toThrow(InvalidChatFolderAccessError)
     })
   })
 
@@ -204,7 +210,7 @@ describe("[Failure] AccessGroupService", () => {
           write: true,
         })
       })
-      await expect(result).rejects.toThrow(InvalidPrivateDirAccessError)
+      await expect(result).rejects.toThrow(InvalidPrivateFolderAccessError)
     })
   })
 
@@ -224,13 +230,13 @@ describe("[Failure] AccessGroupService", () => {
   })
 
   it("Can't create or delete access group with member role", async () => {
-    const { memberUser, dirs } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
+    const { memberUser, folders } = await fixtureFactory.createTenantWithOwnerAndOtherUsers()
     await runWithDiContainer(testContainer, async () => {
       const accessGroupService = testContainer.resolve<AccessGroupService>("AccessGroupService")
       const createResult = runWithPrivateContext({ idToken: memberUser.idToken }, async () => {
         return await accessGroupService.create({
           name: "Member Group",
-          resourceId: dirs.sharedRoot.id,
+          resourceId: folders.sharedRoot.id,
           read: true,
           write: true,
         })
@@ -245,12 +251,12 @@ describe("[Failure] AccessGroupService", () => {
   })
 
   it("Can't create access group without a private context", async () => {
-    const { dirs } = await fixtureFactory.createTenantWithOwner()
+    const { folders } = await fixtureFactory.createTenantWithOwner()
     await runWithDiContainer(testContainer, async () => {
       const accessGroupService = testContainer.resolve<AccessGroupService>("AccessGroupService")
       const result = accessGroupService.create({
         name: "No Context Group",
-        resourceId: dirs.sharedRoot.id,
+        resourceId: folders.sharedRoot.id,
         read: true,
         write: true,
       })
@@ -272,7 +278,7 @@ describe("[Failure] AccessGroupService", () => {
           userIdsToAdd: ["any-user-id"],
         })
       })
-      await expect(resultAddUser).rejects.toThrow(InvalidPrivateDirAccessError)
+      await expect(resultAddUser).rejects.toThrow(InvalidPrivateFolderAccessError)
 
       const resultRemoveUser = runWithPrivateContext({ idToken: user.idToken }, async () => {
         return await accessGroupService.edit({
@@ -280,7 +286,7 @@ describe("[Failure] AccessGroupService", () => {
           userIdsToRemove: ["any-user-id"],
         })
       })
-      await expect(resultRemoveUser).rejects.toThrow(InvalidPrivateDirAccessError)
+      await expect(resultRemoveUser).rejects.toThrow(InvalidPrivateFolderAccessError)
 
       const resultAddResource = runWithPrivateContext({ idToken: user.idToken }, async () => {
         return await accessGroupService.edit({
@@ -288,7 +294,7 @@ describe("[Failure] AccessGroupService", () => {
           resourceIdsToAdd: ["any-resource-id"],
         })
       })
-      await expect(resultAddResource).rejects.toThrow(InvalidPrivateDirAccessError)
+      await expect(resultAddResource).rejects.toThrow(InvalidPrivateFolderAccessError)
 
       const resultRemoveResource = runWithPrivateContext({ idToken: user.idToken }, async () => {
         return await accessGroupService.edit({
@@ -296,7 +302,7 @@ describe("[Failure] AccessGroupService", () => {
           resourceIdsToRemove: ["any-resource-id"],
         })
       })
-      await expect(resultRemoveResource).rejects.toThrow(InvalidPrivateDirAccessError)
+      await expect(resultRemoveResource).rejects.toThrow(InvalidPrivateFolderAccessError)
     })
   })
 

@@ -14,9 +14,9 @@ import {
   DomainFileDescriptor,
   DomainFileHistory,
   ImplementationError,
-  InvalidChatDirAccessError,
-  InvalidPrivateDirAccessError,
-  InvalidRootDirAccessError,
+  InvalidChatFolderAccessError,
+  InvalidPrivateFolderAccessError,
+  InvalidRootFolderAccessError,
   MimeType,
   PageResult,
   PermissionDeniedError,
@@ -37,7 +37,7 @@ import {
   FileAccessServiceFindByTextResult,
   FileAccessServiceListArg,
   FileAccessServiceListFileHistoryArg,
-  FileAccessServiceMakeDirectoryArg,
+  FileAccessServiceMakeFolderArg,
   FileAccessServiceMoveFileArg,
   FileAccessServiceReadBlobArg,
   FileAccessServiceReadFileArg,
@@ -85,7 +85,7 @@ export class FileAccessServiceImpl extends FileAccessService {
     // 2. If a user has a write access policy to the folder A, it means the user can read all the ancestors of the folder A and can write all the files and folders under the folder A.
     // 3. If a user has a write access policy to the folder A, user can write the folder A like renaming, moving, deleting, and creating new file/folder under the folder A.
     // 4. If a user has a read or write access policy to the folder A, user can not read folders that are not ancestors of the folder A and files/folders that are not under the folder A.
-    // 5. User can not access other user's private directory in any case, even if the user has access policy to the folder A which is ancestor of other user's private directory.
+    // 5. User can not access other user's private folder in any case, even if the user has access policy to the folder A which is ancestor of other user's private folder.
 
     const { userId } = this.fileAccessContext
     const desc = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
@@ -171,20 +171,20 @@ export class FileAccessServiceImpl extends FileAccessService {
   }): Promise<DomainFileDescriptor> {
     const { chatId, fileName, content, mimeType } = arg
     const { userId } = this.fileAccessContext
-    const userPrivateDir = await this.fileDescriptorSource.find("EntityFileDescriptor", {
+    const userPrivateFolder = await this.fileDescriptorSource.find("EntityFileDescriptor", {
       where: { privateRootOf: { id: userId } },
     })
 
-    // Create chat root directory if not exists
-    let chatDirId: string
-    const chatDirExists = await this.fileDescriptorSource.findIfExists("EntityFileDescriptor", {
-      where: { parentId: userPrivateDir.id, isChatDir: true },
+    // Create chat root folder if not exists
+    let chatFolderId: string
+    const chatFolderExists = await this.fileDescriptorSource.findIfExists("EntityFileDescriptor", {
+      where: { parentId: userPrivateFolder.id, isChatDir: true },
     })
-    if (chatDirExists) {
-      chatDirId = chatDirExists.id
+    if (chatFolderExists) {
+      chatFolderId = chatFolderExists.id
     } else {
       const id = randomId()
-      const chatDir = await this.fileDescriptorSource.create({
+      const chatFolder = await this.fileDescriptorSource.create({
         data: {
           id,
           blobHash: await this.blobStore.createBlobHash(new ArrayBuffer(0)),
@@ -194,24 +194,24 @@ export class FileAccessServiceImpl extends FileAccessService {
           isDirectory: true,
           mimeType: "inode/directory",
           size: 0,
-          pathIds: `${userPrivateDir.pathIds}/${id}`,
-          parent: { connect: { id: userPrivateDir.id } },
+          pathIds: `${userPrivateFolder.pathIds}/${id}`,
+          parent: { connect: { id: userPrivateFolder.id } },
           owner: { connect: { id: userId } },
           isChatDir: true,
         },
       })
-      chatDirId = chatDir.id
+      chatFolderId = chatFolder.id
     }
 
-    let thisChatDirId: string
-    const thisChatDir = await this.fileDescriptorSource.findIfExists("EntityFileDescriptor", {
-      where: { parent: { id: chatDirId }, chats: { some: { id: chatId } } },
+    let thisChatFolderId: string
+    const thisChatFolder = await this.fileDescriptorSource.findIfExists("EntityFileDescriptor", {
+      where: { parent: { id: chatFolderId }, chats: { some: { id: chatId } } },
     })
-    if (thisChatDir) {
-      thisChatDirId = thisChatDir.id
+    if (thisChatFolder) {
+      thisChatFolderId = thisChatFolder.id
     } else {
       const id = randomId()
-      const newChatDir = await this.fileDescriptorSource.create({
+      const newChatFolder = await this.fileDescriptorSource.create({
         data: {
           id,
           blobHash: await this.blobStore.createBlobHash(new ArrayBuffer(0)),
@@ -221,17 +221,17 @@ export class FileAccessServiceImpl extends FileAccessService {
           isDirectory: true,
           mimeType: "inode/directory",
           size: 0,
-          pathIds: `${userPrivateDir.pathIds}/${chatDirId}/${id}`,
-          parent: { connect: { id: chatDirId } },
+          pathIds: `${userPrivateFolder.pathIds}/${chatFolderId}/${id}`,
+          parent: { connect: { id: chatFolderId } },
           owner: { connect: { id: userId } },
           chats: { connect: { id: chatId } },
         },
       })
-      thisChatDirId = newChatDir.id
+      thisChatFolderId = newChatFolder.id
     }
 
     return await this.newFile({
-      parentDescId: thisChatDirId,
+      parentDescId: thisChatFolderId,
       fileName,
       content,
       mimeType,
@@ -248,7 +248,7 @@ export class FileAccessServiceImpl extends FileAccessService {
   }): Promise<DomainFileDescriptor> {
     const { parentDescId, fileName, content, mimeType, chatId } = arg
     const { userId } = this.fileAccessContext
-    const parentDir = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: parentDescId } })
+    const parentFolder = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: parentDescId } })
     const blobHash = await this.blobStore.createBlobHash(content)
 
     const id = randomId()
@@ -263,7 +263,7 @@ export class FileAccessServiceImpl extends FileAccessService {
         isDirectory: false,
         mimeType,
         size: content.byteLength,
-        pathIds: `${parentDir.pathIds}/${id}`,
+        pathIds: `${parentFolder.pathIds}/${id}`,
         owner: { connect: { id: userId } },
         chats: chatId ? { connect: { id: chatId } } : undefined,
       },
@@ -326,51 +326,51 @@ export class FileAccessServiceImpl extends FileAccessService {
     return null
   }
 
-  private async deleteDirectoryRecord(descId: string): Promise<DomainFileDescriptor[]> {
+  private async deleteFolderRecord(descId: string): Promise<DomainFileDescriptor[]> {
     const desc = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
     if (desc) {
       const { userId } = this.fileAccessContext
-      const isUserPrivateDir = await this.fileDescriptorSource.exists({
+      const isUserPrivateFolder = await this.fileDescriptorSource.exists({
         where: { id: descId, privateRootOf: { id: userId }, isDirectory: true },
       })
       if (desc.isDirectory) {
         if (desc.isRoot) {
-          throw new InvalidRootDirAccessError(`Cannot delete root directory.`)
-        } else if (isUserPrivateDir) {
-          throw new InvalidPrivateDirAccessError(`Cannot delete user private directory.`)
+          throw new InvalidRootFolderAccessError(`Cannot delete root folder.`)
+        } else if (isUserPrivateFolder) {
+          throw new InvalidPrivateFolderAccessError(`Cannot delete user private folder.`)
         } else if (desc.isChatDir) {
-          throw new InvalidChatDirAccessError(`Cannot delete chat directory.`)
+          throw new InvalidChatFolderAccessError(`Cannot delete chat folder.`)
         }
         await this.fileDescriptorSource.delete({ where: { id: descId } })
         await this.fileDescriptorSource.deleteMany({ where: { pathIds: { contains: descId } } })
 
-        // Get all deleted directories and files for response
+        // Get all deleted folders and files for response
         const deletedEntities = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
           where: { pathIds: { contains: descId }, deletedAt: undefined },
         })
         return deletedEntities.map(mapFileDescriptorEntityToDomain)
       } else {
-        throw new BadRequestError(`Not a directory: ${descId}`)
+        throw new BadRequestError(`Not a folder: ${descId}`)
       }
     }
     return []
   }
 
-  private async mkdir(arg: { parentDescId: string; dirName: string }): Promise<DomainFileDescriptor> {
-    const { parentDescId, dirName } = arg
+  private async mkFolder(arg: { parentDescId: string; folderName: string }): Promise<DomainFileDescriptor> {
+    const { parentDescId, folderName } = arg
     const { userId } = this.fileAccessContext
     const parent = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: parentDescId } })
     const blobHash = await this.blobStore.createBlobHash(new ArrayBuffer(0))
 
     const id = randomId()
-    const dir = await this.fileDescriptorSource.create({
+    const folder = await this.fileDescriptorSource.create({
       data: {
         id,
         parent: { connect: { id: parentDescId } },
         blobHash,
         birthtime: new Date(),
         mtime: new Date(),
-        name: dirName,
+        name: folderName,
         isDirectory: true,
         mimeType: "inode/directory",
         size: 0,
@@ -378,10 +378,10 @@ export class FileAccessServiceImpl extends FileAccessService {
         owner: { connect: { id: userId } },
       },
     })
-    return mapFileDescriptorEntityToDomain(dir)
+    return mapFileDescriptorEntityToDomain(folder)
   }
 
-  private async mkdirRoot(): Promise<DomainFileDescriptor> {
+  private async mkRootFolder(): Promise<DomainFileDescriptor> {
     const blobHash = await this.blobStore.createBlobHash(new ArrayBuffer(0))
     const count = await this.fileDescriptorSource.count({ where: { isRoot: true } })
     if (count === 1) {
@@ -389,7 +389,7 @@ export class FileAccessServiceImpl extends FileAccessService {
       return mapFileDescriptorEntityToDomain(root)
     } else {
       if (count > 1) {
-        throw new BadRequestError(`Multiple root directories exist.`)
+        throw new BadRequestError(`Multiple root folders exist.`)
       }
     }
 
@@ -411,22 +411,22 @@ export class FileAccessServiceImpl extends FileAccessService {
     return mapFileDescriptorEntityToDomain(desc)
   }
 
-  private async move(arg: { descId: string; targetDirId: string; newName?: string }): Promise<DomainFileDescriptor> {
-    const { descId, targetDirId, newName } = arg
+  private async move(arg: { descId: string; targetFolderId: string; newName?: string }): Promise<DomainFileDescriptor> {
+    const { descId, targetFolderId, newName } = arg
     const file = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
-    const parentDir = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: targetDirId } })
+    const parentFolder = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: targetFolderId } })
     const newDesc = await this.fileDescriptorSource.update({
       where: { id: descId },
       data: {
-        parent: { connect: { id: targetDirId } },
+        parent: { connect: { id: targetFolderId } },
         name: newName || file.name,
-        pathIds: `${parentDir.pathIds}/${descId}`,
+        pathIds: `${parentFolder.pathIds}/${descId}`,
         mtime: new Date(),
       },
     })
 
     if (file.isDirectory) {
-      // Update pathIds of all children if it's a directory
+      // Update pathIds of all children if it's a folder
       let page = 0
       while (true) {
         const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
@@ -469,12 +469,12 @@ export class FileAccessServiceImpl extends FileAccessService {
     }
 
     if (file.isDirectory) {
-      throw new BadRequestError(`You cannot copy a directory. descId=${descId}`)
+      throw new BadRequestError(`You cannot copy a folder. descId=${descId}`)
     }
 
     const { userId } = this.fileAccessContext
     const newId = randomId()
-    const parentDir = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: file.parentId } })
+    const parentFolder = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: file.parentId } })
     const [name, ext] = file.name.split(/(?=\.[^\.]+$)/)
     const newDesc = await this.fileDescriptorSource.create({
       data: {
@@ -487,7 +487,7 @@ export class FileAccessServiceImpl extends FileAccessService {
         isDirectory: file.isDirectory,
         mimeType: file.mimeType,
         size: file.size,
-        pathIds: `${parentDir.pathIds}/${newId}`,
+        pathIds: `${parentFolder.pathIds}/${newId}`,
         owner: { connect: { id: userId } },
       },
     })
@@ -531,12 +531,12 @@ export class FileAccessServiceImpl extends FileAccessService {
     return desc
   }
 
-  // Everyone can create root dir, so no need to check access policy here.
-  async createRootDir(): Promise<DomainFileDescriptor> {
-    return await this.mkdirRoot()
+  // Everyone can create root folder, so no need to check access policy here.
+  async createRootFolder(): Promise<DomainFileDescriptor> {
+    return await this.mkRootFolder()
   }
 
-  async createPrivateDir(): Promise<DomainFileDescriptor> {
+  async createPrivateFolder(): Promise<DomainFileDescriptor> {
     const { userId } = this.fileAccessContext
     const privateRoot = await this.fileDescriptorSource.findIfExists("EntityFileDescriptor", {
       where: { privateRootOf: { id: userId }, isDirectory: true },
@@ -545,7 +545,7 @@ export class FileAccessServiceImpl extends FileAccessService {
       return mapFileDescriptorEntityToDomain(privateRoot)
     }
 
-    const rootDesc = await this.mkdirRoot()
+    const rootDesc = await this.mkRootFolder()
     const blobHash = await this.blobStore.createBlobHash(new ArrayBuffer(0))
     const id = randomId()
     const desc = await this.fileDescriptorSource.create({
@@ -585,9 +585,9 @@ export class FileAccessServiceImpl extends FileAccessService {
     const { descId, sortBy, sortDirection, page, take } = arg
     const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
 
-    const dir = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
-    if (!dir.isDirectory) {
-      throw new BadRequestError(`Not a directory: ${descId}`)
+    const folder = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
+    if (!folder.isDirectory) {
+      throw new BadRequestError(`Not a folder: ${descId}`)
     } else if (!hasAllowedPolicy && !isAncestorOfAllowedFolder) {
       throw new PermissionDeniedError("You don't have access to this folder")
     } else if (isUnderOtherUserPrivate) {
@@ -595,7 +595,7 @@ export class FileAccessServiceImpl extends FileAccessService {
     }
 
     const { userId } = this.fileAccessContext
-    const otherUserPrivateDirIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
+    const otherUserPrivateFolderIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
       where: {
         privateRootOf: { id: { not: userId } },
       },
@@ -605,10 +605,10 @@ export class FileAccessServiceImpl extends FileAccessService {
       const { data, ...rest } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
         where: {
           parentId: descId,
-          // Filter out files that are under other user's private directories
+          // Filter out files that are under other user's private folders
           AND:
-            otherUserPrivateDirIds.length > 0
-              ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
+            otherUserPrivateFolderIds.length > 0
+              ? otherUserPrivateFolderIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
               : undefined,
         },
         sortBy,
@@ -635,10 +635,10 @@ export class FileAccessServiceImpl extends FileAccessService {
         where: {
           parentId: descId,
           id: { in: visibleFolderIds },
-          // Filter out files that are under other user's private directories
+          // Filter out files that are under other user's private folders
           AND:
-            otherUserPrivateDirIds.length > 0
-              ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
+            otherUserPrivateFolderIds.length > 0
+              ? otherUserPrivateFolderIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
               : undefined,
         },
         sortBy,
@@ -655,9 +655,9 @@ export class FileAccessServiceImpl extends FileAccessService {
     const { descId, maxDepth = 0, maxItems = 100 } = arg
     const { isAncestorOfAllowedFolder, hasAllowedPolicy, isUnderOtherUserPrivate } = await this.checkAccessPolicy(descId, "read")
 
-    const dir = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
-    if (!dir.isDirectory) {
-      throw new BadRequestError(`Not a directory: ${descId}`)
+    const folder = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: descId } })
+    if (!folder.isDirectory) {
+      throw new BadRequestError(`Not a folder: ${descId}`)
     } else if (!hasAllowedPolicy && !isAncestorOfAllowedFolder) {
       throw new PermissionDeniedError("You don't have access to this folder")
     } else if (isUnderOtherUserPrivate) {
@@ -671,7 +671,7 @@ export class FileAccessServiceImpl extends FileAccessService {
       const { isAncestorOfAllowedFolder, hasAllowedPolicy } = await this.checkAccessPolicy(descId, "read")
       const remaining = maxItems - collected.length
       let children: DomainFileDescriptor[]
-      const otherUserPrivateDirIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
+      const otherUserPrivateFolderIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
         where: {
           privateRootOf: { id: { not: userId } },
         },
@@ -681,10 +681,10 @@ export class FileAccessServiceImpl extends FileAccessService {
         const { data } = await this.fileDescriptorSource.findMany("EntityFileDescriptor", {
           where: {
             parentId: descId,
-            // Filter out files that are under other user's private directories
+            // Filter out files that are under other user's private folders
             AND:
-              otherUserPrivateDirIds.length > 0
-                ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
+              otherUserPrivateFolderIds.length > 0
+                ? otherUserPrivateFolderIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
                 : undefined,
           },
           take: remaining,
@@ -708,10 +708,10 @@ export class FileAccessServiceImpl extends FileAccessService {
           where: {
             parentId: descId,
             id: { in: visibleFolderIds },
-            // Filter out files that are under other user's private directories
+            // Filter out files that are under other user's private folders
             AND:
-              otherUserPrivateDirIds.length > 0
-                ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
+              otherUserPrivateFolderIds.length > 0
+                ? otherUserPrivateFolderIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
                 : undefined,
           },
           take: remaining,
@@ -725,7 +725,7 @@ export class FileAccessServiceImpl extends FileAccessService {
       for (const child of children) {
         if (collected.length >= maxItems) break
         collected.push(child)
-        if (child.isDirectory && currentDepth < maxDepth) {
+        if (child.isFolder && currentDepth < maxDepth) {
           await collectItems(child.id, currentDepth + 1, maxDepth, maxItems)
         }
       }
@@ -772,11 +772,11 @@ export class FileAccessServiceImpl extends FileAccessService {
   }
 
   async deleteMany(arg: FileAccessServiceDeleteManyArg): Promise<void> {
-    const { ids, onlyDirectories, onlyFiles } = arg
+    const { ids, onlyFolders, onlyFiles } = arg
     const descList = await this.fileDescriptorSource.findAll("EntityFileDescriptor", { where: { id: { in: ids } } })
 
-    if (onlyDirectories && descList.some((desc) => !desc.isDirectory)) {
-      throw new BadRequestError(`Some of the specified ids are not directories.`)
+    if (onlyFolders && descList.some((desc) => !desc.isDirectory)) {
+      throw new BadRequestError(`Some of the specified ids are not folders.`)
     } else if (onlyFiles && descList.some((desc) => desc.isDirectory)) {
       throw new BadRequestError(`Some of the specified ids are not files.`)
     }
@@ -788,7 +788,7 @@ export class FileAccessServiceImpl extends FileAccessService {
 
     for (const desc of descList) {
       if (desc.isDirectory) {
-        await this.deleteDirectoryRecord(desc.id)
+        await this.deleteFolderRecord(desc.id)
       } else {
         await this.deleteFileRecord(desc.id)
       }
@@ -796,11 +796,11 @@ export class FileAccessServiceImpl extends FileAccessService {
     }
   }
 
-  async makeDirectory(arg: FileAccessServiceMakeDirectoryArg): Promise<DomainFileDescriptor> {
-    const { parentDescId, dirName } = arg
+  async makeFolder(arg: FileAccessServiceMakeFolderArg): Promise<DomainFileDescriptor> {
+    const { parentDescId, folderName } = arg
     await this.checkAccessPolicyAndThrow(parentDescId, "write")
 
-    const desc = await this.mkdir({ parentDescId, dirName })
+    const desc = await this.mkFolder({ parentDescId, folderName })
     await this.recordHistory(desc.id, "create", desc.blobHash)
 
     return desc
@@ -885,14 +885,14 @@ export class FileAccessServiceImpl extends FileAccessService {
     const targetParentDesc = await this.fileDescriptorSource.find("EntityFileDescriptor", { where: { id: parentDescId } })
     const isMovingIntoDescendant = targetParentDesc.pathIds.split("/").includes(descId)
     if (isMovingIntoDescendant) {
-      throw new BadRequestError(`Cannot move a directory into its own descendant.`)
+      throw new BadRequestError(`Cannot move a folder into its own descendant.`)
     } else if (!targetParentDesc.isDirectory) {
-      throw new BadRequestError(`Cannot move a file/directory into a file.`)
+      throw new BadRequestError(`Cannot move a file/folder into a file.`)
     } else if (targetDesc.isChatDir) {
-      throw new InvalidChatDirAccessError(`Cannot move a chat directory.`)
+      throw new InvalidChatFolderAccessError(`Cannot move a chat folder.`)
     }
 
-    await this.move({ descId, targetDirId: parentDescId, newName })
+    await this.move({ descId, targetFolderId: parentDescId, newName })
     const desc = await this.getDescriptor(descId)
     await this.recordHistory(desc.id, "move", desc.blobHash)
 
@@ -939,7 +939,7 @@ export class FileAccessServiceImpl extends FileAccessService {
       },
     })
 
-    const otherUserPrivateDirIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
+    const otherUserPrivateFolderIds = await this.fileDescriptorSource.findAll("EntityFileDescriptor", {
       where: {
         privateRootOf: { id: { not: userId } },
       },
@@ -952,9 +952,11 @@ export class FileAccessServiceImpl extends FileAccessService {
       where: {
         OR: uniquePathIdList.map((pathId) => ({ pathIds: { contains: pathId } })),
         blobHash: { in: blobHashList },
-        // Filter out files that are under other user's private directories
+        // Filter out files that are under other user's private folders
         AND:
-          otherUserPrivateDirIds.length > 0 ? otherUserPrivateDirIds.map(({ id }) => ({ pathIds: { not: { contains: id } } })) : undefined,
+          otherUserPrivateFolderIds.length > 0
+            ? otherUserPrivateFolderIds.map(({ id }) => ({ pathIds: { not: { contains: id } } }))
+            : undefined,
       },
       take: maxResults,
     })

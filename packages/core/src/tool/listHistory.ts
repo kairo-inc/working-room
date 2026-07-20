@@ -47,8 +47,8 @@ When you want to view the specific content of a file at a certain point in its h
 
     try {
       const desc = await this.fileAccessService.getDescriptor(input.data.targetDescId)
-      if (desc.isDirectory) {
-        return { message: this.buildError(toolCall, `The target descriptor is a directory. Please provide a file descriptor ID.`) }
+      if (desc.isFolder) {
+        return { message: this.buildError(toolCall, `The target descriptor is a folder. Please provide a file descriptor ID.`) }
       }
 
       const take = input.data.take ?? DEFAULT_TAKE

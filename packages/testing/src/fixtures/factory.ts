@@ -27,23 +27,23 @@ const resetDatabase = async () => {
   await client.tenant.deleteMany().catch(() => {})
 }
 
-const createUserWithRole = async (tenantId: string, role: UserRole, rootDirId: string) => {
+const createUserWithRole = async (tenantId: string, role: UserRole, rootFolderId: string) => {
   const client = new PrismaClient()
   const userId = `user-${tenantId}-${role}-${randomId()}`
   const userEmail = `user-${tenantId}-${role}-${randomId()}@workingroom.io`
   const userSub = `user-sub-${tenantId}-${role}-${randomId()}`
-  const privateUserRootDirId = `private-user-private-${role}-${randomId()}`
+  const privateUserRootFolderId = `private-user-private-${role}-${randomId()}`
 
   await client.fileDescriptor.create({
     data: {
-      id: privateUserRootDirId,
+      id: privateUserRootFolderId,
       name: "private",
       birthtime: new Date(),
       mtime: new Date(),
       isRoot: false,
       isDirectory: true,
-      parentId: rootDirId,
-      pathIds: `/${rootDirId}/${privateUserRootDirId}`,
+      parentId: rootFolderId,
+      pathIds: `/${rootFolderId}/${privateUserRootFolderId}`,
       mimeType: "inode/directory",
       size: 0,
       blobHash: `test-private-user-root-blob-hash-${role}`,
@@ -68,16 +68,16 @@ const createUserWithRole = async (tenantId: string, role: UserRole, rootDirId: s
             isPersonal: true,
             tenant: { connect: { id: tenantId } },
             resources: {
-              connect: { id: privateUserRootDirId },
+              connect: { id: privateUserRootFolderId },
             },
           },
         ],
       },
       privateDir: {
-        connect: { id: privateUserRootDirId },
+        connect: { id: privateUserRootFolderId },
       },
       fileDescriptors: {
-        connect: { id: privateUserRootDirId },
+        connect: { id: privateUserRootFolderId },
       },
     },
   })
@@ -88,7 +88,7 @@ const createUserWithRole = async (tenantId: string, role: UserRole, rootDirId: s
     sub: userSub,
     role,
     tenantId,
-    privateDir: { id: privateUserRootDirId, pathIds: `/${rootDirId}/${privateUserRootDirId}` },
+    privateDir: { id: privateUserRootFolderId, pathIds: `/${rootFolderId}/${privateUserRootFolderId}` },
   }
   return {
     ...user,
@@ -107,16 +107,16 @@ const createTenantWithOwner = async () => {
   })
   const tenantId = tenant.id
 
-  const rootDirId = `root-${tenantId}`
-  const rootDir = await client.fileDescriptor.create({
+  const rootFolderId = `root-${tenantId}`
+  const rootFolder = await client.fileDescriptor.create({
     data: {
-      id: rootDirId,
+      id: rootFolderId,
       name: "root",
       birthtime: new Date(),
       mtime: new Date(),
       isRoot: true,
       isDirectory: true,
-      pathIds: `/${rootDirId}`,
+      pathIds: `/${rootFolderId}`,
       mimeType: "inode/directory",
       size: 0,
       blobHash: "test-root-blob-hash",
@@ -124,17 +124,17 @@ const createTenantWithOwner = async () => {
     },
   })
 
-  const sharedRootDirId = `shared-root-${tenantId}`
-  const sharedRootDir = await client.fileDescriptor.create({
+  const sharedRootFolderId = `shared-root-${tenantId}`
+  const sharedRootFolder = await client.fileDescriptor.create({
     data: {
-      id: sharedRootDirId,
+      id: sharedRootFolderId,
       name: "shared",
       birthtime: new Date(),
       mtime: new Date(),
       isRoot: false,
       isDirectory: true,
-      parentId: rootDir.id,
-      pathIds: `${rootDir.pathIds}/${sharedRootDirId}`,
+      parentId: rootFolder.id,
+      pathIds: `${rootFolder.pathIds}/${sharedRootFolderId}`,
       mimeType: "inode/directory",
       size: 0,
       blobHash: "test-shared-root-blob-hash",
@@ -142,18 +142,18 @@ const createTenantWithOwner = async () => {
     },
   })
 
-  // Private user root dir
-  const privateUserRootDirId = `private-user-root-${tenantId}`
+  // Private user root folder
+  const privateUserRootFolderId = `private-user-root-${tenantId}`
   await client.fileDescriptor.create({
     data: {
-      id: privateUserRootDirId,
+      id: privateUserRootFolderId,
       name: "private",
       birthtime: new Date(),
       mtime: new Date(),
       isRoot: false,
       isDirectory: true,
-      parentId: rootDir.id,
-      pathIds: `${rootDir.pathIds}/${privateUserRootDirId}`,
+      parentId: rootFolder.id,
+      pathIds: `${rootFolder.pathIds}/${privateUserRootFolderId}`,
       mimeType: "inode/directory",
       size: 0,
       blobHash: "test-private-user-root-blob-hash",
@@ -182,7 +182,7 @@ const createTenantWithOwner = async () => {
             isPersonal: true,
             tenant: { connect: { id: tenant.id } },
             resources: {
-              connect: { id: privateUserRootDirId },
+              connect: { id: privateUserRootFolderId },
             },
           },
           {
@@ -192,16 +192,16 @@ const createTenantWithOwner = async () => {
             isOwner: true,
             tenant: { connect: { id: tenant.id } },
             resources: {
-              connect: { id: rootDir.id },
+              connect: { id: rootFolder.id },
             },
           },
         ],
       },
       privateDir: {
-        connect: { id: privateUserRootDirId },
+        connect: { id: privateUserRootFolderId },
       },
       fileDescriptors: {
-        connect: { id: privateUserRootDirId },
+        connect: { id: privateUserRootFolderId },
       },
     },
   })
@@ -212,7 +212,7 @@ const createTenantWithOwner = async () => {
     sub: testUserSub,
     role: "owner" as UserRole,
     tenantId: tenant.id,
-    privateDir: { id: privateUserRootDirId, pathIds: `${rootDir.pathIds}/${privateUserRootDirId}` },
+    privateDir: { id: privateUserRootFolderId, pathIds: `${rootFolder.pathIds}/${privateUserRootFolderId}` },
   }
 
   return {
@@ -221,28 +221,28 @@ const createTenantWithOwner = async () => {
       ...user,
       idToken: createIdToken(user),
     } satisfies TestUserWithToken,
-    dirs: {
-      root: { id: rootDir.id, pathIds: rootDir.pathIds },
-      sharedRoot: { id: sharedRootDir.id, pathIds: sharedRootDir.pathIds },
+    folders: {
+      root: { id: rootFolder.id, pathIds: rootFolder.pathIds },
+      sharedRoot: { id: sharedRootFolder.id, pathIds: sharedRootFolder.pathIds },
     },
   }
 }
 
 const createTenantWithOwnerAndOtherUsers = async () => {
   const fixtures = await createTenantWithOwner()
-  const { tenant, dirs } = fixtures
+  const { tenant, folders } = fixtures
   return {
     ...fixtures,
-    adminUser: await createUserWithRole(tenant.id, "admin", dirs.root.id),
-    memberUser: await createUserWithRole(tenant.id, "member", dirs.root.id),
+    adminUser: await createUserWithRole(tenant.id, "admin", folders.root.id),
+    memberUser: await createUserWithRole(tenant.id, "member", folders.root.id),
   }
 }
 
 const createTestConfigWithTmpFolder = (options?: Partial<CoreConfig>): CoreConfig => {
-  const tmpDir = `${tmpdir()}/test-root-${randomId()}`
+  const tmpFolder = `${tmpdir()}/test-root-${randomId()}`
   // Create files.
-  const rootDir = options?.root ? path.join(tmpDir, options.root) : `${tmpDir}`
-  const blobDir = options?.blobDir ? path.join(tmpDir, options.blobDir) : `${tmpDir}/blob`
+  const rootDir = options?.root ? path.join(tmpFolder, options.root) : `${tmpFolder}`
+  const blobDir = options?.blobDir ? path.join(tmpFolder, options.blobDir) : `${tmpFolder}/blob`
   mkdirSync(rootDir, { recursive: true })
   mkdirSync(blobDir, { recursive: true })
   return {
@@ -256,7 +256,7 @@ const removeTestFolder = async (config: CoreConfig) => {
     rmSync(config.root, { recursive: true, force: true })
     rmSync(config.blobDir, { recursive: true, force: true })
   } catch (e) {
-    console.error(`Failed to clean up temporary directory: ${e.message}`)
+    console.error(`Failed to clean up temporary folder: ${e.message}`)
   }
 }
 

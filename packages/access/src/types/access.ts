@@ -40,7 +40,7 @@ export type FileAccessServiceReadHistoryArg = {
 export type FileAccessServiceDeleteManyArg = {
   ids: string[]
   onlyFiles?: boolean
-  onlyDirectories?: boolean
+  onlyFolders?: boolean
 }
 
 export type FileAccessServiceWriteFileNewArg = {
@@ -104,9 +104,9 @@ export type FileAccessServiceUploadArg = {
   parentDescId: string
 }
 
-export type FileAccessServiceMakeDirectoryArg = {
+export type FileAccessServiceMakeFolderArg = {
   parentDescId: string
-  dirName: string
+  folderName: string
 }
 
 export type FileAccessServiceRenameArg = {
@@ -146,8 +146,8 @@ export abstract class FileAccessService {
   abstract buildReadablePath(descId: string): Promise<string>
 
   abstract upload(arg: FileAccessServiceUploadArg): Promise<DomainFileDescriptor>
-  abstract createRootDir(): Promise<DomainFileDescriptor>
-  abstract createPrivateDir(): Promise<DomainFileDescriptor>
+  abstract createRootFolder(): Promise<DomainFileDescriptor>
+  abstract createPrivateFolder(): Promise<DomainFileDescriptor>
   abstract createChatFile(arg: FileAccessServiceCreateChatFileArg): Promise<DomainFileDescriptor>
 
   abstract list(arg: FileAccessServiceListArg): Promise<PageResult<DomainFileDescriptor>>
@@ -160,7 +160,7 @@ export abstract class FileAccessService {
   abstract listFileHistory(arg: FileAccessServiceListFileHistoryArg): Promise<PageResult<DomainFileHistory>>
   abstract readHistory(arg: FileAccessServiceReadHistoryArg): Promise<DomainFileHistory>
 
-  abstract makeDirectory(arg: FileAccessServiceMakeDirectoryArg): Promise<DomainFileDescriptor>
+  abstract makeFolder(arg: FileAccessServiceMakeFolderArg): Promise<DomainFileDescriptor>
 
   abstract writeFileNew(arg: FileAccessServiceWriteFileNewArg): Promise<DomainFileDescriptor>
   abstract writeBlobNew(arg: FileAccessServiceWriteBlobNewArg): Promise<string>

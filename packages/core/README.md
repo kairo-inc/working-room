@@ -9,7 +9,7 @@ This package implements the chat/agent runtime: it runs a Chat's Agent loop, dis
 ## Structure
 
 - `agent/` — `AgentBuilder`, `AgentRegistry`, `agentCoordinator`, and the built-in `agentHeavy` Agent definition.
-- `tool/` — core Tool implementations (e.g. `ToolReadTextFile`, `ToolWriteReplace`, `ToolListDir`, `ToolFindFileByText`) and the `ToolRegistry` that resolves them for an Agent.
+- `tool/` — core Tool implementations (e.g. `ToolReadTextFile`, `ToolWriteReplace`, `ToolListFolder`, `ToolFindFileByText`) and the `ToolRegistry` that resolves them for an Agent.
 - `engine.ts` — `ChatEngine`, which drives a Chat's Agent loop and Tool execution.
 - `event/` — `EventBus`, used to publish Chat and Tool events.
 - `prompt/` — prompt-building helpers (e.g. for file content).
