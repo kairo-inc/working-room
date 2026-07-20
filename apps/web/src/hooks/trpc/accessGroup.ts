@@ -24,11 +24,11 @@ export const useAccessGroupCreate = () => {
             { error: ValidationError, message: "Invalid input data." },
             {
               error: InvalidChatDirAccessError,
-              message: L.accessGroup.chatDirNotAllowed,
+              message: L.accessGroup.chatFolderNotAllowed,
             },
             {
               error: InvalidPrivateDirAccessError,
-              message: L.accessGroup.privateDirNotAllowed,
+              message: L.accessGroup.privateFolderNotAllowed,
             },
           ],
           L.accessGroup.createFailed
@@ -51,7 +51,7 @@ export const useAccessGroupEdit = () => {
           [
             {
               error: InvalidChatDirAccessError,
-              message: L.accessGroup.chatDirNotAllowed,
+              message: L.accessGroup.chatFolderNotAllowed,
             },
             {
               error: InvalidPrivateDirAccessError,

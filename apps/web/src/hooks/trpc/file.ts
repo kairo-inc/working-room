@@ -138,7 +138,7 @@ export const useFileDeleteMany = () => {
   }
 }
 
-export const useFileCreateDirectory = () => {
+export const useFileCreateFolder = () => {
   const { mutateAsync, mutate: _, ...rest } = trpc.fileCreateDirectory.useMutation()
   return {
     ...rest,
@@ -152,10 +152,10 @@ export const useFileCreateDirectory = () => {
             { error: ValidationError, message: L.common.invalidInput },
             {
               error: PermissionDeniedError,
-              message: L.file.errors.createDirectoryPermissionDenied,
+              message: L.file.errors.createFolderPermissionDenied,
             },
           ],
-          L.file.errors.createDirectoryFailed
+          L.file.errors.createFolderFailed
         )
       }
     },
@@ -198,7 +198,7 @@ export const useFileCopy = () => {
           [
             {
               error: BadRequestError,
-              message: L.file.errors.cannotCopyDirectory,
+              message: L.file.errors.cannotCopyFolder,
             },
           ],
           L.file.errors.copyFailed

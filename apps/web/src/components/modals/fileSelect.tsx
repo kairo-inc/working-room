@@ -8,7 +8,7 @@ import { AppFileDescriptor } from "../../types/file"
 import { RectangleButton } from "../buttons/rectangleButton"
 import { FileIconSm } from "../file/item"
 import { LoadingIndicator } from "../indicator"
-import { useDirectoryCreateModal } from "./directoryCreate"
+import { useFolderCreateModal } from "./folderCreate"
 import { Modal, ModalProps, useModal } from "./modal"
 
 type Args = {
@@ -42,7 +42,7 @@ const FileList = ({
     "text-sm font-normal text-muted-foreground p-2 pr-0 sticky top-0 bg-popover-foreground flex items-center justify-between"
   const rowClassName = "text-sm cursor-pointer p-2 hover:bg-muted border-t border-border first:border-t-0"
   const selectedRowClassName = "!bg-link/20 !text-link "
-  const notDirectoryRowClassName = "cursor-not-allowed text-sm text-muted-foreground p-2 border-t border-border first:border-t-0"
+  const notFolderRowClassName = "cursor-not-allowed text-sm text-muted-foreground p-2 border-t border-border first:border-t-0"
   const placeholderClassName = "text-sm text-muted-foreground p-2 border-t border-border first:border-t-0 text-center"
   return (
     <div className="grid">
@@ -69,12 +69,12 @@ const FileList = ({
       {files.map((file) => (
         <div
           key={file.id}
-          className={clsx(file.isDirectory ? rowClassName : notDirectoryRowClassName, file.id === selectedFileId && selectedRowClassName)}
+          className={clsx(file.isFolder ? rowClassName : notFolderRowClassName, file.id === selectedFileId && selectedRowClassName)}
           onClick={() => {
-            if (file.isDirectory) onRowClick(file)
+            if (file.isFolder) onRowClick(file)
           }}
           onDoubleClick={() => {
-            if (file.isDirectory) onRowDoubleClick(file)
+            if (file.isFolder) onRowDoubleClick(file)
           }}
         >
           <div className="flex items-center gap-2">
@@ -99,7 +99,7 @@ export const FileSelectModal = ({ show, onClose, onFileSelected, initialParentFo
 
   const { data: grandParent, isPending: isGrandParentPending } = useFileGetParentOrRoot(queryArgs?.parentId)
   const { data, isPending: isFilesPending, isError, refetch } = useFileGetList(queryArgs)
-  const { show: showCreateDirectoryModal, modal: CreateDirectoryModal } = useDirectoryCreateModal()
+  const { show: showCreateFolderModal, modal: CreateFolderModal } = useFolderCreateModal()
 
   const isPending = isFilesPending || isGrandParentPending
   const files = data?.pages.flatMap((page) => page.data) ?? []
@@ -138,7 +138,7 @@ export const FileSelectModal = ({ show, onClose, onFileSelected, initialParentFo
           onNewFolderClick={
             grandParent
               ? () => {
-                  showCreateDirectoryModal({ data: { id: grandParent.id }, onResolve: () => refetch() })
+                  showCreateFolderModal({ data: { id: grandParent.id }, onResolve: () => refetch() })
                 }
               : undefined
           }
@@ -158,7 +158,7 @@ export const FileSelectModal = ({ show, onClose, onFileSelected, initialParentFo
           {L.modal.fileSelect.close}
         </RectangleButton>
       </div>
-      {CreateDirectoryModal}
+      {CreateFolderModal}
     </Modal>
   )
 }

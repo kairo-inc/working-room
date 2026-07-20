@@ -60,7 +60,7 @@ export class FileServiceImpl extends FileService {
     const { id, isUnderChatDir, isUnderPrivateDir } = arg
     const ancestors = await this.getAncestors({ id })
     for (const ancestor of ancestors.reverse()) {
-      if (ancestor.isChatDir && isUnderChatDir) {
+      if (ancestor.isChatFolder && isUnderChatDir) {
         throw new InvalidChatDirAccessError("Chat directories cannot be accessed")
       } else if (ancestor.isPrivateRoot && isUnderPrivateDir) {
         throw new InvalidPrivateDirAccessError("Private directories cannot be accessed")

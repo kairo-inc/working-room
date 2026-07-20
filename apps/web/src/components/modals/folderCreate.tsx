@@ -3,7 +3,7 @@ import { Form } from "react-final-form"
 import { DomainFileDescriptor } from "@wr/shared"
 
 import { useNotification } from "../../contexts/notification"
-import { useFileCreateDirectory } from "../../hooks/trpc/file"
+import { useFileCreateFolder } from "../../hooks/trpc/file"
 import { L } from "../../localization"
 import { RectangleButton } from "../buttons/rectangleButton"
 import { formStringRequired } from "../formSchema"
@@ -18,7 +18,7 @@ type Args = ModalBaseArgs & {
   data: Pick<DomainFileDescriptor, "id">
 }
 
-type DirectoryCreateModalProps = ModalProps & Args
+type FolderCreateModalProps = ModalProps & Args
 
 const validate = (values: FormType) => {
   const error = {} as { name?: string }
@@ -30,25 +30,25 @@ const validate = (values: FormType) => {
   return error
 }
 
-export const DirectoryCreateModal = ({ show, onClose, data, onReject, onResolve }: DirectoryCreateModalProps) => {
+export const FolderCreateModal = ({ show, onClose, data, onReject, onResolve }: FolderCreateModalProps) => {
   const notify = useNotification()
-  const { mutateAsync: createDirectory, isPending } = useFileCreateDirectory()
+  const { mutateAsync: createFolder, isPending } = useFileCreateFolder()
   const focusRef = (el: HTMLInputElement | null) => {
     if (el && show) {
       el.focus()
     }
   }
   return (
-    <Modal show={show} onClose={onClose} title={L.modal.directoryCreate.title}>
+    <Modal show={show} onClose={onClose} title={L.modal.folderCreate.title}>
       <Form<FormType>
         validate={validate}
         onSubmit={async (values) => {
           try {
-            await createDirectory({ parentId: data.id, name: values.name })
+            await createFolder({ parentId: data.id, name: values.name })
             onClose?.()
             onResolve?.()
           } catch (error) {
-            notify.error(L.modal.directoryCreate.failed, error.message)
+            notify.error(L.modal.folderCreate.failed, error.message)
             onReject?.()
           }
         }}
@@ -56,13 +56,13 @@ export const DirectoryCreateModal = ({ show, onClose, data, onReject, onResolve 
           <form onSubmit={handleSubmit} className="mt-4 flex flex-col text-sm">
             <TextForm
               formName="name"
-              label={L.modal.directoryCreate.directoryName}
-              placeholder={L.modal.directoryCreate.directoryNamePlaceholder}
+              label={L.modal.folderCreate.folderName}
+              placeholder={L.modal.folderCreate.folderNamePlaceholder}
               ref={focusRef}
             />
             <div className="mt-6 flex justify-end gap-4">
               <RectangleButton type="submit" loading={isPending} disabled={hasValidationErrors}>
-                {L.modal.directoryCreate.create}
+                {L.modal.folderCreate.create}
               </RectangleButton>
               <RectangleButton onClick={onClose} disabled={isPending} variant="defaultOutline">
                 {L.common.cancel}
@@ -75,6 +75,6 @@ export const DirectoryCreateModal = ({ show, onClose, data, onReject, onResolve 
   )
 }
 
-export const useDirectoryCreateModal = () => {
-  return useModal<Args>(DirectoryCreateModal)
+export const useFolderCreateModal = () => {
+  return useModal<Args>(FolderCreateModal)
 }

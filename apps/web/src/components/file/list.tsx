@@ -14,7 +14,7 @@ import { elementIds } from "../elementId"
 import { useHoverMenu } from "../hoverMenu"
 import { LoadingIndicator } from "../indicator"
 import { useAccessGroupCreateModal } from "../modals/accessGroupCreate"
-import { useDirectoryCreateModal } from "../modals/directoryCreate"
+import { useFolderCreateModal } from "../modals/folderCreate"
 import { useFileCreateModal } from "../modals/fileCreate"
 import { useFileRenameModal } from "../modals/fileRename"
 import { useFileDeleteModal } from "../modals/filesDelete"
@@ -37,10 +37,10 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
   const gridRowClassName = `${gridHeaderClassName} py-2 bg-card hover:bg-muted cursor-pointer text-sm`
   const selectedRowClassName = "!bg-link/20 !text-link text-sm"
   const sortedFiles = [...data].sort((a, b) => {
-    if (a.isDirectory === b.isDirectory) {
+    if (a.isFolder === b.isFolder) {
       return a.name.localeCompare(b.name)
     }
-    return a.isDirectory ? -1 : 1
+    return a.isFolder ? -1 : 1
   })
   const placeholder = (
     <div className={gridRowClassName}>
@@ -60,7 +60,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
   const { show: showRenameModal, modal: RenameModal } = useFileRenameModal()
   const { show: showDeleteModal, modal: DeleteModal } = useFileDeleteModal()
   const { show: showAccessGroupCreateModal, modal: AccessGroupCreateModal } = useAccessGroupCreateModal()
-  const { show: showCreateDirectoryModal, modal: CreateDirectoryModal } = useDirectoryCreateModal()
+  const { show: showCreateFolderModal, modal: CreateFolderModal } = useFolderCreateModal()
   const { show: showFileCreateModal, modal: FileCreateModal } = useFileCreateModal()
   const { show: showHoverMenu, menu: HoverMenu } = useHoverMenu<HoverMenuAction>()
 
@@ -98,10 +98,10 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
           return
         }
         const multipleSelection = handlingFileIds.length > 1
-        const isDirectory = !multipleSelection && targetFile.isDirectory
-        const containsDirectory = handlingFileIds.some((id) => {
+        const isFolder = !multipleSelection && targetFile.isFolder
+        const containsFolder = handlingFileIds.some((id) => {
           const item = data.find((file) => file.id === id)
-          return item?.isDirectory
+          return item?.isFolder
         })
 
         if (descId) {
@@ -118,14 +118,14 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
               {
                 action: "copy",
                 label: L.file.list.copyTitle,
-                variant: containsDirectory ? "disabled" : "default",
-                disabled: containsDirectory,
+                variant: containsFolder ? "disabled" : "default",
+                disabled: containsFolder,
               },
               {
                 action: "accessGroup",
                 label: L.file.list.accessGroup,
-                variant: isAdminOrOwner && isDirectory ? "default" : "disabled",
-                disabled: !isAdminOrOwner || !isDirectory,
+                variant: isAdminOrOwner && isFolder ? "default" : "disabled",
+                disabled: !isAdminOrOwner || !isFolder,
               },
               { action: "delete", label: L.file.list.delete, variant: "destructive" },
             ],
@@ -137,7 +137,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                   break
                 }
                 case "newFolder": {
-                  showCreateDirectoryModal({
+                  showCreateFolderModal({
                     data: { id: parent.id },
                     onResolve: () => {
                       refetchFiles?.()
@@ -169,7 +169,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                   break
                 }
                 case "accessGroup": {
-                  if (!multipleSelection && isAdminOrOwner && isDirectory) {
+                  if (!multipleSelection && isAdminOrOwner && isFolder) {
                     const desc = data.find((file) => file.id === descId)!
                     showAccessGroupCreateModal({ data: desc })
                   }
@@ -190,7 +190,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
           ],
           onItemClick: (action) => {
             if (action === "newFolder") {
-              showCreateDirectoryModal({
+              showCreateFolderModal({
                 data: { id: parent.id },
                 onResolve: () => {
                   refetchFiles?.()
@@ -359,7 +359,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
             )}
             {sortedFiles.length > 0
               ? sortedFiles.map((file) => {
-                  const { id, name, mimeType, mtime, isDirectory } = file
+                  const { id, name, mimeType, mtime, isFolder } = file
                   const isSelected = selectedFileIds.includes(id)
                   return (
                     <div
@@ -369,7 +369,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                       data-file-id={id}
                       data-file-mime-type={mimeType}
                       onDoubleClick={() => {
-                        if (isDirectory) {
+                        if (isFolder) {
                           router.push(Route.tree(id))
                         } else {
                           router.push(Route.file(id))
@@ -416,9 +416,9 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                         e.currentTarget.style.backgroundColor = ""
                         e.currentTarget.style.cursor = ""
                         const currentTargetMimeType = e.currentTarget.getAttribute("data-file-mime-type") || ""
-                        const isDirectory = currentTargetMimeType === "inode/directory"
+                        const isFolder = currentTargetMimeType === "inode/directory"
                         const targetFolderId = e.currentTarget.getAttribute("data-file-id") || undefined
-                        if (isDirectory) {
+                        if (isFolder) {
                           await handleOnDrop(e, targetFolderId)
                         }
                       }}
@@ -427,7 +427,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                         <FileIconSm type={mimeType} className="shrink-0" />
                         <span className="min-w-0 truncate">{name}</span>
                       </div>
-                      <div className={`text-muted-foreground hidden pl-4 sm:block`}>{isDirectory ? "-" : mimeType.split("/").pop()}</div>
+                      <div className={`text-muted-foreground hidden pl-4 sm:block`}>{isFolder ? "-" : mimeType.split("/").pop()}</div>
                       <div className={`text-muted-foreground truncate pr-2 pl-4`}>{dayjs(mtime).fromNow()}</div>
                     </div>
                   )
@@ -437,7 +437,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
         )}
       </div>
       {HoverMenu}
-      {CreateDirectoryModal}
+      {CreateFolderModal}
       {FileCreateModal}
       {DeleteModal}
       {RenameModal}

@@ -54,7 +54,7 @@ export const FileListItem = ({ descId }: FileItemProps) => {
   const getContent = () => {
     if (isPending) return <LoadingIndicator size="small" />
     if (isError) return <div className="text-xs">{L.file.notFound}</div>
-    if (file.isDirectory) {
+    if (file.isFolder) {
       return (
         <a href={Route.tree(file.id)} className="inline-flex items-center gap-1 text-xs" target="_blank" rel="noopener noreferrer">
           <FileIconSm type={file.mimeType} />
