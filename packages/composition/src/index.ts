@@ -32,6 +32,7 @@ import {
   ToolReadTextFile,
   ToolReadTextFileHistory,
   ToolRegistry,
+  ToolRestoreFileHistory,
   ToolSlackAddReaction,
   ToolSlackDescribeMySelf,
   ToolSlackListChannels,
@@ -144,6 +145,7 @@ container.register<Tool>("Tool", { useClass: ToolTraverseFolder })
 container.register<Tool>("Tool", { useClass: ToolListHistory })
 container.register<Tool>("Tool", { useClass: ToolReadTextFileHistory })
 container.register<Tool>("Tool", { useClass: ToolCompareTextFileHistory })
+container.register<Tool>("Tool", { useClass: ToolRestoreFileHistory })
 container.register<Tool>("Tool", { useClass: ToolSlackDescribeMySelf })
 container.register<Tool>("Tool", { useClass: ToolSlackListChannels })
 container.register<Tool>("Tool", { useClass: ToolSlackListUsers })
