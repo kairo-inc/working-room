@@ -42,15 +42,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ai-sdk/google@npm:4.0.24":
-  version: 4.0.24
-  resolution: "@ai-sdk/google@npm:4.0.24"
+"@ai-sdk/google@npm:4.0.27":
+  version: 4.0.27
+  resolution: "@ai-sdk/google@npm:4.0.27"
   dependencies:
-    "@ai-sdk/provider": "npm:4.0.3"
-    "@ai-sdk/provider-utils": "npm:5.0.12"
+    "@ai-sdk/provider": "npm:4.0.4"
+    "@ai-sdk/provider-utils": "npm:5.0.14"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/d5e6a80a68a97e33528a47d9561874915b2cf0517046f06f8fed18a55b5aaef2437fabfda848ae7e2a4c7ab815cecb8452ee261d9b3879395a1ede9c2ffba0fe
+  checksum: 10c0/ec44d0619604175177af9e26f635ec8d6837d048ccd8aaad666138e0c0f764c805443997b4b2a2672c57cc977d72abd12a99148d2019fde5c31d7ba3e5e8285a
   languageName: node
   linkType: hard
 
@@ -92,12 +92,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ai-sdk/provider-utils@npm:5.0.14":
+  version: 5.0.14
+  resolution: "@ai-sdk/provider-utils@npm:5.0.14"
+  dependencies:
+    "@ai-sdk/provider": "npm:4.0.4"
+    "@standard-schema/spec": "npm:^1.1.0"
+    "@workflow/serde": "npm:4.1.0"
+    eventsource-parser: "npm:^3.0.8"
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 10c0/15c9a08d6563cf0521c9304efee9827928e3b85ae4abe7eac3a1bd2efe8d0518ceb48fd0c94ca5b4b2a005222b56a2c025a35033101b71b3fd56c3ee28c68361
+  languageName: node
+  linkType: hard
+
 "@ai-sdk/provider@npm:4.0.3":
   version: 4.0.3
   resolution: "@ai-sdk/provider@npm:4.0.3"
   dependencies:
     json-schema: "npm:^0.4.0"
   checksum: 10c0/4af0a9592baffbde5b4bb04668a2dfe41750405f0f35f7df86ba0ef3ba46e505d3ad1352cc4cfbe9580ac82d60f11fbb2bf1b55761deb268d99a611d146f3d7f
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider@npm:4.0.4":
+  version: 4.0.4
+  resolution: "@ai-sdk/provider@npm:4.0.4"
+  dependencies:
+    json-schema: "npm:^0.4.0"
+  checksum: 10c0/ad8841d2592d16911e35eed82e77dca8a2bc46f6379fe5488c34d6fe3f5f4e4d8f87960acb4fef45b5896f8445dee63c4c249a8b4a1fb7703c10a2af0f731fb9
   languageName: node
   linkType: hard
 
@@ -9455,7 +9478,7 @@ __metadata:
   resolution: "@wr/web@workspace:apps/web"
   dependencies:
     "@ai-sdk/anthropic": "npm:4.0.20"
-    "@ai-sdk/google": "npm:4.0.24"
+    "@ai-sdk/google": "npm:4.0.27"
     "@ai-sdk/openai": "npm:4.0.20"
     "@ai-sdk/openai-compatible": "npm:3.0.14"
     "@aws-sdk/client-s3": "npm:3.1095.0"
