@@ -54,15 +54,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ai-sdk/openai-compatible@npm:3.0.14":
-  version: 3.0.14
-  resolution: "@ai-sdk/openai-compatible@npm:3.0.14"
+"@ai-sdk/openai-compatible@npm:3.0.16":
+  version: 3.0.16
+  resolution: "@ai-sdk/openai-compatible@npm:3.0.16"
   dependencies:
-    "@ai-sdk/provider": "npm:4.0.3"
-    "@ai-sdk/provider-utils": "npm:5.0.12"
+    "@ai-sdk/provider": "npm:4.0.4"
+    "@ai-sdk/provider-utils": "npm:5.0.14"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/53490f9118cf16a9524c54207e142d6e196a3f0905af839bd0f954f1c2e0c34c64c961380c11f795a9c0164920e04d9e54bdde5dcc7146377e8aa24fb6c13d21
+  checksum: 10c0/fb9429c1a42a08473a2757478dfd68c22c8bead726a217a4ca481e6ab6e491a7fc8a65f5dfe5f7ac7df3db5458b2553b52f1a91c4447a19bb78255b405386f64
   languageName: node
   linkType: hard
 
@@ -92,12 +92,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ai-sdk/provider-utils@npm:5.0.14":
+  version: 5.0.14
+  resolution: "@ai-sdk/provider-utils@npm:5.0.14"
+  dependencies:
+    "@ai-sdk/provider": "npm:4.0.4"
+    "@standard-schema/spec": "npm:^1.1.0"
+    "@workflow/serde": "npm:4.1.0"
+    eventsource-parser: "npm:^3.0.8"
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 10c0/15c9a08d6563cf0521c9304efee9827928e3b85ae4abe7eac3a1bd2efe8d0518ceb48fd0c94ca5b4b2a005222b56a2c025a35033101b71b3fd56c3ee28c68361
+  languageName: node
+  linkType: hard
+
 "@ai-sdk/provider@npm:4.0.3":
   version: 4.0.3
   resolution: "@ai-sdk/provider@npm:4.0.3"
   dependencies:
     json-schema: "npm:^0.4.0"
   checksum: 10c0/4af0a9592baffbde5b4bb04668a2dfe41750405f0f35f7df86ba0ef3ba46e505d3ad1352cc4cfbe9580ac82d60f11fbb2bf1b55761deb268d99a611d146f3d7f
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider@npm:4.0.4":
+  version: 4.0.4
+  resolution: "@ai-sdk/provider@npm:4.0.4"
+  dependencies:
+    json-schema: "npm:^0.4.0"
+  checksum: 10c0/ad8841d2592d16911e35eed82e77dca8a2bc46f6379fe5488c34d6fe3f5f4e4d8f87960acb4fef45b5896f8445dee63c4c249a8b4a1fb7703c10a2af0f731fb9
   languageName: node
   linkType: hard
 
@@ -9457,7 +9480,7 @@ __metadata:
     "@ai-sdk/anthropic": "npm:4.0.20"
     "@ai-sdk/google": "npm:4.0.24"
     "@ai-sdk/openai": "npm:4.0.20"
-    "@ai-sdk/openai-compatible": "npm:3.0.14"
+    "@ai-sdk/openai-compatible": "npm:3.0.16"
     "@aws-sdk/client-s3": "npm:3.1095.0"
     "@slack/web-api": "npm:8.0.0"
     "@svgr/webpack": "npm:8.1.0"
