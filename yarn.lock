@@ -17,15 +17,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ai-sdk/anthropic@npm:4.0.25":
-  version: 4.0.25
-  resolution: "@ai-sdk/anthropic@npm:4.0.25"
+"@ai-sdk/anthropic@npm:4.0.27":
+  version: 4.0.27
+  resolution: "@ai-sdk/anthropic@npm:4.0.27"
   dependencies:
     "@ai-sdk/provider": "npm:4.0.4"
-    "@ai-sdk/provider-utils": "npm:5.0.16"
+    "@ai-sdk/provider-utils": "npm:5.0.18"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/ba4807bf756bf8367ad908202e3dda3daab04b80152f3ff2d924d5794a14fbdfc9759fc35d5a51db29e81a5f5dfa483cd4c89dcb4f937dc54f2108307645f4ed
+  checksum: 10c0/f99180d7f10b2bc1a7ad3f386f8eb470ba1c62f62238c0e1f6ffa08b3e6d6772c798a5d8bf7c27813548da8ff2b34d824b57ffcb4943b0e83b005314356f955e
   languageName: node
   linkType: hard
 
@@ -90,6 +90,21 @@ __metadata:
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
   checksum: 10c0/3e18437f4249f2ddedbf5fcd1cb8ee5d3ea15184f66544a78a844340df751fc8387042ad8f3d46c100849ba97ff141a71602918971496882838ad91d6cd2707f
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider-utils@npm:5.0.18":
+  version: 5.0.18
+  resolution: "@ai-sdk/provider-utils@npm:5.0.18"
+  dependencies:
+    "@ai-sdk/provider": "npm:4.0.4"
+    "@standard-schema/spec": "npm:^1.1.0"
+    "@workflow/serde": "npm:4.1.0"
+    eventsource-parser: "npm:^3.0.8"
+    undici: "npm:^7.28.0"
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 10c0/9b360e26f21401014a6101cd42c0e30054ab67689e090ca3822c430ec2c208f59ea816c9906f503a13a15239f16016795d20de7ded56702f1cea42b515961ed3
   languageName: node
   linkType: hard
 
@@ -9455,7 +9470,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wr/web@workspace:apps/web"
   dependencies:
-    "@ai-sdk/anthropic": "npm:4.0.25"
+    "@ai-sdk/anthropic": "npm:4.0.27"
     "@ai-sdk/google": "npm:4.0.29"
     "@ai-sdk/openai": "npm:4.0.25"
     "@ai-sdk/openai-compatible": "npm:3.0.18"
