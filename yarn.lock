@@ -66,15 +66,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ai-sdk/openai@npm:4.0.25":
-  version: 4.0.25
-  resolution: "@ai-sdk/openai@npm:4.0.25"
+"@ai-sdk/openai@npm:4.0.27":
+  version: 4.0.27
+  resolution: "@ai-sdk/openai@npm:4.0.27"
   dependencies:
     "@ai-sdk/provider": "npm:4.0.4"
-    "@ai-sdk/provider-utils": "npm:5.0.16"
+    "@ai-sdk/provider-utils": "npm:5.0.18"
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
-  checksum: 10c0/81280ce5f3a4abf80d975e606dc3adda0c6c4911cb217f35ad44b0b9ecd1610d49a0effd436cad5a2d3f352ab74ce3816d63a80b30dac3a4be508c8bc2535c86
+  checksum: 10c0/7362a457b6f10c31ac03a9c42959d2122f9448bc3cdea7b00ea4b9ae573e79af464d29c0a90364b00e8a570b0d026525390dea2c477bc4e0a60abe045481ddbb
   languageName: node
   linkType: hard
 
@@ -90,6 +90,21 @@ __metadata:
   peerDependencies:
     zod: ^3.25.76 || ^4.1.8
   checksum: 10c0/3e18437f4249f2ddedbf5fcd1cb8ee5d3ea15184f66544a78a844340df751fc8387042ad8f3d46c100849ba97ff141a71602918971496882838ad91d6cd2707f
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider-utils@npm:5.0.18":
+  version: 5.0.18
+  resolution: "@ai-sdk/provider-utils@npm:5.0.18"
+  dependencies:
+    "@ai-sdk/provider": "npm:4.0.4"
+    "@standard-schema/spec": "npm:^1.1.0"
+    "@workflow/serde": "npm:4.1.0"
+    eventsource-parser: "npm:^3.0.8"
+    undici: "npm:^7.28.0"
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 10c0/9b360e26f21401014a6101cd42c0e30054ab67689e090ca3822c430ec2c208f59ea816c9906f503a13a15239f16016795d20de7ded56702f1cea42b515961ed3
   languageName: node
   linkType: hard
 
@@ -9457,7 +9472,7 @@ __metadata:
   dependencies:
     "@ai-sdk/anthropic": "npm:4.0.25"
     "@ai-sdk/google": "npm:4.0.29"
-    "@ai-sdk/openai": "npm:4.0.25"
+    "@ai-sdk/openai": "npm:4.0.27"
     "@ai-sdk/openai-compatible": "npm:3.0.18"
     "@aws-sdk/client-s3": "npm:3.1099.0"
     "@slack/web-api": "npm:8.0.0"
