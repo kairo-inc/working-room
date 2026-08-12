@@ -355,9 +355,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-s3@npm:3.1104.0":
-  version: 3.1104.0
-  resolution: "@aws-sdk/client-s3@npm:3.1104.0"
+"@aws-sdk/client-s3@npm:3.1106.0":
+  version: 3.1106.0
+  resolution: "@aws-sdk/client-s3@npm:3.1106.0"
   dependencies:
     "@aws-sdk/checksums": "npm:^3.1000.26"
     "@aws-sdk/core": "npm:^3.977.6"
@@ -370,7 +370,7 @@ __metadata:
     "@smithy/node-http-handler": "npm:^4.9.13"
     "@smithy/types": "npm:^4.16.1"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/9bd438a0c66e4b43e6f8197c401fb4733728bbcda71b0c7b940f8fda2353b9891f044cd532a788c2abeefe4a300b26941d40841220130510a07bb0c8f2acf0e3
+  checksum: 10c0/5416261ca593f79888204269f759ee1c30ad8213239ccdee712138dbd8100c6b23c4a56e6cc4deffdf7fa0667ee26e95a97d28926c38daed04f65b021c31fae6
   languageName: node
   linkType: hard
 
@@ -9432,7 +9432,7 @@ __metadata:
     "@ai-sdk/google": "npm:4.0.36"
     "@ai-sdk/openai": "npm:4.0.32"
     "@ai-sdk/openai-compatible": "npm:3.0.25"
-    "@aws-sdk/client-s3": "npm:3.1104.0"
+    "@aws-sdk/client-s3": "npm:3.1106.0"
     "@slack/web-api": "npm:8.0.0"
     "@svgr/webpack": "npm:8.1.0"
     "@tanstack/react-query": "npm:5.101.4"
