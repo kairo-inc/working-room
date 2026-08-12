@@ -33,7 +33,7 @@
     "@wr/integration": "workspace:*",
     "@wr/shared": "workspace:*",
     "@wr/shared-node": "workspace:*",
-    "ai": "7.0.55",
+    "ai": "7.0.58",
     "bcryptjs": "3.0.3",
     "chardet": "2.2.0",
     "class-variance-authority": "0.7.1",
