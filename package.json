@@ -33,16 +33,16 @@
     "@tailwindcss/postcss": "4.3.3",
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
     "@types/node": "24.13.3",
-    "@vitest/coverage-v8": "4.1.10",
+    "@vitest/coverage-v8": "4.1.11",
     "dotenv-cli": "11.0.0",
     "eslint": "9.39.5",
-    "eslint-config-next": "16.3.0",
-    "memfs": "4.68.0",
+    "eslint-config-next": "16.3.3",
+    "memfs": "4.68.2",
     "prettier": "3.9.6",
     "prettier-plugin-tailwindcss": "0.8.1",
-    "tsx": "4.23.9",
+    "tsx": "4.23.12",
     "typescript": "6.0.3",
-    "vitest": "4.1.10"
+    "vitest": "4.1.11"
   },
   "packageManager": "yarn@4.5.3",
   "engines": {

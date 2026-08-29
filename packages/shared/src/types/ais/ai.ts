@@ -28,11 +28,14 @@ export type AiModelOpenAI = Extract<
   | "gpt-5.4-nano"
   | "gpt-5.4-pro"
   | "gpt-5.5"
+  | "gpt-5.6-luna"
+  | "gpt-5.6-terra"
+  | "gpt-5.6-sol"
 >
 
 export const openAiDefaultTierMapping: Record<AiModelTier, AiModelOpenAI> = {
-  heavy: "gpt-5.5",
-  medium: "gpt-5.4-mini",
+  heavy: "gpt-5.6-terra",
+  medium: "gpt-5.6-luna",
   light: "gpt-5.4-nano",
 }
 
@@ -47,17 +50,19 @@ export type AiModelAnthropic = Extract<
   | "claude-sonnet-4-5-20250929"
   | "claude-sonnet-4-5"
   | "claude-sonnet-4-6"
+  | "claude-sonnet-5"
   | "claude-opus-4-5"
   | "claude-opus-4-5-20251101"
   | "claude-opus-4-6"
   | "claude-opus-4-7"
   | "claude-opus-4-8"
+  | "claude-opus-5"
   | "claude-fable-5"
 >
 
 export const anthropicDefaultTierMapping: Record<AiModelTier, AiModelAnthropic> = {
-  heavy: "claude-opus-4-8",
-  medium: "claude-sonnet-4-6",
+  heavy: "claude-opus-5",
+  medium: "claude-sonnet-5",
   light: "claude-haiku-4-5",
 }
 export type AiModelTierMappingAnthropic = typeof anthropicDefaultTierMapping
