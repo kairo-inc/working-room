@@ -12,7 +12,7 @@
   "dependencies": {
     "@ai-sdk/anthropic": "4.0.45",
     "@ai-sdk/google": "4.0.57",
-    "@ai-sdk/openai": "4.0.51",
+    "@ai-sdk/openai": "4.0.60",
     "@ai-sdk/openai-compatible": "3.0.40",
     "@aws-sdk/client-s3": "3.1121.0",
     "@slack/web-api": "8.1.1",
