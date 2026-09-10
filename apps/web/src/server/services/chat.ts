@@ -299,6 +299,8 @@ export class ChatServiceImpl extends ChatService {
         // NOTE: The tier overrides are just an example of how to provide custom configuration for the chat engine.
         // You can adjust or remove it as needed based on your specific requirements.
         coordinator: "medium",
+        // NOTE: You can also add tier overrides for other tools as needed.
+        ToolReadPdfFile: "medium",
       },
       workingFolder: await this.buildWorkingFolder({ folderId: chat.workingFolder?.id }),
     })
