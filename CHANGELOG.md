@@ -4,6 +4,30 @@ All notable changes to WorkingRoom will be documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.7] - 2026-09-15
+
+### Added
+
+#### Chat Experience
+
+- Added a setting to send Chat messages with the Enter key, with Shift+Enter still inserting a newline.
+
+#### File Management
+
+- Added a Tool that lets an Agent restore a file to a previous version from its edit history.
+- Added the ability to create a new folder directly from the folder selection dialog.
+
+### Changed
+
+#### AI Agent System
+
+- Reading a large text file or PDF now returns a concise, purpose-aware summary instead of the full content, keeping Chat history compact.
+- Updated the default AI models used for each agent tier to the latest Anthropic and OpenAI releases.
+
+#### File Management
+
+- Renamed "Directory" to "Folder" throughout the interface for consistency.
+
 ## [0.2.6] - 2026-07-17
 
 ### Added
