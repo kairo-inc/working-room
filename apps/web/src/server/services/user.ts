@@ -28,7 +28,7 @@ export class UserServiceImpl extends UserService {
 
   async editMySelf(args: UserServiceEditMySelfArg): Promise<void> {
     const { userId } = getPrivateContext()
-    await this.userSource.update({ where: { id: userId }, data: { name: args.name } })
+    await this.userSource.update({ where: { id: userId }, data: { name: args.name, sendMessageOnEnter: args.sendMessageOnEnter } })
   }
 
   async getMySetting(): Promise<UserServiceGetMySettingResult> {

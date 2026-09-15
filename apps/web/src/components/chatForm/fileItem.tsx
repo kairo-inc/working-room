@@ -17,6 +17,7 @@ export const FileItem = ({ file, onRemove, className, isUploading }: FileItemPro
   useEffect(() => {
     if (file.type.startsWith("image") || file.type.includes("pdf")) {
       const nextObjectUrl = URL.createObjectURL(file)
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncs state with a browser object URL, which must be created/revoked as an effect.
       setObjectUrl(nextObjectUrl)
       return () => URL.revokeObjectURL(nextObjectUrl)
     }

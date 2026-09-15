@@ -37,8 +37,8 @@ Be careful of the file type when using this tool. This tool is designed for text
       const history = await this.fileAccessService.readHistory({ historyId: input.data.sourceHistoryId })
       const compareToHistory = await this.fileAccessService.readHistory({ historyId: input.data.targetHistoryId })
       const desc = await this.fileAccessService.getDescriptor(history.fileDescriptorId)
-      if (desc.isDirectory) {
-        return { message: this.buildError(toolCall, `Given history ID corresponds to a directory. Please provide a file history ID.`) }
+      if (desc.isFolder) {
+        return { message: this.buildError(toolCall, `Given history ID corresponds to a folder. Please provide a file history ID.`) }
       } else if (!desc.mimeType.startsWith("text/")) {
         return {
           message: this.buildError(

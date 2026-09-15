@@ -12,6 +12,7 @@ export class EntityUser implements Omit<User, "deletedAt" | "localSecretHash" | 
   name: string
   tenantId: string
   role: $Enums.UserRole
+  sendMessageOnEnter: boolean
 
   static select = {
     id: true,
@@ -22,6 +23,7 @@ export class EntityUser implements Omit<User, "deletedAt" | "localSecretHash" | 
     updatedAt: true,
     tenantId: true,
     role: true,
+    sendMessageOnEnter: true,
   } as const satisfies Prisma.UserSelect
 }
 export class EntityUserSetting implements Omit<
@@ -33,6 +35,7 @@ export class EntityUserSetting implements Omit<
   name: string
   role: $Enums.UserRole
   privateDirId: string
+  sendMessageOnEnter: boolean
 
   static select = {
     id: true,
@@ -40,6 +43,7 @@ export class EntityUserSetting implements Omit<
     email: true,
     role: true,
     privateDirId: true,
+    sendMessageOnEnter: true,
   } as const satisfies Prisma.UserSelect
 }
 
@@ -54,6 +58,7 @@ export class EntityUserSecret implements Omit<User, "deletedAt" | "privateDirId"
   tenantId: string
   role: $Enums.UserRole
   refreshToken: string | null
+  sendMessageOnEnter: boolean
 
   static select = {
     id: true,
@@ -66,6 +71,7 @@ export class EntityUserSecret implements Omit<User, "deletedAt" | "privateDirId"
     localSecretHash: true,
     role: true,
     refreshToken: true,
+    sendMessageOnEnter: true,
   } as const satisfies Prisma.UserSelect
 }
 

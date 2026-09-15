@@ -46,19 +46,19 @@ export class BadRequestError extends BaseError {
   public errorCode = "BAD_REQUEST"
 }
 
-export class InvalidRootDirAccessError extends BaseError {
+export class InvalidRootFolderAccessError extends BaseError {
   public statusCode = 400
-  public errorCode = "INVALID_ROOT_DIR_ACCESS"
+  public errorCode = "INVALID_ROOT_FOLDER_ACCESS"
 }
 
-export class InvalidChatDirAccessError extends BaseError {
+export class InvalidChatFolderAccessError extends BaseError {
   public statusCode = 400
-  public errorCode = "INVALID_CHAT_DIR_ACCESS"
+  public errorCode = "INVALID_CHAT_FOLDER_ACCESS"
 }
 
-export class InvalidPrivateDirAccessError extends BaseError {
+export class InvalidPrivateFolderAccessError extends BaseError {
   public statusCode = 400
-  public errorCode = "INVALID_PRIVATE_DIR_ACCESS"
+  public errorCode = "INVALID_PRIVATE_FOLDER_ACCESS"
 }
 
 export class InternalServerError extends BaseError {

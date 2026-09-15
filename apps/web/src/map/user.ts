@@ -18,6 +18,7 @@ export const mapUserSettingEntityToApp = (user: EntityUserSetting): AppUserSetti
     email: user.email,
     name: user.name,
     role: user.role,
-    privateDirId: user.privateDirId,
+    privateFolderId: user.privateDirId,
+    sendMessageOnEnter: user.sendMessageOnEnter,
   }
 }

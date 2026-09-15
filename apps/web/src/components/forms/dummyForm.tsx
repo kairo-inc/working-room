@@ -24,6 +24,7 @@ export interface DummyFormProps extends ComponentPropsWithoutRef<"div">, Variant
   formName: string
   disabled?: boolean
   placeholder?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   toString?: (value: any) => string
   onRemove?: () => void
 }
@@ -69,5 +70,4 @@ export const DummyForm = forwardRef<HTMLDivElement, DummyFormProps>(
     )
   }
 )
-
 DummyForm.displayName = "DummyForm"

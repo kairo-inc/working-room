@@ -166,6 +166,7 @@ export const PageChat = ({ data }: PageChatProps) => {
       setTimeout(() => {
         scrollToBottom()
       }, 300)
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- records the committed DOM's scrollHeight, which only exists after render.
       setCurrentHeight(document.getElementById(elementIds.scrollableContainer)?.scrollHeight || 0)
     }
     focusOnChatInput()
@@ -206,6 +207,7 @@ export const PageChat = ({ data }: PageChatProps) => {
         const newHeight = dom.scrollHeight
         const newPosition = newHeight - currentHeight
         dom.scrollTop = newPosition
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- records the committed DOM's scrollHeight, which only exists after render.
         setCurrentHeight(newHeight)
       }
     }

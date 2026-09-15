@@ -45,13 +45,19 @@ export const AccessGroupCreateModal = ({ show, data, onClose, onReject, onResolv
   const router = useRouter()
   const notify = useNotification()
   const { mutateAsync: createAccessGroup, isPending } = useAccessGroupCreate()
+
+  const handleClose = () => {
+    onClose?.()
+    onReject?.()
+  }
+
   return (
     <Modal show={show} onClose={onClose} title={L.modal.accessGroupCreate.title}>
       <Form<FormData>
         validate={validate}
         onSubmit={async (values) => {
           try {
-            const accessGroup = await createAccessGroup({
+            await createAccessGroup({
               name: values.name,
               description: values.description,
               read: true,
@@ -89,7 +95,7 @@ export const AccessGroupCreateModal = ({ show, data, onClose, onReject, onResolv
               <RectangleButton type="submit" loading={isPending} disabled={hasValidationErrors}>
                 {L.common.ok}
               </RectangleButton>
-              <RectangleButton variant="defaultOutline" onClick={onClose} disabled={isPending}>
+              <RectangleButton variant="defaultOutline" onClick={handleClose} disabled={isPending}>
                 {L.common.cancel}
               </RectangleButton>
             </div>

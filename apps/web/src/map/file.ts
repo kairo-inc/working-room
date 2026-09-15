@@ -9,7 +9,7 @@ export const mapFileDescriptorEntityToAppEssential = (
   return {
     id: entity.id,
     name: entity.name,
-    isDirectory: entity.isDirectory,
+    isFolder: entity.isDirectory,
     mimeType: entity.mimeType,
     pathIds: entity.pathIds || undefined,
   }
@@ -23,11 +23,11 @@ export const mapFileDescriptorEntityToApp = (entity: EntityFileDescriptor): AppF
     name: entity.name,
     blobHash: entity.blobHash,
     mimeType: entity.mimeType,
-    isDirectory: entity.isDirectory,
+    isFolder: entity.isDirectory,
     isRoot: entity.isRoot,
     parentId: entity.parentId || undefined,
     pathIds: entity.pathIds,
-    isChatDir: entity.isChatDir,
+    isChatFolder: entity.isChatDir,
     isPrivateRoot: !!entity.privateRootOf,
   }
 }
@@ -40,11 +40,11 @@ export const mapFileDescriptorDomainToApp = (entity: DomainFileDescriptor): AppF
     name: entity.name,
     blobHash: entity.blobHash,
     mimeType: entity.mimeType,
-    isDirectory: entity.isDirectory,
+    isFolder: entity.isFolder,
     isRoot: entity.isRoot,
     parentId: entity.parentId || undefined,
     pathIds: entity.pathIds,
-    isChatDir: entity.isChatDir,
+    isChatFolder: entity.isChatFolder,
     isPrivateRoot: entity.isPrivateRoot,
   }
 }

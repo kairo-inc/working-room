@@ -15,12 +15,12 @@ const inputSchema = z.object({
   targetDescId: z
     .string()
     .optional()
-    .describe(`The ID of the directory to traverse. If you need to access the root directory, do not provide this field.`),
+    .describe(`The ID of the folder to traverse. If you need to access the root folder, do not provide this field.`),
   maxDepth: z
     .number()
     .optional()
     .describe(
-      "The maximum depth to traverse. Defaults to 0, which means only the specified directory will be listed. A value of 1 will include the contents of subdirectories, and so on."
+      "The maximum depth to traverse. Defaults to 0, which means only the specified folder will be listed. A value of 1 will include the contents of subfolders, and so on."
     ),
   maxItems: z
     .number()
@@ -31,9 +31,9 @@ const inputSchema = z.object({
 })
 
 @injectable()
-export class ToolTraverseDir extends Tool {
-  name = "ToolTraverseDir"
-  description = "Traverse the contents of a directory. Use this when you need to explore the file system recursively."
+export class ToolTraverseFolder extends Tool {
+  name = "ToolTraverseFolder"
+  description = "Traverse the contents of a folder. Use this when you need to explore the file system recursively."
   needApproval = false
   inputSchema = inputSchema
   toolType: DomainToolType = "read"
@@ -63,7 +63,7 @@ export class ToolTraverseDir extends Tool {
       const files = await this.fileAccessService.traverse({ descId: desc.id, maxDepth, maxItems: maxItemsInPage })
 
       // Construct the result message and file content
-      let fileContent = `Found ${files.length} items under the directory '${desc.name}' (ID: ${desc.id}) up to a depth of ${maxDepth}. Showing up to ${maxItemsInPage} items.\n\n`
+      let fileContent = `Found ${files.length} items under the folder '${desc.name}' (ID: ${desc.id}) up to a depth of ${maxDepth}. Showing up to ${maxItemsInPage} items.\n\n`
 
       const proceededFiles: DomainMessageContentProceededFile[] = []
       for (const file of files) {
@@ -87,9 +87,9 @@ export class ToolTraverseDir extends Tool {
       }
     } catch (e) {
       if (e instanceof NotFoundError) {
-        return { message: this.buildError(toolCall, `Directory not found: ${input.data.targetDescId || "root"}`) }
+        return { message: this.buildError(toolCall, `Folder not found: ${input.data.targetDescId || "root"}`) }
       }
-      return { message: this.buildError(toolCall, `Failed to traverse directory: ${e instanceof Error ? e.message : String(e)}`) }
+      return { message: this.buildError(toolCall, `Failed to traverse folder: ${e instanceof Error ? e.message : String(e)}`) }
     }
   }
 }

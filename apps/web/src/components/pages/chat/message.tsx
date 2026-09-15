@@ -20,7 +20,7 @@ type ChatMessageProps = ComponentPropsWithoutRef<"div"> & {
   progressText?: string
 }
 
-export const ChatMessage = ({ role, text, fileMeta, proceededFiles, showLoading, progressText, ...rest }: ChatMessageProps) => {
+export const ChatMessage = ({ role, text, fileMeta, proceededFiles, showLoading, progressText }: ChatMessageProps) => {
   const uniqueProceededFiles = proceededFiles?.filter((file, index, self) => self.findIndex((f) => f.descId === file.descId) === index)
   return (
     <div className={clsx("my-2 flex flex-col gap-2 rounded-sm p-4 pb-2", role === "user" ? "" : "bg-card")}>

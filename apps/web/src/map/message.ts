@@ -33,7 +33,7 @@ export const mapUserMessageDomainToApp = (message: Extract<DomainMessage, { role
           case "meta":
             return null
           default:
-            throw new ImplementationError(`Unsupported message content type: ${(c as any).type}`)
+            throw new ImplementationError(`Unsupported message content type: ${c.type}`)
         }
       })
       .filter((c): c is AppUserMessage["content"][number] => c !== null),
@@ -62,6 +62,8 @@ export const mapAssistantMessageDomainToApp = (message: Extract<DomainMessage, {
               mimeType: c.mimeType,
             } satisfies AppMessageContentProceededFile
           default:
+            // NOTE: This is a safeguard against unexpected content types. In practice, this should never happen if the backend is functioning correctly.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             throw new ImplementationError(`Unsupported message content type: ${(c as any).type}`)
         }
       })

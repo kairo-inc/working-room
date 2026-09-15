@@ -28,7 +28,7 @@ describe("[Success] Find records", () => {
   })
 
   it("Filter out deleted records", async () => {
-    const { user, tenant, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, tenant, folders } = await fixtureFactory.createTenantWithOwner()
     await runWithDiContainer(testContainer, async () => {
       const userSource = testContainer.resolve<UserSource>("UserSource")
 
@@ -50,7 +50,7 @@ describe("[Success] Find records", () => {
               mtime: new Date(),
               isRoot: false,
               isDirectory: true,
-              pathIds: `${dirs.root.pathIds}/private-deleted-${uid}`,
+              pathIds: `${folders.root.pathIds}/private-deleted-${uid}`,
               mimeType: "inode/directory",
               size: 0,
               blobHash: `hash-deleted-${uid}`,

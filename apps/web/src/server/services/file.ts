@@ -7,8 +7,8 @@ import {
   DomainMessageContentFileRef,
   DomainMessageContentToolResult,
   ImageMimeType,
-  InvalidChatDirAccessError,
-  InvalidPrivateDirAccessError,
+  InvalidChatFolderAccessError,
+  InvalidPrivateFolderAccessError,
   MimeType,
   PageResult,
 } from "@wr/shared"
@@ -60,10 +60,10 @@ export class FileServiceImpl extends FileService {
     const { id, isUnderChatDir, isUnderPrivateDir } = arg
     const ancestors = await this.getAncestors({ id })
     for (const ancestor of ancestors.reverse()) {
-      if (ancestor.isChatDir && isUnderChatDir) {
-        throw new InvalidChatDirAccessError("Chat directories cannot be accessed")
+      if (ancestor.isChatFolder && isUnderChatDir) {
+        throw new InvalidChatFolderAccessError("Chat directories cannot be accessed")
       } else if (ancestor.isPrivateRoot && isUnderPrivateDir) {
-        throw new InvalidPrivateDirAccessError("Private directories cannot be accessed")
+        throw new InvalidPrivateFolderAccessError("Private directories cannot be accessed")
       }
     }
   }
@@ -201,9 +201,9 @@ export class FileServiceImpl extends FileService {
 
   async createDirectory(arg: FileServiceCreateDirectoryArg): Promise<AppFileDescriptor> {
     const { parentId, name } = arg
-    const desc = await this.fileAccessService.makeDirectory({
+    const desc = await this.fileAccessService.makeFolder({
       parentDescId: parentId,
-      dirName: name,
+      folderName: name,
     })
     return mapFileDescriptorDomainToApp(desc)
   }
@@ -376,9 +376,9 @@ export class FileServiceImpl extends FileService {
   }
 
   async ensureRootDir(): Promise<DomainFileDescriptor> {
-    return await this.fileAccessService.createRootDir()
+    return await this.fileAccessService.createRootFolder()
   }
   async ensurePrivateDir(): Promise<DomainFileDescriptor> {
-    return await this.fileAccessService.createPrivateDir()
+    return await this.fileAccessService.createPrivateFolder()
   }
 }

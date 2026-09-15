@@ -69,7 +69,7 @@ describe("[Success] Model", () => {
       // Role: user
       { role: "user", content: [{ type: "text", text: "hello" }] },
       { role: "user", content: [] },
-      { role: "user", content: [{ type: "image", image: "base64-image", mediaType: "image/any" }] },
+      { role: "user", content: [{ type: "file", data: "base64-image", mediaType: "image/any" }] },
       { role: "user", content: [{ type: "file", data: "base64-file", mediaType: "application/any" }] },
       { role: "user", content: [{ type: "text", text: "text" }] },
       // Role: assistant

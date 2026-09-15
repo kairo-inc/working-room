@@ -25,7 +25,7 @@ const Button = ({
   )
 }
 
-type PagerProps = ComponentPropsWithoutRef<"div"> & Omit<PageResult<any>, "data">
+type PagerProps = ComponentPropsWithoutRef<"div"> & Omit<PageResult<unknown>, "data">
 
 // Index starts with 0.
 export const Pager = ({ nextPage, maxPage, className, ...props }: PagerProps) => {

@@ -115,6 +115,11 @@ model User {
   name String
   role UserRole
 
+  // Whether pressing Enter in the Chat message input sends the Message immediately.
+  // If false (default), Enter inserts a newline and only the send button sends the Message.
+  // Shift+Enter always inserts a newline regardless of this setting.
+  sendMessageOnEnter Boolean @default(false)
+
   // Email of the user.
   // If you want to use same mail-box for multiple tenants, you can use email alias or plus addressing to make them unique.
   email String @unique

@@ -32,6 +32,7 @@ export const TextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps>((
     return <BaseTextAreaForm {...props} ref={ref} />
   }
 })
+TextAreaForm.displayName = "TextAreaForm"
 
 const FinalTextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps & { formName: string }>(
   ({ formName, disabled, onChange: _, ...props }, ref) => {
@@ -40,6 +41,7 @@ const FinalTextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps & { 
     return <BaseTextAreaForm {...input} {...props} ref={ref} disabled={isDisabled} errorText={meta.touched && meta.error} />
   }
 )
+FinalTextAreaForm.displayName = "FinalTextAreaForm"
 
 const BaseTextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps>(
   ({ className, variant = "default", formName, label, disabled, noError, errorText, ...props }, ref) => {
@@ -65,5 +67,4 @@ const BaseTextAreaForm = forwardRef<HTMLTextAreaElement, TextAreaFormProps>(
     )
   }
 )
-
-TextAreaForm.displayName = "TextAreaForm"
+BaseTextAreaForm.displayName = "BaseTextAreaForm"

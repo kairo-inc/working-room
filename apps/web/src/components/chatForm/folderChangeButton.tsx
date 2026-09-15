@@ -21,18 +21,18 @@ export const FolderChangeButton = ({ chat, className, ...props }: ChatInputFormP
   const chatId = chat.id
   const router = useRouter()
   const notify = useNotification()
-  const { privateDirId } = useSetting()
+  const { privateFolderId } = useSetting()
   const { mutateAsync: editChat } = useChatEdit()
   const { show: showFileSelectModal, modal: FileSelectModal } = useFileSelectModal()
 
   // This will be the default working folder when the user opens the file select modal.
-  const workingFolder = chat.workingFolder ?? { id: privateDirId, name: L.chat.privateFolder }
+  const workingFolder = chat.workingFolder ?? { id: privateFolderId, name: L.chat.privateFolder }
   const { data: parentWorkingFolder } = useFileGetParentOrRoot(workingFolder.id)
 
   return (
     <>
       <div className={clsx("text-muted-foreground mt-0.5 flex w-full items-center justify-end gap-1 text-xs", className)} {...props}>
-        <span className="hidden sm:inline">{L.chat.currentDirectory}: </span>
+        <span className="hidden sm:inline">{L.chat.currentFolder}: </span>
         <Link href={Route.tree(workingFolder.id)} target="_blank" className="text-primary">
           <FileIconSm type="inode/directory" />
           {workingFolder.name}
@@ -55,7 +55,7 @@ export const FolderChangeButton = ({ chat, className, ...props }: ChatInputFormP
             })
           }
         >
-          {L.chat.changeDirectory}
+          {L.chat.changeFolder}
         </button>
       </div>
       {FileSelectModal}

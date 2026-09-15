@@ -295,8 +295,8 @@ export class Model {
             content.push({ type: "text", text: c.text })
           } else if (c.type === "image") {
             content.push({
-              type: "image",
-              image: c.image,
+              type: "file",
+              data: c.image,
               mediaType: c.mediaType,
             })
           } else if (c.type === "file") {

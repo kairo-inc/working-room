@@ -28,7 +28,7 @@ describe("[Success] Find records", () => {
   })
 
   it("Find records (no deletedAt filtering)", async () => {
-    const { user, dirs } = await fixtureFactory.createTenantWithOwner()
+    const { user, folders } = await fixtureFactory.createTenantWithOwner()
     await runWithDiContainer(testContainer, async () => {
       const fileHistorySource = testContainer.resolve<FileHistorySource>("FileHistorySource")
 
@@ -41,8 +41,8 @@ describe("[Success] Find records", () => {
           birthtime: new Date(),
           mtime: new Date(),
           blobHash: "dummy-hash",
-          pathIds: `${dirs.root.pathIds}/test-file.txt`,
-          parentId: dirs.root.id,
+          pathIds: `${folders.root.pathIds}/test-file.txt`,
+          parentId: folders.root.id,
           tenantId: user.tenantId,
         },
       })

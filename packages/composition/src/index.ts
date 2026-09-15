@@ -19,19 +19,20 @@ import {
   CoreConfig,
   EventBus,
   ToolCompareTextFileHistory,
-  ToolDeleteDir,
   ToolDeleteFile,
+  ToolDeleteFolder,
   ToolFindFileByName,
   ToolFindFileByText,
-  ToolListDir,
+  ToolListFolder,
   ToolListHistory,
-  ToolMakeDir,
+  ToolMakeFolder,
   ToolMoveFile,
   ToolReadImageFile,
   ToolReadPdfFile,
   ToolReadTextFile,
   ToolReadTextFileHistory,
   ToolRegistry,
+  ToolRestoreFileHistory,
   ToolSlackAddReaction,
   ToolSlackDescribeMySelf,
   ToolSlackListChannels,
@@ -39,7 +40,7 @@ import {
   ToolSlackListUsers,
   ToolSlackRemoveReaction,
   ToolSlackSendMessage,
-  ToolTraverseDir,
+  ToolTraverseFolder,
   ToolWebSearch,
   ToolWriteAppend,
   ToolWriteNewFile,
@@ -127,7 +128,7 @@ container.register<AgentRegistry>("AgentRegistry", { useClass: AgentRegistry })
 
 // Tools
 container.register<Tool>("Tool", { useClass: ToolWebSearch })
-container.register<Tool>("Tool", { useClass: ToolListDir })
+container.register<Tool>("Tool", { useClass: ToolListFolder })
 container.register<Tool>("Tool", { useClass: ToolMoveFile })
 container.register<Tool>("Tool", { useClass: ToolWriteNewFile })
 container.register<Tool>("Tool", { useClass: ToolWriteAppend })
@@ -136,14 +137,15 @@ container.register<Tool>("Tool", { useClass: ToolWriteReplace })
 container.register<Tool>("Tool", { useClass: ToolReadImageFile })
 container.register<Tool>("Tool", { useClass: ToolReadTextFile })
 container.register<Tool>("Tool", { useClass: ToolReadPdfFile })
-container.register<Tool>("Tool", { useClass: ToolMakeDir })
-container.register<Tool>("Tool", { useClass: ToolDeleteDir })
+container.register<Tool>("Tool", { useClass: ToolMakeFolder })
+container.register<Tool>("Tool", { useClass: ToolDeleteFolder })
 container.register<Tool>("Tool", { useClass: ToolFindFileByText })
 container.register<Tool>("Tool", { useClass: ToolFindFileByName })
-container.register<Tool>("Tool", { useClass: ToolTraverseDir })
+container.register<Tool>("Tool", { useClass: ToolTraverseFolder })
 container.register<Tool>("Tool", { useClass: ToolListHistory })
 container.register<Tool>("Tool", { useClass: ToolReadTextFileHistory })
 container.register<Tool>("Tool", { useClass: ToolCompareTextFileHistory })
+container.register<Tool>("Tool", { useClass: ToolRestoreFileHistory })
 container.register<Tool>("Tool", { useClass: ToolSlackDescribeMySelf })
 container.register<Tool>("Tool", { useClass: ToolSlackListChannels })
 container.register<Tool>("Tool", { useClass: ToolSlackListUsers })

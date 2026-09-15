@@ -10,13 +10,13 @@ export const mapFileDescriptorEntityToDomain = (entity: EntityFileDescriptor): D
     mtime: entity.mtime.getTime(),
     size: entity.size,
     mimeType: entity.mimeType as MimeType,
-    isDirectory: entity.isDirectory,
+    isFolder: entity.isDirectory,
     isRoot: entity.isRoot,
     blobHash: entity.blobHash,
     status: entity.status,
     pathIds: entity.pathIds,
     parentId: entity.parentId,
-    isChatDir: entity.isChatDir,
+    isChatFolder: entity.isChatDir,
     isPrivateRoot: !!entity.privateRootOf,
   }
 }
@@ -29,11 +29,11 @@ export const mapFileDescriptorDomainToEntity = (domain: DomainFileDescriptor): P
     mtime: new Date(domain.mtime),
     size: domain.size,
     mimeType: domain.mimeType,
-    isDirectory: domain.isDirectory,
+    isDirectory: domain.isFolder,
     isRoot: domain.isRoot,
     blobHash: domain.blobHash,
     pathIds: domain.pathIds,
     parentId: domain.parentId,
-    isChatDir: domain.isChatDir,
+    isChatDir: domain.isChatFolder,
   }
 }

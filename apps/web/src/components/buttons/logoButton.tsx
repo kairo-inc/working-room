@@ -30,7 +30,7 @@ type BaseLogoButtonProps = ComponentPropsWithoutRef<"button"> &
     icon?: ReactNode
   }
 
-const BaseLogoButton = ({ children, variant, size, className, disabled, loading, href, icon, ...props }: BaseLogoButtonProps) => {
+const BaseLogoButton = ({ children, variant, size, className, disabled, loading, icon, ...props }: BaseLogoButtonProps) => {
   const isDisabled = Boolean(disabled || loading)
   const resolvedVariant = isDisabled ? "disabled" : variant
 
@@ -56,17 +56,9 @@ const BaseLogoButton = ({ children, variant, size, className, disabled, loading,
   )
 }
 
-export const SlackLogoButton = ({ variant, size, className, disabled, loading, href, icon, ...props }: BaseLogoButtonProps) => {
+export const SlackLogoButton = ({ variant, size, className, disabled, loading, ...props }: BaseLogoButtonProps) => {
   return (
-    <BaseLogoButton
-      variant={variant}
-      size={size}
-      className={clsx(className, "gap-2")}
-      disabled={disabled}
-      loading={loading}
-      href={href}
-      {...props}
-    >
+    <BaseLogoButton variant={variant} size={size} className={clsx(className, "gap-2")} disabled={disabled} loading={loading} {...props}>
       <SlackLogo style={{ height: size === "sm" ? 16 : 20 }} />
     </BaseLogoButton>
   )

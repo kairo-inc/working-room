@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe"
 
 import { AccessGroupSource, UserSource } from "@wr/db"
-import { BadRequestError, InvalidPrivateDirAccessError, InvalidRootDirAccessError, PageResult } from "@wr/shared"
+import { BadRequestError, InvalidPrivateFolderAccessError, InvalidRootFolderAccessError, PageResult } from "@wr/shared"
 import { getPrivateContext } from "@wr/shared-node"
 
 import { mapAccessGroupEntityToApp } from "../../map/accessGroup"
@@ -101,15 +101,15 @@ export class AccessGroupServiceImpl extends AccessGroupService {
     })
     if (target.isPersonal) {
       if (userIdsToAdd || userIdsToRemove) {
-        throw new InvalidPrivateDirAccessError("Personal access groups cannot accept any user to be added or removed")
+        throw new InvalidPrivateFolderAccessError("Personal access groups cannot accept any user to be added or removed")
       } else if (resourceIdsToAdd || resourceIdsToRemove) {
-        throw new InvalidPrivateDirAccessError("Personal access groups cannot accept any resource to be added or removed")
+        throw new InvalidPrivateFolderAccessError("Personal access groups cannot accept any resource to be added or removed")
       }
     } else if (target.isOwner) {
       if (userIdsToAdd || userIdsToRemove) {
-        throw new InvalidRootDirAccessError("Owner access groups cannot accept any user to be added or removed")
+        throw new InvalidRootFolderAccessError("Owner access groups cannot accept any user to be added or removed")
       } else if (resourceIdsToAdd || resourceIdsToRemove) {
-        throw new InvalidRootDirAccessError("Owner access groups cannot accept any resource to be added or removed")
+        throw new InvalidRootFolderAccessError("Owner access groups cannot accept any resource to be added or removed")
       }
     }
 

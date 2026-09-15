@@ -20,8 +20,8 @@ export class ToolDeleteFile extends Tool {
   name = "ToolDeleteFile"
   description = `Delete files from the system. Use this when you need to remove files that are no longer needed.
 The input should include the IDs of the files to be deleted.This can be obtained from the file reference returned by the tool that created or accessed the file.
-When any directory ids are provided, the tool throws an error since directories should be deleted with the ToolDeleteDir tool to ensure proper handling of their contents. 
-If you need to delete a directory, use the ToolDeleteDir tool instead.
+When any folder ids are provided, the tool throws an error since folders should be deleted with the ToolDeleteFolder tool to ensure proper handling of their contents.
+If you need to delete a folder, use the ToolDeleteFolder tool instead.
 `
   needApproval = true
   inputSchema = inputSchema

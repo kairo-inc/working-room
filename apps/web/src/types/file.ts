@@ -7,9 +7,9 @@ export type AppFileDescriptor = {
   name: string
   blobHash: string
   mimeType: MimeType
-  isDirectory: boolean
+  isFolder: boolean
   isPrivateRoot: boolean
-  isChatDir: boolean
+  isChatFolder: boolean
   parentId?: string
   isRoot: boolean
   pathIds: string
@@ -19,6 +19,6 @@ export type AppFileDescriptorEssential = {
   id: string
   name: string
   pathIds?: string
-  isDirectory: boolean
+  isFolder: boolean
   mimeType: string
 }

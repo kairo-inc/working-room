@@ -38,6 +38,7 @@ export const PdfThumbnail = ({ descId, className, ...rest }: PdfThumbnailProps) 
   }, [descId])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- kicks off an async PDF fetch into local state; there's no external store to sync from instead.
     loadPdf()
 
     return () => {
@@ -70,5 +71,4 @@ export const PdfThumbnail = ({ descId, className, ...rest }: PdfThumbnailProps) 
     </div>
   )
 }
-
 PdfThumbnail.displayName = "PdfThumbnail"

@@ -91,7 +91,7 @@ export class Agent {
       messages.push({
         role: "system" as const,
         content: `You are working in a virtual file system with a current working folder, which ID is ${workingFolder.id} and name is ${workingFolder.name}.
-${workingFolder.parent ? `The parent folder ID is ${workingFolder.parent.id} and name is ${workingFolder.parent.name}.` : "This folder is the root directory."}
+${workingFolder.parent ? `The parent folder ID is ${workingFolder.parent.id} and name is ${workingFolder.parent.name}.` : "This folder is the root folder."}
 This folder has the following structure:\n${workingFolder.items
           .map((item) => `- Name: ${item.name}, ID: ${item.id}, MimeType: ${item.mimeType}`)
           .join("\n")}\nYou can use the tools to access these files if needed.`,

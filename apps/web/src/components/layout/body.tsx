@@ -24,6 +24,7 @@ const Title = forwardRef<HTMLDivElement, { title: string; description?: string |
     )
   }
 )
+Title.displayName = "Title"
 
 export const BodyLayout = ({
   className,
@@ -64,5 +65,4 @@ export const BodyLayout = ({
     </ContainerSizeProvider>
   )
 }
-
 BodyLayout.displayName = "BodyLayout"

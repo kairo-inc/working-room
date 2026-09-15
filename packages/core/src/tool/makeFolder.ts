@@ -12,17 +12,17 @@ const inputSchema = z.object({
     .string()
     .optional()
     .describe(
-      `The ID of the parent directory where the new directory will be created.
-This must be a directory that the agent has access to. If you need to refer to the root directory, do not provide this field.`
+      `The ID of the parent folder where the new folder will be created.
+This must be a folder that the agent has access to. If you need to refer to the root folder, do not provide this field.`
     ),
-  dirName: z.string().describe(`The name of the new directory to be created.`),
+  folderName: z.string().describe(`The name of the new folder to be created.`),
 })
 
 @injectable()
-export class ToolMakeDir extends Tool {
-  name = "ToolMakeDir"
-  description = `Create a new directory. Use this when you need to organize files into a new folder.
-This tool will throw an error if the directory already exists at the specified path, so please make sure the directory does not exist before using this tool.`
+export class ToolMakeFolder extends Tool {
+  name = "ToolMakeFolder"
+  description = `Create a new folder. Use this when you need to organize files into a new folder.
+This tool will throw an error if the folder already exists at the specified path, so please make sure the folder does not exist before using this tool.`
   needApproval = true
   inputSchema = inputSchema
   toolType: DomainToolType = "create"
@@ -52,7 +52,7 @@ This tool will throw an error if the directory already exists at the specified p
           descId: desc.id,
         },
       ],
-      change: `+${input.data.dirName}`,
+      change: `+${input.data.folderName}`,
     }
   }
 
@@ -71,12 +71,12 @@ This tool will throw an error if the directory already exists at the specified p
         desc = await this.fileAccessService.rootDescriptor()
       }
 
-      const dir = await this.fileAccessService.makeDirectory({
+      const folder = await this.fileAccessService.makeFolder({
         parentDescId: desc.id,
-        dirName: input.data.dirName,
+        folderName: input.data.folderName,
       })
-      let message = `Directory created successfully`
-      message += `\n- ${dir.name}/ (ID: ${dir.id})`
+      let message = `Folder created successfully`
+      message += `\n- ${folder.name}/ (ID: ${folder.id})`
 
       return {
         message: {
@@ -95,7 +95,7 @@ This tool will throw an error if the directory already exists at the specified p
     } catch (e) {
       console.error((e as Error).stack)
       return {
-        message: this.buildError(toolCall, `Failed to create directory: ${(e as Error).message}`),
+        message: this.buildError(toolCall, `Failed to create folder: ${(e as Error).message}`),
       }
     }
   }

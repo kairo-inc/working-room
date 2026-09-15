@@ -164,7 +164,7 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
             rows={[
               {
                 items: [
-                  <div className="flex items-center gap-2 text-sm">
+                  <div key="add-resource" className="flex items-center gap-2 text-sm">
                     <Plus />
                     {L.settingAccessGroup.addResource}
                   </div>,
@@ -181,6 +181,7 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
                   resource.name,
                   resource.mimeType,
                   <IconButton
+                    key={resource.id}
                     icon={<Trash />}
                     size="sm"
                     onClick={() =>
@@ -200,7 +201,7 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
             rows={[
               {
                 items: [
-                  <div className="flex items-center gap-2 text-sm">
+                  <div key="add-user" className="flex items-center gap-2 text-sm">
                     <Plus />
                     {L.settingAccessGroup.addUser}
                   </div>,
@@ -217,6 +218,7 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
                   user.name,
                   user.email,
                   <IconButton
+                    key={user.id}
                     icon={<Trash />}
                     size="sm"
                     onClick={() =>

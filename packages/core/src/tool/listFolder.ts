@@ -16,7 +16,7 @@ const inputSchema = z.object({
   targetDescId: z
     .string()
     .optional()
-    .describe(`The ID of the directory to list. If you need to access the root directory, do not provide this field.`),
+    .describe(`The ID of the folder to list. If you need to access the root folder, do not provide this field.`),
   page: z.number().optional().describe("The page number to retrieve. Defaults to 0 because the first page is 0."),
   sortBy: z.enum(FileDescriptorSortByList).optional().describe("The field to sort the results by. Defaults to 'name'."),
   sortDirection: z.enum(["asc", "desc"]).optional().describe("The direction to sort the results. Defaults to 'asc'."),
@@ -29,9 +29,9 @@ const inputSchema = z.object({
 })
 
 @injectable()
-export class ToolListDir extends Tool {
-  name = "ToolListDir"
-  description = "List the contents of a directory. Use this when you need to explore the file system."
+export class ToolListFolder extends Tool {
+  name = "ToolListFolder"
+  description = "List the contents of a folder. Use this when you need to explore the file system."
   needApproval = false
   inputSchema = inputSchema
   toolType: DomainToolType = "read"
@@ -63,7 +63,7 @@ export class ToolListDir extends Tool {
       const files = await this.fileAccessService.list({ descId: desc.id, take: maxItemsInPage, page, sortBy, sortDirection })
 
       // Construct the result message and file content
-      let resultMessage = `Found ${files.count} items in the directory '${desc.name}' (ID: ${desc.id}). Showing page ${page} with up to ${maxItemsInPage} items per page.`
+      let resultMessage = `Found ${files.count} items in the folder '${desc.name}' (ID: ${desc.id}). Showing page ${page} with up to ${maxItemsInPage} items per page.`
       if (files.nextPage) {
         resultMessage += `\nThere are more items available. The next page is ${files.nextPage}. You can specify the 'page' parameter to retrieve the next set of items.`
       } else {
@@ -93,9 +93,9 @@ export class ToolListDir extends Tool {
       }
     } catch (e) {
       if (e instanceof NotFoundError) {
-        return { message: this.buildError(toolCall, `Directory not found: ${input.data.targetDescId || "root"}`) }
+        return { message: this.buildError(toolCall, `Folder not found: ${input.data.targetDescId || "root"}`) }
       }
-      return { message: this.buildError(toolCall, `Failed to list directory: ${e instanceof Error ? e.message : String(e)}`) }
+      return { message: this.buildError(toolCall, `Failed to list folder: ${e instanceof Error ? e.message : String(e)}`) }
     }
   }
 }

@@ -8,7 +8,7 @@ export type DomainFileDescriptor = {
   id: string
   birthtime: number
   mtime: number
-  isDirectory: boolean
+  isFolder: boolean
   isRoot: boolean
   name: string
   size: number
@@ -17,7 +17,7 @@ export type DomainFileDescriptor = {
   pathIds: string
   parentId: string | null
   isPrivateRoot: boolean
-  isChatDir: boolean
+  isChatFolder: boolean
   status: "exist" | "missing" | "deleted"
 }
 
@@ -25,7 +25,7 @@ export type DomainFileStat = {
   id: string
   birthtime: number
   mtime: number
-  isDirectory: boolean
+  isFolder: boolean
   name: string
   size: number
   mimeType: MimeType

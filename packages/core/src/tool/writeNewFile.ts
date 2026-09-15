@@ -20,8 +20,8 @@ const inputSchema = z.object({
     .string()
     .optional()
     .describe(
-      `The ID of the parent directory where the new file will be created. This should be a directory that the agent has access to.
-If you need to refer to the root directory, do not provide this field.`
+      `The ID of the parent folder where the new file will be created. This should be a folder that the agent has access to.
+If you need to refer to the root folder, do not provide this field.`
     ),
   fileName: z.string().describe(`The name of the new file to be created.`),
   content: z.string().describe("The text content to write to the new file."),
