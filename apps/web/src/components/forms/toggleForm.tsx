@@ -18,9 +18,10 @@ type Variants = VariantProps<typeof variants>
 
 export type ToggleFormProps = ComponentPropsWithoutRef<"input"> & {
   formName: string
+  noErrorSpace?: boolean
 }
 
-export const ToggleForm = ({ formName, disabled, ...props }: ToggleFormProps) => {
+export const ToggleForm = ({ formName, disabled, noErrorSpace, ...props }: ToggleFormProps) => {
   const { input, meta } = useField(formName)
   const isDisabled = meta.submitting || disabled
   const showError = meta.touched && meta.error
@@ -50,7 +51,7 @@ export const ToggleForm = ({ formName, disabled, ...props }: ToggleFormProps) =>
     <div className="inline-flex w-full flex-col gap-1">
       <input type="checkbox" {...input} {...props} disabled={isDisabled} style={{ display: "none" }} />
       <div className={clsx(variants({ variant: variantState }), variants({ variant: variantValueState }))} onClick={handleOnClick} />
-      <span className="text-destructive h-4 text-xs">{showError ? meta.error : ""}</span>
+      {!noErrorSpace && <span className="text-destructive h-4 text-xs">{showError ? meta.error : ""}</span>}
     </div>
   )
 }

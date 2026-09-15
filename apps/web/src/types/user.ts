@@ -12,4 +12,5 @@ export type AppUserSetting = {
   name: string
   privateFolderId: string
   role: "owner" | "admin" | "member" | "guest"
+  sendMessageOnEnter: boolean
 }

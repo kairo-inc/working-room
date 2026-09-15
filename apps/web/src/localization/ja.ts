@@ -72,6 +72,11 @@ export default {
       notConnected: "未接続",
       disconnect: "接続解除",
     },
+    chat: {
+      title: "チャット",
+      sendMessageOnEnter: "Enterキーでメッセージを送信する",
+      failed: "設定の更新に失敗しました",
+    },
     signout: {
       title: "サインアウト",
       button: "サインアウト",

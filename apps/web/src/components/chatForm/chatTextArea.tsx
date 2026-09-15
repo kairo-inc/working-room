@@ -1,9 +1,10 @@
 import { cva } from "class-variance-authority"
 import clsx from "clsx"
 import { FilePlus, Forward } from "lucide-react"
-import { ComponentPropsWithoutRef, useCallback, useLayoutEffect, useRef, useState } from "react"
+import { ComponentPropsWithoutRef, KeyboardEvent, useCallback, useLayoutEffect, useRef, useState } from "react"
 import { useField, useForm } from "react-final-form"
 
+import { useSetting } from "../../contexts/setting"
 import { useFileUploadFileToChat } from "../../hooks/trpc/file"
 import { L } from "../../localization"
 import { IconButton } from "../buttons/iconButton"
@@ -42,7 +43,9 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
   const fileSpaceRef = useRef<HTMLDivElement>(null)
   const [rows, setRows] = useState(1)
   const { mutateAsync: uploadFile } = useFileUploadFileToChat()
-  const { getFieldState, change } = useForm<ChatInputFormType>()
+  const form = useForm<ChatInputFormType>()
+  const { getFieldState, change } = form
+  const { sendMessageOnEnter } = useSetting()
 
   const { input } = useField<string>("chatMessage", { type: "textarea" })
   const {
@@ -96,6 +99,19 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
       textarea.style.paddingTop = `16px`
     }
   }, [input.value, calculateRows])
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLTextAreaElement>) => {
+      // isComposing guards against IME confirmation keystrokes (e.g. Japanese/Chinese input), which also fire "Enter".
+      if (sendMessageOnEnter && e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+        e.preventDefault()
+        if (!isDisabled) {
+          form.submit()
+        }
+      }
+    },
+    [sendMessageOnEnter, isDisabled, form]
+  )
 
   const handleRemoveFile = useCallback(
     (file: File) => {
@@ -171,6 +187,7 @@ export const ChatTextArea = ({ chatId, className, isDisabled, ...props }: ChatTe
           rows={rows}
           placeholder={L.chat.inputPlaceholder}
           {...input}
+          onKeyDown={handleKeyDown}
           {...props}
         />
         <input
