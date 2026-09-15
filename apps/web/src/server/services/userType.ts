@@ -12,6 +12,7 @@ export type UserServiceGetListResult = PageResult<AppUser>
 
 export type UserServiceEditMySelfArg = {
   name?: string
+  sendMessageOnEnter?: boolean
 }
 
 export abstract class UserService {

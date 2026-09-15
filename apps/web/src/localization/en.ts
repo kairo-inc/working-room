@@ -70,6 +70,11 @@ export default {
       notConnected: "Not connected",
       disconnect: "Disconnect",
     },
+    chat: {
+      title: "Chat",
+      sendMessageOnEnter: "Send message with Enter key",
+      failed: "Failed to update the setting",
+    },
     signout: {
       title: "Signout",
       button: "Sign Out",

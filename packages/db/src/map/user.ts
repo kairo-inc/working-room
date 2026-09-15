@@ -25,5 +25,7 @@ export const mapUserDomainToEntity = (domain: DomainUser): EntityUser => {
     name: domain.name,
     tenantId: domain.tenantId,
     role: domain.role,
+    // Not part of the domain concept of a User; defaults to the same value as the database column default.
+    sendMessageOnEnter: false,
   }
 }

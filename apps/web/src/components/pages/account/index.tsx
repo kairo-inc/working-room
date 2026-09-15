@@ -1,8 +1,10 @@
 import { Edit } from "lucide-react"
 import { useRouter } from "next/router"
+import { Form } from "react-final-form"
 
 import { IconButton } from "../../../components/buttons/iconButton"
 import { RectangleButton } from "../../../components/buttons/rectangleButton"
+import { ToggleForm } from "../../../components/forms/toggleForm"
 import { BodyLayout } from "../../../components/layout/body"
 import { PageLayout } from "../../../components/layout/page"
 import { useOauthClientDisconnectModal } from "../../../components/modals/oauthClientDisconnect"
@@ -10,6 +12,7 @@ import { useUserEditModal } from "../../../components/modals/userEdit"
 import { Section } from "../../../components/section"
 import { useNotification } from "../../../contexts/notification"
 import { useAuthSignout } from "../../../hooks/trpc/auth"
+import { useUserEdit } from "../../../hooks/trpc/user"
 import { L } from "../../../localization"
 import { Route } from "../../../route"
 import { AppOauthClient, AppOauthClientSlack } from "../../../types/oauthClient"
@@ -17,6 +20,10 @@ import { AppUserSetting } from "../../../types/user"
 import { SlackLogoButton } from "../../buttons/logoButton"
 import { VerticalAligned3Items } from "../../layout/verticalAligned3Items"
 import { VerticalAlignedItems } from "../../layout/verticalAlignedItems"
+
+type ChatSettingFormType = {
+  sendMessageOnEnter: boolean
+}
 
 const availableOauthClients = ["slack"] as const
 
@@ -31,6 +38,7 @@ export const PageAccount = ({ data, oauthClients }: PageAccountProps) => {
   const { mutateAsync: signout, isPending } = useAuthSignout()
   const { show: showUserEditModal, modal: UserEditModal } = useUserEditModal()
   const { show: showOauthClientDisconnectModal, modal: OauthClientDisconnectModal } = useOauthClientDisconnectModal()
+  const { mutateAsync: editUser } = useUserEdit()
   const editButton = <IconButton size="default" icon={<Edit />} onClick={() => showUserEditModal({ data })} />
 
   return (
@@ -43,6 +51,41 @@ export const PageAccount = ({ data, oauthClients }: PageAccountProps) => {
               { label: L.account.userData.email, value: data.email },
               { label: L.account.userData.role, value: data.role },
             ]}
+          />
+        </Section>
+        <Section title={L.account.chat.title}>
+          <Form<ChatSettingFormType>
+            initialValues={{ sendMessageOnEnter: data.sendMessageOnEnter }}
+            onSubmit={async (values) => {
+              try {
+                await editUser({ sendMessageOnEnter: values.sendMessageOnEnter })
+                router.replace(router.asPath)
+              } catch (error) {
+                notify.error(L.account.chat.failed, error.message)
+              }
+            }}
+            render={({ handleSubmit, submitting, pristine }) => (
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <VerticalAlignedItems
+                  className="items-center"
+                  items={[
+                    {
+                      label: <div className="text-primary">{L.account.chat.sendMessageOnEnter}</div>,
+                      value: (
+                        <div className="leading-0">
+                          <ToggleForm formName="sendMessageOnEnter" noErrorSpace />
+                        </div>
+                      ),
+                    },
+                  ]}
+                />
+                <div className="flex justify-end">
+                  <RectangleButton type="submit" loading={submitting} disabled={pristine}>
+                    {L.common.save}
+                  </RectangleButton>
+                </div>
+              </form>
+            )}
           />
         </Section>
         <Section title={L.account.oauthClient.title}>

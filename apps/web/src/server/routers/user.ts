@@ -7,10 +7,12 @@ import { getWebAppDiContainer } from "../container"
 import { UserService } from "../services/userType"
 import { privateProcedure } from "../trpc"
 
-export const userEdit = privateProcedure.input(z.object({ name: z.string().min(1).max(128).optional() })).mutation(async ({ input }) => {
-  const service = getWebAppDiContainer().resolve<UserService>("UserService")
-  await service.editMySelf({ name: input.name })
-})
+export const userEdit = privateProcedure
+  .input(z.object({ name: z.string().min(1).max(128).optional(), sendMessageOnEnter: z.boolean().optional() }))
+  .mutation(async ({ input }) => {
+    const service = getWebAppDiContainer().resolve<UserService>("UserService")
+    await service.editMySelf({ name: input.name, sendMessageOnEnter: input.sendMessageOnEnter })
+  })
 
 export const userGetList = privateProcedure
   .input(

@@ -3,7 +3,7 @@ import clsx from "clsx"
 import { ComponentPropsWithoutRef } from "react"
 import { useField } from "react-final-form"
 
-const variants = cva("h-8 w-14 outline-1 outline-border rounded-full relative inline-block cursor-pointer", {
+const variants = cva("h-8 w-14 outline-1 outline-border rounded-full relative inline-block cursor-pointer ", {
   variants: {
     variant: {
       on: "bg-card after:absolute after:inset-0 after:rounded-full after:bg-primary after:transition-transform after:w-6 after:h-6 after:top-1 after:translate-x-7",
@@ -18,9 +18,10 @@ type Variants = VariantProps<typeof variants>
 
 export type ToggleFormProps = ComponentPropsWithoutRef<"input"> & {
   formName: string
+  noErrorSpace?: boolean
 }
 
-export const ToggleForm = ({ formName, disabled, ...props }: ToggleFormProps) => {
+export const ToggleForm = ({ formName, disabled, noErrorSpace, ...props }: ToggleFormProps) => {
   const { input, meta } = useField(formName)
   const isDisabled = meta.submitting || disabled
   const showError = meta.touched && meta.error
@@ -49,8 +50,11 @@ export const ToggleForm = ({ formName, disabled, ...props }: ToggleFormProps) =>
   return (
     <div className="inline-flex w-full flex-col gap-1">
       <input type="checkbox" {...input} {...props} disabled={isDisabled} style={{ display: "none" }} />
-      <div className={clsx(variants({ variant: variantState }), variants({ variant: variantValueState }))} onClick={handleOnClick} />
-      <span className="text-destructive h-4 text-xs">{showError ? meta.error : ""}</span>
+      <div
+        className={clsx(variants({ variant: variantState }), variants({ variant: variantValueState }), "block")}
+        onClick={handleOnClick}
+      />
+      {!noErrorSpace && <span className="text-destructive h-4 text-xs">{showError ? meta.error : ""}</span>}
     </div>
   )
 }
