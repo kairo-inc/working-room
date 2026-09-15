@@ -50,10 +50,7 @@ export const ToggleForm = ({ formName, disabled, noErrorSpace, ...props }: Toggl
   return (
     <div className="inline-flex w-full flex-col gap-1">
       <input type="checkbox" {...input} {...props} disabled={isDisabled} style={{ display: "none" }} />
-      <div
-        className={clsx(variants({ variant: variantState }), variants({ variant: variantValueState }), "block")}
-        onClick={handleOnClick}
-      />
+      <div className={clsx(variants({ variant: variantState }), variants({ variant: variantValueState }))} onClick={handleOnClick} />
       {!noErrorSpace && <span className="text-destructive h-4 text-xs">{showError ? meta.error : ""}</span>}
     </div>
   )
