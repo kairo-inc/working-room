@@ -3,7 +3,7 @@ import clsx from "clsx"
 import { ComponentPropsWithoutRef } from "react"
 import { useField } from "react-final-form"
 
-const variants = cva("h-8 w-14 outline-1 outline-border rounded-full relative inline-block cursor-pointer ", {
+const variants = cva("h-8 w-14 outline-1 outline-border rounded-full relative inline-block cursor-pointer", {
   variants: {
     variant: {
       on: "bg-card after:absolute after:inset-0 after:rounded-full after:bg-primary after:transition-transform after:w-6 after:h-6 after:top-1 after:translate-x-7",
