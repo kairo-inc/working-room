@@ -27,9 +27,7 @@ import {
   ToolListHistory,
   ToolMakeFolder,
   ToolMoveFile,
-  ToolReadImageFile,
-  ToolReadPdfFile,
-  ToolReadTextFile,
+  ToolReadFile,
   ToolReadTextFileHistory,
   ToolRegistry,
   ToolRestoreFileHistory,
@@ -134,9 +132,7 @@ container.register<Tool>("Tool", { useClass: ToolWriteNewFile })
 container.register<Tool>("Tool", { useClass: ToolWriteAppend })
 container.register<Tool>("Tool", { useClass: ToolDeleteFile })
 container.register<Tool>("Tool", { useClass: ToolWriteReplace })
-container.register<Tool>("Tool", { useClass: ToolReadImageFile })
-container.register<Tool>("Tool", { useClass: ToolReadTextFile })
-container.register<Tool>("Tool", { useClass: ToolReadPdfFile })
+container.register<Tool>("Tool", { useClass: ToolReadFile })
 container.register<Tool>("Tool", { useClass: ToolMakeFolder })
 container.register<Tool>("Tool", { useClass: ToolDeleteFolder })
 container.register<Tool>("Tool", { useClass: ToolFindFileByText })

@@ -11,6 +11,7 @@ import { L } from "../../localization"
 import { Route } from "../../route"
 import { AppFileDescriptor } from "../../types/file"
 import { elementIds } from "../elementId"
+import { getFileTypeLabel } from "../formatter"
 import { useHoverMenu } from "../hoverMenu"
 import { LoadingIndicator } from "../indicator"
 import { useAccessGroupCreateModal } from "../modals/accessGroupCreate"
@@ -427,7 +428,7 @@ export const FileList = ({ data, parent, isPending, className, refetchFiles, ...
                         <FileIconSm type={mimeType} className="shrink-0" />
                         <span className="min-w-0 truncate">{name}</span>
                       </div>
-                      <div className={`text-muted-foreground hidden pl-4 sm:block`}>{isFolder ? "-" : mimeType.split("/").pop()}</div>
+                      <div className={`text-muted-foreground hidden pl-4 sm:block`}>{isFolder ? "-" : getFileTypeLabel(mimeType)}</div>
                       <div className={`text-muted-foreground truncate pr-2 pl-4`}>{dayjs(mtime).fromNow()}</div>
                     </div>
                   )

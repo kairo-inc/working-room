@@ -45,9 +45,8 @@ export const ChatMessage = ({ role, text, fileMeta, proceededFiles, showLoading,
                 return <ImageThumbnail key={meta.descId} descId={meta.descId} />
               } else if (mimeType.includes("pdf")) {
                 return <PdfThumbnail key={meta.descId} descId={meta.descId} />
-              } else if (mimeType.startsWith("text")) {
-                return <FileListItem key={meta.descId} descId={meta.descId} />
               }
+              return <FileListItem key={meta.descId} descId={meta.descId} />
             })}
           </div>
         )}

@@ -48,6 +48,11 @@ export type CursorResult<T> = {
 export const supportedTextMimeTypes = ["text/markdown", "text/plain", "text/csv"] as const
 export const supportedImageMimeTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"] as const
 export const supportedBinaryMimeTypes = ["application/pdf", "application/octet-stream", ...supportedImageMimeTypes] as const
+export const supportedOfficeMimeTypes = [
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+] as const
 export const supportedMimeTypes = [
   "inode/directory",
   "text/markdown",
@@ -59,6 +64,7 @@ export const supportedMimeTypes = [
   "image/webp",
   "application/pdf",
   "application/octet-stream",
+  ...supportedOfficeMimeTypes,
 ] as const
 
 export type FolderMimeType = "inode/directory"

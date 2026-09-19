@@ -79,6 +79,11 @@
   --popover: #111111;
   --popover-foreground: #ffffff;
 
+  /* File Type Colors */
+  --word: oklch(54.6% 0.245 262.881);
+  --excel: oklch(62.7% 0.194 149.214);
+  --powerpoint: oklch(64.6% 0.222 41.116);
+
   /* Utilities */
   --radius: 0.5rem;
   --font-weight-medium: 500;
@@ -143,6 +148,11 @@
 
   --popover: #fafafa;
   --popover-foreground: #121212;
+
+  /* File Type Colors */
+  --word: oklch(70.7% 0.165 254.624);
+  --excel: oklch(79.2% 0.209 151.711);
+  --powerpoint: oklch(75% 0.183 55.934);
 }
 
 @theme inline {
@@ -193,6 +203,10 @@
 
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
+  --color-word: var(--word);
+  --color-excel: var(--excel);
+  --color-powerpoint: var(--powerpoint);
 
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);

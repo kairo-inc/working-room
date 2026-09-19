@@ -12,6 +12,7 @@ import { AppFileDescriptorEssential } from "../../../../types/file"
 import { AppUser } from "../../../../types/user"
 import { IconButton } from "../../../buttons/iconButton"
 import { RectangleButton } from "../../../buttons/rectangleButton"
+import { getFileTypeLabel } from "../../../formatter"
 import { TextAreaForm } from "../../../forms/textAreaForm"
 import { TextForm } from "../../../forms/textForm"
 import { ToggleForm } from "../../../forms/toggleForm"
@@ -179,7 +180,7 @@ export const PageSettingAccessGroupEdit = ({ data, userList, resourceList }: Pag
               ...resourceList.map((resource) => ({
                 items: [
                   resource.name,
-                  resource.mimeType,
+                  getFileTypeLabel(resource.mimeType),
                   <IconButton
                     key={resource.id}
                     icon={<Trash />}
