@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { File, FileImage, FileMinus, FileText, Folder } from "lucide-react"
+import { File, FileImage, FileMinus, FileSpreadsheet, FileText, Folder, Presentation } from "lucide-react"
 
 import { useFileGet } from "../../hooks/trpc/file"
 import { L } from "../../localization"
@@ -15,8 +15,8 @@ export interface FileItemProps extends React.HTMLAttributes<HTMLDivElement> {
   descId: string
 }
 
-const getIcon = (type: string, size: "sm" | "md" | "lg") => {
-  const getSize = size === "sm" ? "size-4" : size === "md" ? "size-6" : "size-8"
+const getIcon = (type: string, size: "sm" | "md" | "lg" | "xl") => {
+  const getSize = size === "sm" ? "size-4" : size === "md" ? "size-6" : size === "lg" ? "size-8" : "size-16"
   switch (type) {
     case "inode/directory":
       return <Folder className={getSize} fill="currentColor" />
@@ -26,6 +26,12 @@ const getIcon = (type: string, size: "sm" | "md" | "lg") => {
     case "text/plain":
     case "text/csv":
       return <FileText className={getSize} />
+    case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+      return <FileText className={clsx(getSize, "text-word")} />
+    case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+      return <FileSpreadsheet className={clsx(getSize, "text-excel")} />
+    case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+      return <Presentation className={clsx(getSize, "text-powerpoint")} />
     case "image/png":
     case "image/jpeg":
     case "image/gif":
@@ -46,6 +52,10 @@ export const FileIconMd = ({ type, className }: FileIconProps) => {
 
 export const FileIconLg = ({ type, className }: FileIconProps) => {
   return <div className={clsx(className)}>{getIcon(type, "lg")}</div>
+}
+
+export const FileIconXl = ({ type, className }: FileIconProps) => {
+  return <div className={clsx(className)}>{getIcon(type, "xl")}</div>
 }
 
 export const FileListItem = ({ descId }: FileItemProps) => {

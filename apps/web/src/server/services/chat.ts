@@ -300,7 +300,7 @@ export class ChatServiceImpl extends ChatService {
         // You can adjust or remove it as needed based on your specific requirements.
         coordinator: "medium",
         // NOTE: You can also add tier overrides for other tools as needed.
-        ToolReadPdfFile: "medium",
+        ToolReadFile: "medium",
       },
       workingFolder: await this.buildWorkingFolder({ folderId: chat.workingFolder?.id }),
     })

@@ -20,8 +20,12 @@
     "ai": "6.0.0",
     "chardet": "2.1.1",
     "cuid": "3.0.0",
+    "fast-xml-parser": "5.11.1",
+    "jszip": "3.10.2",
+    "mammoth": "1.12.3",
     "mime": "4.1.0",
     "node-poppler": "9.1.2",
-    "tsyringe": "4.10.0"
+    "tsyringe": "4.10.0",
+    "xlsx": "0.18.5"
   }
 }

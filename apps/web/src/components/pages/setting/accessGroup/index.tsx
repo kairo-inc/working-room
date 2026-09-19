@@ -9,6 +9,7 @@ import { AppAccessGroup } from "../../../../types/accessGroup"
 import { AppFileDescriptorEssential } from "../../../../types/file"
 import { AppUser } from "../../../../types/user"
 import { RectangleButton } from "../../../buttons/rectangleButton"
+import { getFileTypeLabel } from "../../../formatter"
 import { BodyLayout } from "../../../layout/body"
 import { PageLayout } from "../../../layout/page"
 import { VerticalAlignedItems } from "../../../layout/verticalAlignedItems"
@@ -83,7 +84,7 @@ export const PageSettingAccessGroup = ({ userList, resourceList, data }: PageSet
             headers={[{ label: L.settingAccessGroup.resources.name }, { label: L.settingAccessGroup.resources.type }]}
             rows={resourceList.map((resource) => ({
               onClick: () => router.push(Route.tree(resource.id)),
-              items: [resource.name, resource.mimeType],
+              items: [resource.name, getFileTypeLabel(resource.mimeType)],
             }))}
           />
         </Section>

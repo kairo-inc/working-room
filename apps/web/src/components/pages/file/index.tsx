@@ -3,6 +3,7 @@ import { ArrowLeft, Download, History, Pencil, X } from "lucide-react"
 import { useRef, useState } from "react"
 
 import { TextEditor } from "../../../components/editor"
+import { FileIconXl } from "../../../components/file/item"
 import { LoadingIndicator } from "../../../components/indicator"
 import { BodyLayout } from "../../../components/layout/body"
 import { PageLayout } from "../../../components/layout/page"
@@ -128,8 +129,15 @@ export const PageFile = ({ data }: PageFileProps) => {
       }
       default:
         return (
-          <div>
-            {L.file.unsupportedFileType} {data.mimeType}
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 p-12 text-center">
+            <FileIconXl type={data.mimeType} className="text-muted-foreground" />
+            <div className="text-muted-foreground text-sm">{L.file.previewNotAvailable}</div>
+            <RectangleButton
+              icon={<Download size={18} />}
+              onClick={() => open(Route.fileContentDownload(data.id), "_blank", "noopener,noreferrer")}
+            >
+              {L.file.download}
+            </RectangleButton>
           </div>
         )
     }

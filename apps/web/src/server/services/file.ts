@@ -1,6 +1,7 @@
 import { inject, injectable } from "tsyringe"
 
 import { FileAccessService } from "@wr/access"
+import { extractOfficeText, isOfficeMimeType } from "@wr/core"
 import { FileHistorySource } from "@wr/db"
 import {
   DomainFileDescriptor,
@@ -260,6 +261,16 @@ export class FileServiceImpl extends FileService {
         return {
           type: "text-file",
           data: `This is a text file with MIME type ${mimeType}.\nContent: \n${Buffer.from(blob).toString("utf-8")}`,
+          descId,
+          mediaType: mimeType as MimeType,
+        }
+      } else if (isOfficeMimeType(mimeType)) {
+        const extracted = await extractOfficeText(blob, mimeType).catch(
+          (e) => `[Failed to extract text from this Office document: ${(e as Error).message}]`
+        )
+        return {
+          type: "text-file",
+          data: `This is an Office document with MIME type ${mimeType}.\nContent: \n${extracted}`,
           descId,
           mediaType: mimeType as MimeType,
         }
