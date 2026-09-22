@@ -34,7 +34,7 @@ import {
   PageResult,
   isDomainSystemMessage,
 } from "@wr/shared"
-import { createAsyncQueue, getPrivateContext } from "@wr/shared-node"
+import { createAsyncQueue, getPrivateContext, randomId } from "@wr/shared-node"
 
 import { mapChatDomainToApp, mapChatNeedApprovalDomainToApp, mapChatStatusDomainToApp } from "../../map/chat"
 import { mapMessageDomainToApp } from "../../map/message"
@@ -309,27 +309,35 @@ export class ChatServiceImpl extends ChatService {
     // Run the engine with appropriate input based on the arguments.
     let loopPromise: Promise<ChatEngineRunResult>
     if (message) {
-      const [userMessage] = await this.messageContextToFile([
-        {
-          // -- Ununsed fields, but need for type compatibility. --
-          id: "unused-id",
-          isUserFacing: false,
-          role: "user",
-          // -- Unused end. --
-          content: [
-            { type: "text", text: message },
-            ...userMessageFileDescriptors.map(
-              (f) =>
-                ({
-                  type: "file-ref",
-                  mimeType: f.mimeType as MimeType,
-                  descId: f.id,
-                  blobHash: f.blobHash,
-                }) satisfies DomainMessageContentFileRef
-            ),
-          ],
+      const userMessageDomain: DomainUserMessage = {
+        id: randomId(),
+        isUserFacing: true,
+        role: "user",
+        content: [
+          { type: "text", text: message },
+          ...userMessageFileDescriptors.map(
+            (f) =>
+              ({
+                type: "file-ref",
+                mimeType: f.mimeType as MimeType,
+                descId: f.id,
+                blobHash: f.blobHash,
+              }) satisfies DomainMessageContentFileRef
+          ),
+        ],
+      }
+
+      // Persist the user's message right away, independently of the engine run below, so it isn't
+      // lost if the run throws before its result can be persisted in the `.then(...)` handler.
+      await this.messageSource.create({
+        data: {
+          chat: { connect: { id } },
+          sequence: messages.length + 1,
+          ...mapMessageDomainToEntity(userMessageDomain),
         },
-      ])
+      })
+
+      const [userMessage] = await this.messageContextToFile([userMessageDomain])
       loopPromise = engine.run(userMessage as DomainUserMessage, chatState, { signal: abortController.signal })
     } else if (approvals) {
       const approvalMessage = Object.fromEntries<"approved" | "rejected">(

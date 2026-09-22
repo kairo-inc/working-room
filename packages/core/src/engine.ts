@@ -53,7 +53,7 @@ export class ChatEngine {
   }
 
   async run(
-    prompt: Omit<DomainUserMessage, "id">,
+    prompt: Omit<DomainUserMessage, "id"> & { id?: string },
     chatState?: ChatState,
     options?: { signal?: AbortSignal }
   ): Promise<ChatEngineRunResult> {
@@ -72,7 +72,9 @@ export class ChatEngine {
       text: `<meta>time=${now}</meta>`,
     }
     const userPrompt: DomainUserMessage = {
-      id: randomId(),
+      // Reuse the caller-supplied id when given, so the message that ends up in the conversation history
+      // matches a copy the caller may have already persisted (e.g. to avoid losing it if the run fails).
+      id: prompt.id ?? randomId(),
       role: "user",
       isUserFacing: true,
       content: [userMetaContent, ...prompt.content],
