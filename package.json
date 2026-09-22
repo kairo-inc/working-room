@@ -40,7 +40,7 @@
     "memfs": "4.78.1",
     "prettier": "3.9.8",
     "prettier-plugin-tailwindcss": "0.8.1",
-    "tsx": "4.23.13",
+    "tsx": "4.23.15",
     "typescript": "6.0.3",
     "vitest": "4.1.11"
   },
