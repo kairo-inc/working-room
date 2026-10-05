@@ -1,0 +1,65 @@
+---
+title: MCP Servers
+sidebar_position: 6
+custom_edit_url: "https://github.com/kairo-inc/working-room/apps/docs/docs/user-guide/mcp-servers.mdx"
+---
+
+# MCP Servers
+
+WorkingRoom can connect to external [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) servers, so Agents can use the Tools those servers provide in your Chats — for example, Tools for an issue tracker, a database, or an internal service.
+
+MCP servers are personal: the servers you add are only visible to you and only used in your own Chats. Other Users in the same Tenant cannot see them or their access tokens.
+
+## Requirements
+
+- The MCP server must support the **Streamable HTTP** transport. Servers that only run as a local process (stdio) are not supported.
+- Authentication is limited to an **access token**, sent as a Bearer token in the `Authorization` header. MCP's OAuth authorization flow is not supported.
+- The server must be reachable from the WorkingRoom server, not just from your browser.
+
+## Adding a server
+
+1. Open the **Account** page and find the **MCP Servers** section.
+2. Select the **+** button.
+3. Enter:
+   - **Name** — Letters, numbers, `_`, and `-` only, up to 32 characters. It must be unique among your servers, and becomes part of the Tool names the Agent sees (for example `mcp__github__create_issue`).
+   - **URL** — The server's endpoint, starting with `http://` or `https://`.
+   - **Access token** (optional) — Leave it blank if the server does not require authentication.
+4. Select **Save**.
+
+When you save, WorkingRoom connects to the server and fetches its list of Tools. If the connection fails, the server is not saved and an error message tells you whether the access token was rejected or the server could not be reached.
+
+Each server in the list shows its URL and how many Tools were fetched.
+
+## Using MCP Tools in a Chat
+
+The Tools of your enabled servers are available to the Agent in every Chat you start. You do not need to select them; the Agent decides when to use them, the same as built-in Tools.
+
+Whether a Tool call needs your approval depends on how the server describes the Tool:
+
+- Tools the server marks as **read-only** run without approval.
+- All other Tools — including Tools that write or delete data, and Tools the server does not describe — require your approval. The approval card shows the server name, the Tool name, and the input the Agent is about to send.
+
+Sub-agents can only use read-only MCP Tools, since there is no one to approve their Tool calls.
+
+:::note
+Whether a Tool is read-only is reported by the MCP server itself. Only add servers you trust.
+:::
+
+## Managing servers
+
+- **Enable / Disable** — Temporarily stop the Agent from using a server's Tools without removing it.
+- **Refresh Tools** (the circular arrow button) — Fetch the server's Tool list again. WorkingRoom keeps a copy of the list so Chats start without waiting for your servers, so refresh it when the server adds, removes, or changes Tools.
+- **Edit** — Change the name, URL, or access token. Leave the access token blank to keep the current one, or turn on **Remove the access token** to clear it. Changing the URL or access token fetches the Tool list again.
+- **Delete** — Remove the server and its access token.
+
+## Troubleshooting
+
+When an MCP Tool call fails during a Chat, the Agent tells you what went wrong and what to do:
+
+| Problem                                 | What to do                                                                 |
+| --------------------------------------- | -------------------------------------------------------------------------- |
+| The server rejected the access token    | Edit the server on the Account page and enter a valid access token.       |
+| The server could not be reached         | Check that the server is running and that the URL is correct.             |
+| The Tool was not found on the server    | Select **Refresh Tools** for the server, since its Tool list has changed. |
+
+WorkingRoom waits up to 10 seconds to connect to a server and up to 60 seconds for a Tool call to finish.
