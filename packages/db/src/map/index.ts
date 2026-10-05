@@ -1,6 +1,7 @@
 export * from "./chat"
 export * from "./file"
 export * from "./fileHistory"
+export * from "./mcpServer"
 export * from "./message"
 export * from "./oauthClientSlack"
 export * from "./tenant"

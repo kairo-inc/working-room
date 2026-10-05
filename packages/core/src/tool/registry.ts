@@ -13,10 +13,20 @@ export class ToolRegistry {
     @inject("AiVendorConfigs") private aiVendorConfigs: AiVendorConfigs,
     @injectAll("Tool") tools: Tool[],
     // User-Defined Tools
-    @inject("AdditionalTools") additionalTools: Tool[]
+    @inject("AdditionalTools") additionalTools: Tool[],
+    // Tools provided by the MCP servers registered by the User.
+    @inject("McpTools") mcpTools: Tool[]
   ) {
     tools.forEach((t) => this.register(t))
     additionalTools.forEach((t) => this.register(t))
+    mcpTools.forEach((t) => {
+      // MCP Tools are defined by external servers, so they must never replace another Tool.
+      if (this.tools.has(t.name)) {
+        console.warn(`Skipped MCP Tool "${t.name}": a Tool with the same name is already registered.`)
+        return
+      }
+      this.register(t)
+    })
   }
 
   register(tool: Tool) {

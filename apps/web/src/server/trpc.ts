@@ -26,13 +26,6 @@ const isZodError = (obj: unknown): obj is { issues: unknown[] } => {
   )
 }
 
-// Server side File polyfill to support file upload in tRPC procedures using undici's File implementation.
-if (typeof window === "undefined") {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const undici = require("undici")
-  globalThis.File = undici.File
-}
-
 // Define trpc context
 export async function createContext(ctx: trpcNext.CreateNextContextOptions) {
   const { req, res } = ctx

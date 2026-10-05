@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe"
 
 import { FileAccessContext } from "@wr/access"
-import { AgentProps, ChatEngine, ChatEngineConfig, EventBus } from "@wr/core"
-import { TenantSource, UserSource } from "@wr/db"
-import { ContextStore, IntegrationContext } from "@wr/integration"
+import { AgentProps, ChatEngine, ChatEngineConfig, EventBus, Tool, buildMcpTools } from "@wr/core"
+import { McpServerSource, TenantSource, UserSource, mapMcpServerEntityToDomain } from "@wr/db"
+import { ContextStore, IntegrationContext, McpClient } from "@wr/integration"
 import {
   AiModelTier,
   AiVendorConfigs,
@@ -31,7 +31,8 @@ export class Resolver {
   constructor(
     // TODO: Get the tenant/user config from these sources.
     @inject("UserSource") private userSource: UserSource,
-    @inject("TenantSource") private tenantSource: TenantSource
+    @inject("TenantSource") private tenantSource: TenantSource,
+    @inject("McpServerSource") private mcpServerSource: McpServerSource
   ) {}
 
   private async createRuntimeContainer(): Promise<DiContainerContext> {
@@ -110,6 +111,15 @@ export class Resolver {
         ? new ContextStore(oauthClient.oauthClientsSlack[0].id, oauthClient.oauthClientsSlack[0].accessToken)
         : undefined,
     })
+
+    // Tools of the MCP servers registered by the user, built from the cached Tool definitions.
+    // The definitions are not fetched here, so starting a Chat never waits for the MCP servers.
+    const mcpServers = await this.mcpServerSource.findAll("EntityMcpServer", { where: { userId, enabled: true } })
+    const mcpServersWithTools = mcpServers.map(mapMcpServerEntityToDomain).filter((s) => s.tools.length > 0)
+    if (mcpServersWithTools.length > 0) {
+      const mcpClient = runtimeContainer.resolve<McpClient>("McpClient")
+      runtimeContainer.registerInstance<Tool[]>("McpTools", buildMcpTools(mcpServersWithTools, mcpClient))
+    }
 
     return runtimeContainer.resolve<ChatEngine>("ChatEngine")
   }

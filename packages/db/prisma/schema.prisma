@@ -152,6 +152,8 @@ model User {
 
   // May need to support multiple accounts.
   oauthClientsSlack OauthClientSlack[]
+
+  mcpServers McpServer[]
 }
 
 model Agent {
@@ -385,4 +387,32 @@ model OauthClientSlack {
 
   // Ensure a user can only have one Slack OAuth connection per team.
   @@unique([userId, slackTeamId])
+}
+
+// MCP (Model Context Protocol) servers registered by a user.
+// Tools provided by these servers are available to Agents in the user's Chats.
+model McpServer {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  name String
+  // Endpoint of the MCP server. Only the Streamable HTTP transport is supported.
+  url  String
+
+  // Sent to the MCP server as a Bearer token in the Authorization header, if set.
+  accessToken String?
+
+  // Whether the server's Tools are available to Agents.
+  enabled Boolean @default(true)
+
+  // Tool definitions fetched from the server via tools/list, cached so they are not fetched on every Chat. Json.
+  tools          String    @default("[]")
+  // When the Tool definitions were last fetched. null means they have not been fetched yet.
+  toolsFetchedAt DateTime?
+
+  // MCP servers are private to the user and not shared with other users in the tenant.
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
