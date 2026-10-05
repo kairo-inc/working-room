@@ -10,7 +10,7 @@ import { ToolRegistry } from "./registry"
 const mcpClient = { listTools: vi.fn(), callTool: vi.fn() } as McpClient
 const buildMcpTool = (serverName: string, toolName: string) =>
   new ToolMcp(
-    { id: "server-1", name: serverName, url: "https://example.com/mcp", accessToken: null },
+    { name: serverName, url: "https://example.com/mcp", accessToken: null },
     { name: toolName, inputSchema: { type: "object" } },
     mcpClient
   )

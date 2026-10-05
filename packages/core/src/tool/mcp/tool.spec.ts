@@ -1,12 +1,17 @@
 import { describe, expect, it, vi } from "vitest"
 
 import { McpClient, McpServerConnection } from "@wr/integration"
-import { DomainMcpServerTool, DomainMessageContentToolCall } from "@wr/shared"
+import {
+  DomainMcpServerTool,
+  DomainMessageContentToolCall,
+  McpServerAuthError,
+  McpServerConnectionError,
+  McpToolNotFoundError,
+} from "@wr/shared"
 
 import { ToolMcp } from "./tool"
 
 const server: McpServerConnection = {
-  id: "server-1",
   name: "github",
   url: "https://example.com/mcp",
   accessToken: "token",
@@ -147,6 +152,23 @@ describe("[Failure] ToolMcp", () => {
         value: 'Failed to call the MCP Tool "create_issue" on "github": connect ECONNREFUSED',
       },
     })
+  })
+
+  it.each([
+    [new McpServerAuthError("Rejected."), "update the access token"],
+    [new McpServerConnectionError("Unavailable."), "Do not retry it repeatedly"],
+    [new McpToolNotFoundError("Not found."), "refresh its Tools"],
+  ])("Tells the Agent what the User can do when the call fails with %s", async (error, instruction) => {
+    const mcpClient = buildMcpClient({ callTool: vi.fn().mockRejectedValue(error) })
+    const tool = new ToolMcp(server, definition, mcpClient)
+
+    const result = await tool.run({ toolCall: buildToolCall({ title: "Bug" }) } as never)
+
+    const content = result.message.content[0] as { output: { type: string; value: string } }
+    expect(content.output.type).toBe("error-text")
+    expect(content.output.value).toContain(error.message)
+    expect(content.output.value).toContain(instruction)
+    expect(content.output.value).toContain('"github"')
   })
 
   it("Returns an error without calling the MCP server when the input is invalid", async () => {

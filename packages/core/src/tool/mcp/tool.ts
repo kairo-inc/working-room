@@ -1,7 +1,15 @@
 import z from "zod"
 
 import { McpClient, McpServerConnection, McpToolResult } from "@wr/integration"
-import { BadRequestError, DomainMcpServerTool, DomainMessageContentToolCall, DomainToolType } from "@wr/shared"
+import {
+  BadRequestError,
+  DomainMcpServerTool,
+  DomainMessageContentToolCall,
+  DomainToolType,
+  McpServerAuthError,
+  McpServerConnectionError,
+  McpToolNotFoundError,
+} from "@wr/shared"
 import { randomId } from "@wr/shared-node"
 
 import { Tool, ToolIncomingChange, ToolRunArgs, ToolRunResult } from "../base"
@@ -106,12 +114,22 @@ export class ToolMcp extends Tool {
         },
       }
     } catch (e) {
-      return {
-        message: this.buildError(
-          toolCall,
-          `Failed to call the MCP Tool "${this.definition.name}" on "${this.server.name}": ${e instanceof Error ? e.message : String(e)}`
-        ),
-      }
+      return { message: this.buildError(toolCall, this.buildFailureMessage(e)) }
     }
+  }
+
+  // Tells the Agent what went wrong and what the User can do about it, since only the User can fix the MCP server settings.
+  private buildFailureMessage(e: unknown): string {
+    const reason = e instanceof Error ? e.message : String(e)
+    if (e instanceof McpServerAuthError) {
+      return `${reason}\nTell the User to update the access token of the MCP server "${this.server.name}" in the Account settings. Do not retry until it is updated.`
+    }
+    if (e instanceof McpServerConnectionError) {
+      return `${reason}\nThe MCP server "${this.server.name}" is unavailable. Do not retry it repeatedly; tell the User, and suggest checking the server or its URL in the Account settings if the problem continues.`
+    }
+    if (e instanceof McpToolNotFoundError) {
+      return `${reason}\nThe Tool list of the MCP server "${this.server.name}" is out of date. Tell the User to refresh its Tools in the Account settings.`
+    }
+    return `Failed to call the MCP Tool "${this.definition.name}" on "${this.server.name}": ${reason}`
   }
 }

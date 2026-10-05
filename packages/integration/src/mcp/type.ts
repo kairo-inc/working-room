@@ -2,7 +2,6 @@ import { DomainMcpServerTool } from "@wr/shared"
 
 // Connection info of an MCP server registered by a User. Only the Streamable HTTP transport is supported.
 export type McpServerConnection = {
-  id: string
   name: string
   url: string
   // Sent as a Bearer token in the Authorization header, if set.

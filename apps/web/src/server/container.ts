@@ -18,6 +18,8 @@ import { ChatServiceImpl } from "./services/chat"
 import { ChatService } from "./services/chatType"
 import { FileServiceImpl } from "./services/file"
 import { FileService } from "./services/fileType"
+import { McpServerServiceImpl } from "./services/mcpServer"
+import { McpServerService } from "./services/mcpServerType"
 import { OauthClientServiceImpl } from "./services/oauthClient"
 import { OauthClientService } from "./services/oauthClientType"
 import { TenantServiceImpl } from "./services/tenant"
@@ -42,6 +44,7 @@ container.register<FileService>("FileService", { useClass: FileServiceImpl })
 container.register<AgentService>("AgentService", { useClass: AgentServiceImpl })
 container.register<OauthService>("OauthService", { useClass: OauthServiceImpl })
 container.register<OauthClientService>("OauthClientService", { useClass: OauthClientServiceImpl })
+container.register<McpServerService>("McpServerService", { useClass: McpServerServiceImpl })
 
 // Resolver registrations
 // You need to use file service resolver to use FileService.

@@ -12,7 +12,7 @@ export const buildMcpTools = (servers: DomainMcpServer[], mcpClient: McpClient):
   const tools = new Map<string, ToolMcp>()
   for (const server of servers) {
     if (!server.enabled) continue
-    const connection = { id: server.id, name: server.name, url: server.url, accessToken: server.accessToken }
+    const connection = { name: server.name, url: server.url, accessToken: server.accessToken }
     for (const definition of server.tools) {
       const tool = new ToolMcp(connection, definition, mcpClient)
       if (tools.has(tool.name)) {

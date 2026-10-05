@@ -1,9 +1,11 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.js"
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js"
-import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js"
+import { CallToolRequestSchema, ErrorCode, ListToolsRequestSchema, McpError } from "@modelcontextprotocol/sdk/types.js"
 import { Server as HttpServer, createServer } from "node:http"
 import { AddressInfo } from "node:net"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
+
+import { McpServerAuthError, McpServerConnectionError, McpToolNotFoundError } from "@wr/shared"
 
 import { McpClientImpl } from "./index"
 import { McpServerConnection } from "./type"
@@ -28,16 +30,24 @@ const toolPages = [
 ]
 
 const buildMcpServer = () => {
-  const server = new Server({ name: "test-server", version: "1.0.0" }, { capabilities: { tools: {} } })
+  // The low-level server is used to control pagination and errors directly.
+  const { server } = new McpServer({ name: "test-server", version: "1.0.0" }, { capabilities: { tools: {} } })
   server.setRequestHandler(ListToolsRequestSchema, async (request) => {
     const page = Number(request.params?.cursor ?? 0)
     return { tools: toolPages[page], nextCursor: page + 1 < toolPages.length ? String(page + 1) : undefined }
   })
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    if (request.params.name === "create_issue") {
-      return { content: [{ type: "text", text: `Created "${request.params.arguments?.title}".` }] }
+    const { name } = request.params
+    if (name === "create_issue") {
+      if (typeof request.params.arguments?.title !== "string") {
+        throw new McpError(ErrorCode.InvalidParams, "Invalid arguments: title is required")
+      }
+      return { content: [{ type: "text", text: `Created "${request.params.arguments.title}".` }] }
     }
-    return { content: [{ type: "text", text: "Unknown tool." }], isError: true }
+    if (name === "failing_tool") {
+      return { content: [{ type: "text", text: "Something went wrong." }], isError: true }
+    }
+    throw new McpError(ErrorCode.InvalidParams, `Tool ${name} not found`)
   })
   return server
 }
@@ -63,7 +73,7 @@ describe("McpClientImpl", () => {
     })
     await new Promise<void>((resolve) => httpServer.listen(0, "127.0.0.1", resolve))
     const { port } = httpServer.address() as AddressInfo
-    connection = { id: "server-1", name: "test", url: `http://127.0.0.1:${port}/mcp`, accessToken: "secret-token" }
+    connection = { name: "test", url: `http://127.0.0.1:${port}/mcp`, accessToken: "secret-token" }
   })
 
   afterEach(async () => {
@@ -109,16 +119,51 @@ describe("McpClientImpl", () => {
   })
 
   it("[Success] Returns isError when the Tool reports an error", async () => {
-    const result = await new McpClientImpl().callTool(connection, { name: "unknown", arguments: {} })
+    const result = await new McpClientImpl().callTool(connection, { name: "failing_tool", arguments: {} })
 
     expect(result.isError).toBe(true)
   })
 
-  it("[Failure] Throws when the MCP server can not be reached", async () => {
+  it("[Failure] Throws McpToolNotFoundError when the Tool does not exist on the server", async () => {
+    const result = new McpClientImpl().callTool(connection, { name: "deleted_tool", arguments: {} })
+
+    await expect(result).rejects.toThrow(McpToolNotFoundError)
+  })
+
+  it("[Failure] Passes through other errors of the Tool call, such as invalid arguments", async () => {
+    const result = new McpClientImpl().callTool(connection, { name: "create_issue", arguments: {} })
+
+    await expect(result).rejects.toThrow(/Invalid arguments/)
+    await expect(result).rejects.not.toThrow(McpToolNotFoundError)
+  })
+
+  it("[Failure] Throws McpServerAuthError when the server rejects the access token", async () => {
+    await new Promise<void>((resolve) => httpServer.close(() => resolve()))
+    httpServer = createServer((_, res) => res.writeHead(401).end("Unauthorized"))
+    await new Promise<void>((resolve) => httpServer.listen(0, "127.0.0.1", resolve))
+    const { port } = httpServer.address() as AddressInfo
+
+    const result = new McpClientImpl().listTools({ ...connection, url: `http://127.0.0.1:${port}/mcp` })
+
+    await expect(result).rejects.toThrow(McpServerAuthError)
+  })
+
+  it("[Failure] Throws McpServerConnectionError when the MCP server can not be reached", async () => {
     await new Promise<void>((resolve) => httpServer.close(() => resolve()))
     httpServer = createServer()
     httpServer.listen(0)
 
-    await expect(new McpClientImpl().listTools(connection)).rejects.toThrow()
+    await expect(new McpClientImpl().listTools(connection)).rejects.toThrow(McpServerConnectionError)
+  })
+
+  it("[Failure] Throws McpServerConnectionError when the server returns an unexpected HTTP error", async () => {
+    await new Promise<void>((resolve) => httpServer.close(() => resolve()))
+    httpServer = createServer((_, res) => res.writeHead(500).end())
+    await new Promise<void>((resolve) => httpServer.listen(0, "127.0.0.1", resolve))
+    const { port } = httpServer.address() as AddressInfo
+
+    const result = new McpClientImpl().listTools({ ...connection, url: `http://127.0.0.1:${port}/mcp` })
+
+    await expect(result).rejects.toThrow(McpServerConnectionError)
   })
 })
