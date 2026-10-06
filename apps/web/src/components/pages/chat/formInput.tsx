@@ -2,6 +2,7 @@ import { FormApi } from "final-form"
 import { Form } from "react-final-form"
 
 import { AppChatStatus } from "../../../types/chat"
+import { AutoApproveButton } from "../../chatForm/autoApproveButton"
 import { ChatTextArea } from "../../chatForm/chatTextArea"
 import { FolderChangeButton } from "../../chatForm/folderChangeButton"
 
@@ -50,7 +51,10 @@ export const ChatInputForm = ({ onSubmit, isDisabled, chat }: ChatInputFormProps
       render={({ handleSubmit, submitting, hasValidationErrors }) => (
         <form onSubmit={handleSubmit} className="bg-background sticky bottom-0 mx-auto w-full pb-4">
           <ChatTextArea chatId={chatId} isDisabled={submitting || isDisabled || hasValidationErrors} />
-          <FolderChangeButton chat={chat} className="mt-2" />
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <AutoApproveButton chat={chat} />
+            <FolderChangeButton chat={chat} className="min-w-0" />
+          </div>
         </form>
       )}
     />

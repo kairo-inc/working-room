@@ -62,6 +62,14 @@ Click **Approve** to allow the operation or **Reject** to cancel it. If multiple
 
 Tools from your [MCP servers](./mcp-servers.mdx) also go through approval, unless the server marks the Tool as read-only. Their approval cards show the server name, the Tool name, and the input instead of a file diff.
 
+### Auto-approve
+
+To let the agent work through a long task without stopping for each approval, switch **Auto-approve** on below the message input. While it is on, every operation that would need approval runs immediately, including deleting files, and the switch is highlighted so you can tell it is on.
+
+- Auto-approve applies only to the Chat where you switch it on, and it stays on for that Chat until you switch it off. It is off for new Chats.
+- It does not give the agent any access beyond your own permissions; it only skips the confirmation.
+- Sub-agents are not affected. They are never given operations that need approval.
+
 ## Chat history
 
 The home screen lists all your chats sorted by most recent activity. Each entry shows a preview of the last message and a timestamp. Scroll down to load older chats.

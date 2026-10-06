@@ -24,6 +24,7 @@ type ResolveEngineArgs = {
   agents?: AgentProps[]
   workingFolder?: AiWorkingFolder
   tierOverrides?: Partial<Record<string, AiModelTier>>
+  autoApprove?: boolean
 }
 
 @injectable()
@@ -43,7 +44,7 @@ export class Resolver {
   }
 
   async resolveEngine(args: ResolveEngineArgs): Promise<ChatEngine> {
-    const { eventBus, agents, tierOverrides, workingFolder } = args
+    const { eventBus, agents, tierOverrides, workingFolder, autoApprove } = args
 
     const runtimeContainer = await this.createRuntimeContainer()
     if (eventBus) {
@@ -99,6 +100,7 @@ export class Resolver {
     runtimeContainer.registerInstance<ChatEngineConfig>("ChatEngineConfig", {
       tierOverrides,
       workingFolder,
+      autoApprove,
     })
 
     // external api integrations.

@@ -19,6 +19,7 @@ export type ChatServiceDeleteArg = {
 export type ChatServiceEditArg = {
   id: string
   workingFolderId?: string
+  autoApprove?: boolean
 }
 
 export type ChatServiceGetListArg = PageArg<ChatSortBy> & {

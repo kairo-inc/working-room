@@ -254,8 +254,12 @@ export class ChatEngine {
       if (onlyText) return { type: "text", text: textContents.join("\n") }
 
       // Handle tool calls. If there are any tool calls that require approval, pause the agent loop and wait for user decision.
+      // With auto-approve on, the user-facing agent runs them right away instead. Sub-agents keep rejecting them below.
       const toolCalls = outputs.content.filter((c): c is DomainMessageContentToolCall => c.type === "tool-call")
-      const pendingCalls = toolCalls.filter((tc) => tc.toolName !== "spawn_agent" && this.toolRegistry.get(tc.toolName)?.needApproval)
+      const autoApproved = ctx.depth === 0 && !!this.config.autoApprove
+      const pendingCalls = autoApproved
+        ? []
+        : toolCalls.filter((tc) => tc.toolName !== "spawn_agent" && this.toolRegistry.get(tc.toolName)?.needApproval)
       const otherCalls = toolCalls.filter((tc) => !pendingCalls.includes(tc))
       try {
         if (pendingCalls.length > 0) {

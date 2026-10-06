@@ -12,6 +12,7 @@ export class EntityChatStatus implements Omit<Chat, "deletedAt" | "workingFolder
   interactions: string | null
   resources: EntityFileDescriptor[]
   requireApproval: boolean
+  autoApprove: boolean
   workingFolder: {
     id: string
     name: string
@@ -25,6 +26,7 @@ export class EntityChatStatus implements Omit<Chat, "deletedAt" | "workingFolder
     pendingApproval: true,
     interactions: true,
     requireApproval: true,
+    autoApprove: true,
     resources: { select: EntityFileDescriptor.select },
     workingFolder: {
       select: { id: true, name: true },
@@ -42,6 +44,7 @@ export class EntityChat implements Omit<
   updatedAt: Date
   messages: EntityMessage[]
   requireApproval: boolean
+  autoApprove: boolean
   workingFolder: {
     id: string
     name: string
@@ -52,6 +55,7 @@ export class EntityChat implements Omit<
     createdAt: true,
     updatedAt: true,
     requireApproval: true,
+    autoApprove: true,
     messages: { select: EntityMessage.select, take: 1, orderBy: { createdAt: "desc" }, where: { role: "user" } },
     workingFolder: {
       select: { id: true, name: true },

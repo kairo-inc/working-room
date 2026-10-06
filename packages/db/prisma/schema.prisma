@@ -225,6 +225,10 @@ model Chat {
   messages        Message[]
   requireApproval Boolean   @default(false)
 
+  // When true, Tool calls that require approval run without asking the User. Only affects the Agent the User talks to,
+  // since sub-agents are never given Tools that require approval.
+  autoApprove Boolean @default(false)
+
   // Default it user's private root directory.
   // This is the working folder for the chat, where the chat assumes the files in this folder are accessible to it.
   workingFolderId String?

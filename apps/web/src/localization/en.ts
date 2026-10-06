@@ -155,6 +155,11 @@ export default {
     currentFolder: "Current folder",
     changeFolder: "Change folder",
     privateFolder: "private",
+    autoApprove: "Auto-approve",
+    autoApproveOn: "On",
+    autoApproveOff: "Off",
+    autoApproveDescription:
+      "When on, the Agent runs Tool calls that need approval (including deleting files) without asking you. Applies only to this Chat.",
     moreFileSingular: "and {0} more file",
     moreFilePlural: "and {0} more files",
   },

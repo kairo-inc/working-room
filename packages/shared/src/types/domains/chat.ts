@@ -45,6 +45,7 @@ export type DomainChat = {
   id: string
   updatedAt: Date
   requireApproval: boolean
+  autoApprove: boolean
   lastUserMessage?: DomainUserMessage
   workingFolder?: {
     id: string
@@ -55,6 +56,8 @@ export type DomainChat = {
 export type DomainChatStatus = {
   id: string
   requireApproval: boolean
+  // A Chat setting rather than part of the run state, so it is not carried through ChatState.
+  autoApprove?: boolean
   interactions: DomainAgentInteraction[]
   pendingApproval?: DomainPendingApproval
   workingFolder?: {
