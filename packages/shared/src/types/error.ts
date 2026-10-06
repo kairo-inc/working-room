@@ -153,3 +153,22 @@ export class SlackApiErrorNotFound extends BaseError {
   public statusCode = 404
   public errorCode = "SLACK_API_ERROR_NOT_FOUND"
 }
+
+// MCP server related errors.
+// The MCP server rejected the access token (HTTP 401 or 403).
+export class McpServerAuthError extends BaseError {
+  public statusCode = 401
+  public errorCode = "MCP_SERVER_AUTH_ERROR"
+}
+
+// The MCP server could not be reached, did not respond in time, or returned an unexpected HTTP response.
+export class McpServerConnectionError extends BaseError {
+  public statusCode = 502
+  public errorCode = "MCP_SERVER_CONNECTION_ERROR"
+}
+
+// The Tool no longer exists on the MCP server, e.g. the cached Tool definitions are out of date.
+export class McpToolNotFoundError extends BaseError {
+  public statusCode = 404
+  public errorCode = "MCP_TOOL_NOT_FOUND"
+}

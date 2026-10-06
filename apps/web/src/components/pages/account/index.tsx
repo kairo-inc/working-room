@@ -15,11 +15,13 @@ import { useAuthSignout } from "../../../hooks/trpc/auth"
 import { useUserEdit } from "../../../hooks/trpc/user"
 import { L } from "../../../localization"
 import { Route } from "../../../route"
+import { AppMcpServer } from "../../../types/mcpServer"
 import { AppOauthClient, AppOauthClientSlack } from "../../../types/oauthClient"
 import { AppUserSetting } from "../../../types/user"
 import { SlackLogoButton } from "../../buttons/logoButton"
 import { VerticalAligned3Items } from "../../layout/verticalAligned3Items"
 import { VerticalAlignedItems } from "../../layout/verticalAlignedItems"
+import { McpServerSection } from "./mcpServerSection"
 
 type ChatSettingFormType = {
   sendMessageOnEnter: boolean
@@ -30,9 +32,10 @@ const availableOauthClients = ["slack"] as const
 export interface PageAccountProps extends React.HTMLAttributes<HTMLDivElement> {
   data: AppUserSetting
   oauthClients: AppOauthClient[]
+  mcpServers: AppMcpServer[]
 }
 
-export const PageAccount = ({ data, oauthClients }: PageAccountProps) => {
+export const PageAccount = ({ data, oauthClients, mcpServers }: PageAccountProps) => {
   const router = useRouter()
   const notify = useNotification()
   const { mutateAsync: signout, isPending } = useAuthSignout()
@@ -119,6 +122,7 @@ export const PageAccount = ({ data, oauthClients }: PageAccountProps) => {
             })}
           />
         </Section>
+        <McpServerSection mcpServers={mcpServers} />
         <Section title={L.account.signout.title}>
           <div className="grid grid-cols-[auto_1fr] gap-2 gap-x-4 text-base">
             <RectangleButton

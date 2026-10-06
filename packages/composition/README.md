@@ -14,4 +14,4 @@ It exposes `getDiContainer()`, which returns the request-scoped container if one
 
 ## Usage
 
-`apps/web` calls `getDiContainer()` to resolve services, and can extend the container with `AdditionalAgents` and `AdditionalTools` registrations without modifying this package.
+`apps/web` calls `getDiContainer()` to resolve services, and can extend the container with `AdditionalAgents` and `AdditionalTools` registrations without modifying this package. `McpTools` is registered as an empty list here, and overridden per Chat by `apps/web`'s resolver with the Tools of the User's MCP servers.

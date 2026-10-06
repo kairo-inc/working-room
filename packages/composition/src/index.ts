@@ -62,6 +62,8 @@ import {
   FileHistorySourceImpl,
   LocalSessionSource,
   LocalSessionSourceImpl,
+  McpServerSource,
+  McpServerSourceImpl,
   MessageSource,
   MessageSourceImpl,
   OauthClientSlackSource,
@@ -76,7 +78,7 @@ import {
   UserSourceImpl,
   createPrismaClient,
 } from "@wr/db"
-import { OauthService, OauthServiceImpl, SlackClient, SlackClientImpl } from "@wr/integration"
+import { McpClient, McpClientImpl, OauthService, OauthServiceImpl, SlackClient, SlackClientImpl } from "@wr/integration"
 import { AiVendorConfigs } from "@wr/shared"
 import { DiContainerContext, getDiContainerStore } from "@wr/shared-node"
 
@@ -99,6 +101,7 @@ container.register<AccessGroupSource>("AccessGroupSource", { useClass: AccessGro
 container.register<AgentSource>("AgentSource", { useClass: AgentSourceImpl })
 container.register<ConsumedTokenSource>("ConsumedTokenSource", { useClass: ConsumedTokenSourceImpl })
 container.register<OauthClientSlackSource>("OauthClientSlackSource", { useClass: OauthClientSlackSourceImpl })
+container.register<McpServerSource>("McpServerSource", { useClass: McpServerSourceImpl })
 container.register<TokenUsageOnTenantSource>("TokenUsageOnTenantSource", { useClass: TokenUsageOnTenantSourceImpl })
 container.register<TokenUsageOnUserSource>("TokenUsageOnUserSource", { useClass: TokenUsageOnUserSourceImpl })
 
@@ -152,6 +155,8 @@ container.register<Tool>("Tool", { useClass: ToolSlackRemoveReaction })
 
 // Externally Defined Tools.
 container.register<Tool[]>("AdditionalTools", { useValue: [] })
+// Tools of the MCP servers registered by the User. Overridden per request by the resolver.
+container.register<Tool[]>("McpTools", { useValue: [] })
 
 // Resolver
 container.register<ToolRegistry>("ToolRegistry", { useClass: ToolRegistry })
@@ -161,6 +166,7 @@ container.register<FileAccessListener>("FileAccessListener", { useClass: NoopFil
 
 // Integration
 container.register<SlackClient>("SlackClient", { useClass: SlackClientImpl })
+container.register<McpClient>("McpClient", { useClass: McpClientImpl })
 
 container.register<OauthService>("OauthService", { useClass: OauthServiceImpl })
 
