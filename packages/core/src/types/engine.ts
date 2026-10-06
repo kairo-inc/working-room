@@ -24,6 +24,10 @@ export type ChatEngineConfig = {
   // A folder that the engine assumes it as a current working folder, which can be used by tools that need file access.
   // This is optional and can be set on a per-chat basis.
   workingFolder?: AiWorkingFolder
+
+  // When true, Tool calls that require approval run without asking the User. Set per Chat.
+  // Sub-agents are not affected, since they are never given Tools that require approval.
+  autoApprove?: boolean
 }
 
 export type ChatEngineOnChunkCallback = (

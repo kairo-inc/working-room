@@ -56,6 +56,7 @@ export const mapChatEntityToDomain = (entity: EntityChat): DomainChat => {
     id: entity.id,
     updatedAt: entity.updatedAt,
     requireApproval: entity.requireApproval,
+    autoApprove: entity.autoApprove,
     lastUserMessage: lastMessage ? mapUserMessageEntityToDomain(lastMessage) : undefined,
     workingFolder: entity.workingFolder ?? undefined,
   }
@@ -81,13 +82,15 @@ export const mapChatStatusEntityToDomain = (entity: EntityChatStatus): DomainCha
   return {
     id: entity.id,
     requireApproval: entity.requireApproval,
+    autoApprove: entity.autoApprove,
     pendingApproval: pendingApproval ?? undefined,
     interactions,
     workingFolder: entity.workingFolder ?? undefined,
   }
 }
 
-type PartialEntityChatStatus = Omit<EntityChatStatus, "createdAt" | "updatedAt" | "messages" | "userId" | "resources">
+// autoApprove is changed only by editing the Chat, never by saving the run state.
+type PartialEntityChatStatus = Omit<EntityChatStatus, "createdAt" | "updatedAt" | "messages" | "userId" | "resources" | "autoApprove">
 
 export const mapChatStatusDomainToEntity = (domain: DomainChatStatus): PartialEntityChatStatus => {
   return {

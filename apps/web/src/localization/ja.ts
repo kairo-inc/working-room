@@ -157,6 +157,11 @@ export default {
     currentFolder: "現在のフォルダ",
     changeFolder: "フォルダを変更",
     privateFolder: "プライベート",
+    autoApprove: "自動承認",
+    autoApproveOn: "オン",
+    autoApproveOff: "オフ",
+    autoApproveDescription:
+      "オンにすると、承認が必要な Tool の呼び出し（ファイルの削除を含む）を、確認せずに Agent が実行します。このチャットにだけ適用されます。",
     moreFileSingular: "他 {0} ファイル",
     moreFilePlural: "他 {0} ファイル",
   },

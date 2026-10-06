@@ -54,6 +54,7 @@ export const chatEdit = privateProcedure
     z.object({
       id: z.string().min(1).max(64),
       workingFolderId: z.string().min(1).max(64).optional(),
+      autoApprove: z.boolean().optional(),
     })
   )
   .mutation(async ({ input }) => {

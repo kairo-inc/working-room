@@ -121,11 +121,14 @@ export class ChatServiceImpl extends ChatService {
   }
 
   async edit(args: ChatServiceEditArg): Promise<void> {
-    const { id, workingFolderId } = args
+    const { id, workingFolderId, autoApprove } = args
     const { userId } = getPrivateContext()
     const updateData: Parameters<typeof this.chatSource.update>[0]["data"] = {}
     if (workingFolderId !== undefined) {
       updateData.workingFolder = { connect: { id: workingFolderId } }
+    }
+    if (autoApprove !== undefined) {
+      updateData.autoApprove = autoApprove
     }
     await this.chatSource.update({ where: { id, userId }, data: updateData })
   }
@@ -303,6 +306,7 @@ export class ChatServiceImpl extends ChatService {
         ToolReadFile: "medium",
       },
       workingFolder: await this.buildWorkingFolder({ folderId: chat.workingFolder?.id }),
+      autoApprove: chat.autoApprove,
     })
     engine.registerHooks({ onChunk })
 

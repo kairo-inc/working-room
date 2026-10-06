@@ -22,6 +22,7 @@ export type AppChat = {
   id: string
   updatedAt: Date
   requireApproval: boolean
+  autoApprove: boolean
   lastUserMessage?: AppUserMessage
   workingFolder?: {
     id: string
@@ -32,6 +33,7 @@ export type AppChat = {
 export type AppChatStatus = {
   id: string
   requireApproval: boolean
+  autoApprove: boolean
   needApprovals: AppChatNeedApproval[]
   workingFolder?: {
     id: string

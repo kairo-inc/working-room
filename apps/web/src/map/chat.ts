@@ -17,6 +17,7 @@ export const mapChatDomainToApp = (domain: DomainChat): AppChat => {
     id: domain.id,
     updatedAt: domain.updatedAt,
     requireApproval: domain.requireApproval,
+    autoApprove: domain.autoApprove,
     lastUserMessage: domain.lastUserMessage ? mapUserMessageDomainToApp(domain.lastUserMessage) : undefined,
     workingFolder: domain.workingFolder ? { id: domain.workingFolder.id, name: domain.workingFolder.name } : undefined,
   }
@@ -26,6 +27,7 @@ export const mapChatStatusDomainToApp = (domain: DomainChatStatus): AppChatStatu
   return {
     id: domain.id,
     requireApproval: domain.requireApproval,
+    autoApprove: domain.autoApprove ?? false,
     needApprovals: domain.pendingApproval ? domain.pendingApproval.needApprovals.map(mapChatNeedApprovalDomainToApp) : [],
     workingFolder: domain.workingFolder ? { id: domain.workingFolder.id, name: domain.workingFolder.name } : undefined,
   }
