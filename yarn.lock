@@ -9718,7 +9718,7 @@ __metadata:
     next-auth: "npm:4.24.15"
     next-superjson: "npm:2.0.0"
     next-themes: "npm:0.4.6"
-    node-poppler: "npm:10.0.1"
+    node-poppler: "npm:11.0.0"
     pino: "npm:10.4.0"
     radix-ui: "npm:1.6.7"
     react: "npm:19.3.0"
@@ -17886,9 +17886,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-poppler@npm:10.0.1":
-  version: 10.0.1
-  resolution: "node-poppler@npm:10.0.1"
+"node-poppler@npm:11.0.0":
+  version: 11.0.0
+  resolution: "node-poppler@npm:11.0.0"
   dependencies:
     camelcase: "npm:^6.3.0"
     ice-barrage: "npm:^1.0.0"
@@ -17897,7 +17897,7 @@ __metadata:
   dependenciesMeta:
     node-poppler-win32:
       optional: true
-  checksum: 10c0/39cf8c0c783c88fa0e7041e7e694edbd3774118a8b7261c6e21089c00be27e137ea47bc05b4d6be2d9a17ae482866aa6ab9c35d3472d061dab30dffb7e2aa82f
+  checksum: 10c0/1c41ce4369a5390cc6353057465ee821b59d9db4d1109ad62c66ea4e0309e1e40d693c63df292a3ac13aa4c56d080973a0604601f40b9bb3e22ff7f36d596050
   languageName: node
   linkType: hard
 
